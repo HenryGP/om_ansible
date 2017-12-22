@@ -1,0 +1,15 @@
+---
+- name: Installing backing databases
+  hosts: opsmgr
+  become: yes
+  gather_facts: no
+  vars_files:
+    - vars/om-install-vars.yaml
+  tasks:
+    # Install the Application database
+    - name: "Installing Application Database"
+      include: tasks/install-backing-dbs.yaml
+
+  # Install Ops Manager
+    - name: "Installing Ops Manager"
+      include: tasks/install-om.yaml

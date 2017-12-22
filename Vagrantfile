@@ -65,9 +65,13 @@ Vagrant.configure("2") do |config|
       v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "bkp"]
     end
+  end
 
-#    config.vm.provision "ansible" do |ansible|
-#      ansible.playbook = "vagrant.yml"
-#    end
-    
+  config.vm.provision "ansible" do |ansible|
+      ansible.limit = "all"
+      ansible.playbook = "om_ansible.yaml"
+  end
+=begin
+ansible.verbose = "vvv"
+=end
 end

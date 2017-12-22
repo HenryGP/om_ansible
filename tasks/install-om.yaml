@@ -1,0 +1,24 @@
+---
+- name: "Download Ops Manager RPM"
+  get_url:
+    url: "{{om_download_url34}}"
+    dest: /tmp/mongodb-mms.rpm
+    force_basic_auth: yes
+- name: "Install the RPM"
+  yum:
+    name: /tmp/mongodb-mms.rpm
+    state: present
+- name: "Enable mongodb-mms service"
+  service:
+    name: mongodb-mms
+    enabled: yes
+- name: "Copy configuration files"
+  template: 
+    src="../files/conf-mms.properties"
+    dest="/opt/mongodb/mms/conf/conf-mms.properties"
+    owner=root 
+    group=root 
+    mode="u=rw,g=r,o=r"
+- name: "Start mongodb-mms service"
+  service: name=mongodb-mms state=started
+  become: yes

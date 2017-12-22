@@ -1,0 +1,40 @@
+---
+- name: "Copy mongodb repository files"
+  template: 
+    src="../files/{{mongodb_repo34}}"
+    dest="/etc/yum.repos.d/{{mongodb_repo34}}"
+    owner=root 
+    group=root 
+    mode="u=rw,g=r,o=r"
+- name: "Install mongodb"
+  yum: name=* state=latest
+- name: "Install mongodb"
+  yum: name=mongodb-org state=latest
+- name: "Create dbpath for Application Database"
+  file: path=/data/appdb state=directory mode=0755 owner=mongod group=mongod
+- name: "Adjust logpath"
+  replace:
+    dest=/etc/mongod.conf
+    regexp='/var/log/mongodb/mongod.log'
+    replace='/data/appdb/mongod.log'
+    backup=yes
+- name: "Adjust dbpath"
+  replace:
+    dest=/etc/mongod.conf
+    regexp='/var/lib/mongo'
+    replace='/data/appdb'
+    backup=yes
+- name: "Enable mongod service"
+  service:
+    name: mongod
+    enabled: yes
+- name: "Set SELinux to permissive"
+  selinux:
+    policy: targeted
+    state: permissive
+- name: "Changing SELinux context"
+  shell: setenforce 0
+  become: yes
+- name: "Start mongod for the Application Database"
+  service: name=mongod state=started
+  become: yes
