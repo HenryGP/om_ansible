@@ -1,4 +1,18 @@
 ---
+- name: "General tasks on all servers"
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: "Copy mongodb repository files"
+      template: 
+        src="files/hosts"
+        dest="/etc/hosts"
+        owner=root 
+        group=root 
+        mode="u=rw,g=r,o=r"
+
 - name: Installing backing databases
   hosts: opsmgr
   become: yes
@@ -13,6 +27,3 @@
     # Install Ops Manager
     - name: "Installing Ops Manager"
       include: tasks/install-om.yaml
-
-    #- name: "Testing API call"
-      

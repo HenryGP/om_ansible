@@ -1,12 +1,12 @@
 ---
 - name: "Copy mongodb repository files"
   template: 
-    src="../files/{{mongodb_repo34}}"
-    dest="/etc/yum.repos.d/{{mongodb_repo34}}"
+    src="../files/{{mongodb_repo36}}"
+    dest="/etc/yum.repos.d/{{mongodb_repo36}}"
     owner=root 
     group=root 
     mode="u=rw,g=r,o=r"
-- name: "Install mongodb"
+- name: "Update yum"
   yum: name=* state=latest
 - name: "Install mongodb"
   yum: name=mongodb-org state=latest
@@ -15,22 +15,10 @@
 - name: "Copy mongod configuration file"
   template: 
     src="../files/mongod.conf"
-    dest="/etc/mongodb.conf"
+    dest="/etc/mongod.conf"
     owner=root 
     group=root 
     mode="u=rw,g=r,o=r"
-#- name: "Adjust logpath"
-#  replace:
-#    dest=/etc/mongod.conf
-#    regexp='/var/log/mongodb/mongod.log'
-#    replace='/data/appdb/mongod.log'
-#    backup=yes
-#- name: "Adjust dbpath"
-#  replace:
-#    dest=/etc/mongod.conf
-#    regexp='/var/lib/mongo'
-#    replace='/data/appdb'
-#    backup=yes
 - name: "Enable mongod service"
   service:
     name: mongod

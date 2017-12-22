@@ -1,7 +1,7 @@
 ---
 - name: "Download Ops Manager RPM"
   get_url:
-    url: "{{om_download_url34}}"
+    url: "{{om_download_url36}}"
     dest: /tmp/mongodb-mms.rpm
     force_basic_auth: yes
 - name: "Install the RPM"
