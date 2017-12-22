@@ -22,3 +22,19 @@
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
   become: yes
+- name: "Create initial user"
+  uri:
+    url: "http://192.168.1.100:8080/api/public/v1.0/unauth/users"
+    method: POST
+    validate_certs: no
+    follow_redirects: all
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    status_code: 201
+    body: "{{first_user_api_call}}"
+    return_content: yes
+    register: api_key
+- name: "Printing result"
+  debug:
+    msg: api_key.apiKey

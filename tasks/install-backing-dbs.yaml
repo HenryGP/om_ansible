@@ -12,18 +12,25 @@
   yum: name=mongodb-org state=latest
 - name: "Create dbpath for Application Database"
   file: path=/data/appdb state=directory mode=0755 owner=mongod group=mongod
-- name: "Adjust logpath"
-  replace:
-    dest=/etc/mongod.conf
-    regexp='/var/log/mongodb/mongod.log'
-    replace='/data/appdb/mongod.log'
-    backup=yes
-- name: "Adjust dbpath"
-  replace:
-    dest=/etc/mongod.conf
-    regexp='/var/lib/mongo'
-    replace='/data/appdb'
-    backup=yes
+- name: "Copy mongod configuration file"
+  template: 
+    src="../files/mongod.conf"
+    dest="/etc/mongodb.conf"
+    owner=root 
+    group=root 
+    mode="u=rw,g=r,o=r"
+#- name: "Adjust logpath"
+#  replace:
+#    dest=/etc/mongod.conf
+#    regexp='/var/log/mongodb/mongod.log'
+#    replace='/data/appdb/mongod.log'
+#    backup=yes
+#- name: "Adjust dbpath"
+#  replace:
+#    dest=/etc/mongod.conf
+#    regexp='/var/lib/mongo'
+#    replace='/data/appdb'
+#    backup=yes
 - name: "Enable mongod service"
   service:
     name: mongod

@@ -10,6 +10,9 @@
     - name: "Installing Application Database"
       include: tasks/install-backing-dbs.yaml
 
-  # Install Ops Manager
+    # Install Ops Manager
     - name: "Installing Ops Manager"
       include: tasks/install-om.yaml
+
+    #- name: "Testing API call"
+      

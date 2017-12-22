@@ -3,3 +3,6 @@ mongodb_repo34: mongodb-org-3.4.repo
 mongodb_repo36: mongodb-org-3.6.repo
 om_download_url34: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-3.4.11.593-1.x86_64.rpm?_ga=2.168513699.347501666.1513595939-1742101892.1511995425
 om_download_url36: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-3.6.1.591-1.x86_64.rpm?_ga=2.171144226.347501666.1513595939-1742101892.1511995425
+om_username: admin@mongodb.com
+om_password: Password1!
+first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "admin@mongodb.com","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
