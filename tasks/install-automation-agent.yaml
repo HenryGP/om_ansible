@@ -1,0 +1,34 @@
+---
+- name: "Copy mongodb repository files"
+  template: 
+    src="../files/{{mongodb_repo36}}"
+    dest="/etc/yum.repos.d/{{mongodb_repo36}}"
+    owner=root 
+    group=root 
+    mode="u=rw,g=r,o=r"
+- name: "Update yum"
+  yum: name=* state=latest
+- name: "Install mongodb shell"
+  yum: name=mongodb-org-shell state=latest
+- name: get automation apikey
+  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
+  register: opsmanager_apikey
+- debug: var=opsmanager_apikey
+- name: get automation groupid
+  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
+  register: opsmanager_groupid
+- debug: var=opsmanager_groupid
+- name: download automation agent
+  get_url: url="http://192.168.1.100:8080/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" dest="/tmp/automation-agent.rpm"
+- name: install automation agent
+  yum: name=/tmp/automation-agent.rpm state=present
+- name: update config mmsGroupId
+  shell: perl -pi -e "s/mmsGroupId=/mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+- name: update config mmsApiKey
+  shell: perl -pi -e "s/mmsApiKey=/mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+- name: update config mmsBaseUrl
+  shell: perl -pi -e "s|mmsBaseUrl=|mmsBaseUrl=http://192.168.1.100:8080|" /etc/mongodb-mms/automation-agent.config
+- name: setup data directory
+  file: path=/data state=directory mode=0755 owner=mongod group=mongod
+- name: start agent
+  service: name=mongodb-mms-automation-agent state=started
