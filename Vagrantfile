@@ -4,13 +4,13 @@
 Vagrant.configure("2") do |config|
   
   config.vm.define "opsmgr" do |opsmgr|
-    opsmgr.vm.box = "centos/7"
+    opsmgr.vm.box = "bento/centos-7.3"
     opsmgr.vm.hostname = 'omserver'
 
     opsmgr.vm.network :private_network, ip: "192.168.1.100"
     opsmgr.vm.synced_folder 'shared/',"/home/vagrant/shared", create: true
 
-    opsmgr.vm.network :forwarded_port, guest: 22, host: 33333
+    opsmgr.vm.network :forwarded_port, guest: 22, host: 33343
 
     opsmgr.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
@@ -68,7 +68,6 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
-      ansible.limit = "all"
       ansible.playbook = "om_ansible.yaml"
   end
 =begin

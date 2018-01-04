@@ -6,8 +6,6 @@
     owner=root 
     group=root 
     mode="u=rw,g=r,o=r"
-- name: "Update yum"
-  yum: name=* state=latest
 - name: "Install mongodb"
   yum: name=mongodb-org state=latest
 - name: "Create dbpath for Application Database"

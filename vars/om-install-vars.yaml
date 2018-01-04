@@ -10,3 +10,4 @@ om_username: admin
 om_password: Password1!
 # API calls for first user
 first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "admin@mongodb.com","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
+first_group_api_call: {"name": "Initial group"}

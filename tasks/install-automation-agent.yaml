@@ -6,8 +6,6 @@
     owner=root 
     group=root 
     mode="u=rw,g=r,o=r"
-- name: "Update yum"
-  yum: name=* state=latest
 - name: "Install mongodb shell"
   yum: name=mongodb-org-shell state=latest
 - name: get automation apikey
@@ -23,11 +21,11 @@
 - name: install automation agent
   yum: name=/tmp/automation-agent.rpm state=present
 - name: update config mmsGroupId
-  shell: perl -pi -e "s/mmsGroupId=/mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+  shell: perl -pi -e "s/mmsGroupId=*/mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
 - name: update config mmsApiKey
-  shell: perl -pi -e "s/mmsApiKey=/mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+  shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
 - name: update config mmsBaseUrl
-  shell: perl -pi -e "s|mmsBaseUrl=|mmsBaseUrl=http://192.168.1.100:8080|" /etc/mongodb-mms/automation-agent.config
+  shell: perl -pi -e "s|mmsBaseUrl=*|mmsBaseUrl=http://192.168.1.100:8080|" /etc/mongodb-mms/automation-agent.config
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod
 - name: start agent
