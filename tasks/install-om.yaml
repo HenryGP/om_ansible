@@ -19,6 +19,8 @@
     owner=root 
     group=root 
     mode="u=rw,g=r,o=r"
+- name: "Create directory for head database"
+  file: path=/data/head state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
   become: yes
@@ -39,21 +41,30 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: api_key
+- name: API Key for admin user
+  debug: var=api_key.json.apiKey
+- name: Moving auxiliary file
+  template: 
+     src="../files/group.txt"
+     dest="/tmp/group.txt"
+     owner=root 
+     group=root 
+     mode="u=rw,g=r,o=r"
 - name: "Create initial group"
-  uri:
-    url: "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true"
-    method: POST
-    validate_certs: no
-    follow_redirects: all
-    headers:
-      Content-Type: "application/json"
-    body_format: json
-    status_code: 401
-    body: "{{first_group_api_call}}"
-    return_content: yes
-    user: admin
-    password: api_key.json.apiKey
-    force_basic_auth: yes
+  shell: 'curl --user "admin:{{api_key.json.apiKey}}" --digest  --header "Accept: application/json"  --header "Content-Type: application/json"  --include  --request POST "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true" --data @/tmp/group.txt'
+#- name: "Create initial group"
+#  uri:
+#    url: "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true"
+#    method: POST
+#    validate_certs: no
+#    follow_redirects: all
+#    headers:
+#      Content-Type: "application/json"
+#    body_format: json
+#    body: "{{first_group_api_call}}"
+#    user: admin
+#    password: api_key.json.apiKey
+#    force_basic_auth: yes
 - name: get automation apikey
   shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
   register: opsmanager_apikey
@@ -64,3 +75,5 @@
   register: opsmanager_groupid
 - name: Group ID
   debug: var=opsmanager_groupid.stdout_lines[0]
+
+
