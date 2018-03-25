@@ -1,0 +1,72 @@
+---
+- name: "Setting up directories and permissions"
+  user:
+    name: minio
+    home: /opt/minio
+- name: "Create bin directory"
+  file: path=/opt/minio/bin state=directory mode=0755 owner=minio group=minio
+- name: "Create data directory"
+  file: path=/opt/minio/data state=directory mode=0755 owner=minio group=minio
+- name: "Downloading minio binary"
+  get_url: 
+    url: "{{minio_url}}"
+    dest: /opt/minio/bin/minio
+    force_basic_auth: yes
+- name: "Adjusting file permissions"
+  file:
+    path: /opt/minio/bin/minio
+    owner: minio
+    group: minio
+    mode: 0744
+- name: "Placing minio configuration file"
+  template: 
+    src="../files/minio.conf"
+    dest="/opt/minio/minio.conf"
+    owner=minio
+    group=minio
+- name: "Setting up minio as a systemd service"
+  template: 
+    src="../files/minio.service"
+    dest="/etc/systemd/system/minio.service"
+- name: "Enable minio service"
+  service:
+    name: minio
+    enabled: yes
+- name: "Start minio service"
+  service: name=minio state=started
+  become: yes
+- name: "Wait for port 9000 to become available"
+  wait_for:
+    port: 9000
+    delay: 1
+- name: "Getting access and secret key"
+  shell: "grep minio /var/log/messages | grep -E 'AccessKey|SecretKey' | awk '{print $7}'"
+  register: access_credentials
+- name: "Copying s3cmd configuration"
+  template: 
+    src="../files/s3cfg"
+    dest="/root/.s3cfg"
+    owner=minio
+    group=minio
+- name: "Registering access key"
+  shell: echo 'access_key = {{access_credentials.stdout_lines[1]}}' >> /root/.s3cfg
+- name: "Registering access key"
+  shell: echo 'secret_key = {{access_credentials.stdout_lines[2]}}' >> /root/.s3cfg 
+- name: "Install unzip"
+  yum: name=unzip state=latest
+- name: "Installing Python dateutil"
+  yum: name=python-dateutil state=latest
+- name: "Downloading s3cmd"
+  unarchive:
+    src: "{{s3cmd_url}}"
+    dest: /opt/minio/bin
+    remote_src: yes
+- name: "Creating S3 bucket"
+  shell: /opt/minio/bin/s3cmd-master/s3cmd mb s3://ombucket
+- name: "Displaying Access Key"
+  debug: var=access_credentials.stdout_lines[1]
+- name: "Displaying Secret Key"
+  debug: var=access_credentials.stdout_lines[2]
+
+
+  

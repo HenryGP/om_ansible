@@ -1,10 +1,10 @@
 ---
 - name: "Copy mongodb repository files"
-  template: 
+  template:
     src="../files/{{mongodb_repo36}}"
     dest="/etc/yum.repos.d/{{mongodb_repo36}}"
-    owner=root 
-    group=root 
+    owner=root
+    group=root
     mode="u=rw,g=r,o=r"
 - name: "Update yum"
   yum: name=* state=latest

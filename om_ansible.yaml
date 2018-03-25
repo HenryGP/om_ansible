@@ -12,7 +12,6 @@
         owner=root 
         group=root 
         mode="u=rw,g=r,o=r"
-
 - name: Installing Ops Manager
   hosts: opsmgr
   become: yes
@@ -24,13 +23,11 @@
     # Install the Application database
     - name: "Installing Application Database"
       include: tasks/install-backing-dbs.yaml
-
     # Install Ops Manager
     - name: "Installing Ops Manager Server"
       include: tasks/install-om.yaml
-
 - name: "Getting clients ready"
-  hosts: node1 node2 backup
+  hosts: node1 node2
   become: yes
   gather_facts: no
   ignore_errors: yes
@@ -40,4 +37,14 @@
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
       include: tasks/install-automation-agent.yaml
-  
+- name: "Setting up S3 storage"
+  hosts: backup
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  vars_files:
+    - vars/om-install-vars.yaml
+  tasks:
+    #Install minio and startup
+    - name: "Installing minio"
+      include: tasks/install-s3.yaml

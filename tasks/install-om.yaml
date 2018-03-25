@@ -27,7 +27,7 @@
 - name: "Wait for port 8080 to become available"
   wait_for:
     port: 8080
-    delay: 2
+    delay: 1
 - name: "Create initial user"
   uri:
     url: "http://192.168.1.100:8080/api/public/v1.0/unauth/users"

@@ -1,0 +1,8 @@
+# Setup endpoint
+host_base = bkp:9000
+host_bucket = bkp:9000
+use_https = False
+
+# Enable S3 v4 signature APIs
+signature_v2 = False
+
