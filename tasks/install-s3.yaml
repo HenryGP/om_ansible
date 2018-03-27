@@ -40,7 +40,7 @@
     port: 9000
     delay: 1
 - name: "Getting access and secret key"
-  shell: "grep minio /var/log/messages | grep -E 'AccessKey|SecretKey' | awk '{print $7}'"
+  shell: "grep minio /var/log/messages | grep -E 'AccessKey|SecretKey' | awk '{print $7}' | head -n2"
   register: access_credentials
 - name: "Copying s3cmd configuration"
   template: 
@@ -49,9 +49,9 @@
     owner=minio
     group=minio
 - name: "Registering access key"
-  shell: echo 'access_key = {{access_credentials.stdout_lines[1]}}' >> /root/.s3cfg
+  shell: echo 'access_key = {{access_credentials.stdout_lines[0]}}' >> /root/.s3cfg
 - name: "Registering access key"
-  shell: echo 'secret_key = {{access_credentials.stdout_lines[2]}}' >> /root/.s3cfg 
+  shell: echo 'secret_key = {{access_credentials.stdout_lines[1]}}' >> /root/.s3cfg 
 - name: "Install unzip"
   yum: name=unzip state=latest
 - name: "Installing Python dateutil"
@@ -64,9 +64,9 @@
 - name: "Creating S3 bucket"
   shell: /opt/minio/bin/s3cmd-master/s3cmd mb s3://ombucket
 - name: "Displaying Access Key"
-  debug: var=access_credentials.stdout_lines[1]
+  debug: var=access_credentials.stdout_lines[0]
 - name: "Displaying Secret Key"
-  debug: var=access_credentials.stdout_lines[2]
+  debug: var=access_credentials.stdout_lines[1]
 
 
   
