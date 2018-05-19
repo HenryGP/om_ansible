@@ -2,48 +2,56 @@ version: "2"
 
 services:
   provisioner:
-    build: .
+    build: ./inventory/provisioner
     hostname: provisioner
     command: tail -f /dev/null
     networks:
       front:
-        ipv4_address: 192.168.2.99
+        ipv4_address: 192.168.1.99
 
   opsmgr:
-    image: "centos:7"
-    hostname: opsmgr
+    build: ./inventory/clients
+    hostname: omserver
+    ports:
+      - "22"
     command: tail -f /dev/null
     networks:
       front:
-        ipv4_address: 192.168.2.100
+        ipv4_address: 192.168.1.100
     mem_limit: 4096M
   
   node1:
-    image: "centos:7"
-    hostname: node1
+    build: ./inventory/clients
+    hostname: n1
+    ports:
+      - "22"
     mem_limit: 512M
     command: tail -f /dev/null
     networks:
       front:
-        ipv4_address: 192.168.2.101
+        ipv4_address: 192.168.1.101
 
   node2:
-    image: "centos:7"
-    hostname: node2
+    build: ./inventory/clients
+    hostname: n2
+    ports:
+      - "22"
     mem_limit: 512M
     command: tail -f /dev/null
     networks:
       front:
-        ipv4_address: 192.168.2.102
+        ipv4_address: 192.168.1.102
 
   backup:
-    image: "centos:7"
-    hostname: backup
+    build: ./inventory/clients
+    hostname: bkp
+    ports:
+      - "22"
     mem_limit: 512M
     command: tail -f /dev/null
     networks:
       front:
-        ipv4_address: 192.168.2.103
+        ipv4_address: 192.168.1.103
 
 networks:
   front:
@@ -54,5 +62,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 192.168.2.0/24
-          gateway: 192.168.2.1
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1

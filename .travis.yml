@@ -1,5 +1,8 @@
 sudo: required
 
+notifications:
+  email: false
+
 services:
   - docker
 
@@ -9,4 +12,3 @@ before_install:
 
 script:
   - echo "TEST"
-
