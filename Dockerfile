@@ -14,7 +14,8 @@ RUN git clone http://github.com/ansible/ansible.git /opt/ansible && \
 ENV PATH /opt/ansible/bin:$PATH
 ENV PYTHONPATH $PYTHONPATH:/opt/ansible/lib
 ENV ANSIBLE_LIBRARY /opt/ansible/library
- 
+
+CMD ["/bin/bash"]
 # setup ssh
 #RUN mkdir /root/.ssh
 #ADD ansible_id_rsa /root/.ssh/id_rsa

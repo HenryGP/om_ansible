@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+  provisioner:
+    build: .
+    hostname: provisioner
+    networks:
+      - backend
+
+  opsmgr:
+    image: "centos"
+    hostname: opsmgr
+    networks:
+      - backend
+    mem_limit: 4096M
+  
+  node1:
+    image: "centos"
+    hostname: node1
+    mem_limit: 512M
+    networks:
+      - backend
+
+networks:
+  backend:
