@@ -15,15 +15,14 @@ ENV PATH /opt/ansible/bin:$PATH
 ENV PYTHONPATH $PYTHONPATH:/opt/ansible/lib
 ENV ANSIBLE_LIBRARY /opt/ansible/library
 
-CMD ["/bin/bash"]
 # setup ssh
-#RUN mkdir /root/.ssh
-#ADD ansible_id_rsa /root/.ssh/id_rsa
-#ADD ansible_id_rsa.pub /root/.ssh/id_rsa.pub
+RUN mkdir /root/.ssh
+ADD keys/ansible_id_rsa /root/.ssh/id_rsa
+ADD keys/ansible_id_rsa.pub /root/.ssh/id_rsa.pub
  
 # extend Ansible
 # use an inventory directory for multiple inventories support
 #RUN mkdir -p /etc/ansible/inventory && \
 #    cp /opt/ansible/plugins/inventory/docker.py /etc/ansible/inventory/
-#ADD ansible.cfg  /etc/ansible/ansible.cfg
-#ADD hosts  /etc/ansible/inventory/hosts
+ADD ansible.cfg  /etc/ansible/ansible.cfg
+ADD hosts  /etc/ansible/inventory/hosts

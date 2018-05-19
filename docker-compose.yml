@@ -4,22 +4,58 @@ services:
   provisioner:
     build: .
     hostname: provisioner
+    command: tail -f /dev/null
     networks:
-      - backend
+      front:
+        ipv4_address: 192.168.2.99
 
   opsmgr:
-    image: "centos"
+    image: "centos:7"
     hostname: opsmgr
+    command: tail -f /dev/null
     networks:
-      - backend
+      front:
+        ipv4_address: 192.168.2.100
     mem_limit: 4096M
   
   node1:
-    image: "centos"
+    image: "centos:7"
     hostname: node1
     mem_limit: 512M
+    command: tail -f /dev/null
     networks:
-      - backend
+      front:
+        ipv4_address: 192.168.2.101
+
+  node2:
+    image: "centos:7"
+    hostname: node2
+    mem_limit: 512M
+    command: tail -f /dev/null
+    networks:
+      front:
+        ipv4_address: 192.168.2.102
+
+  backup:
+    image: "centos:7"
+    hostname: backup
+    mem_limit: 512M
+    command: tail -f /dev/null
+    networks:
+      front:
+        ipv4_address: 192.168.2.103
 
 networks:
-  backend:
+  front:
+  # use the bridge driver, but enable IPv6
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.2.0/24
+          gateway: 192.168.2.1
+  back:
+    # use a custom driver, with no options
+    driver: custom-driver-1
