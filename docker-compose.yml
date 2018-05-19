@@ -56,6 +56,3 @@ networks:
       config:
         - subnet: 192.168.2.0/24
           gateway: 192.168.2.1
-  back:
-    # use a custom driver, with no options
-    driver: custom-driver-1
