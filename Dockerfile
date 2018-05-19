@@ -16,9 +16,9 @@ ENV PYTHONPATH $PYTHONPATH:/opt/ansible/lib
 ENV ANSIBLE_LIBRARY /opt/ansible/library
 
 # setup ssh
-RUN mkdir /root/.ssh
-ADD keys/ansible_id_rsa /root/.ssh/id_rsa
-ADD keys/ansible_id_rsa.pub /root/.ssh/id_rsa.pub
+#RUN mkdir /root/.ssh
+#ADD keys/ansible_id_rsa /root/.ssh/id_rsa
+#ADD keys/ansible_id_rsa.pub /root/.ssh/id_rsa.pub
  
 # extend Ansible
 # use an inventory directory for multiple inventories support
