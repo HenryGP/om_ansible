@@ -12,6 +12,12 @@ services:
   opsmgr:
     build: ./inventory/clients
     hostname: omserver
+#    cap_add:
+#      - SYS_ADMIN
+#    security_opt:
+#      - seccomp:unconfined
+#    volumes:
+#      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
     command: /usr/sbin/sshd -D
@@ -57,8 +63,6 @@ networks:
   front:
   # use the bridge driver, but enable IPv6
     driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "true"
     ipam:
       driver: default
       config:

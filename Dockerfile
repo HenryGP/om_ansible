@@ -6,14 +6,22 @@ RUN apt-get -y update && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN pip install paramiko jinja2 PyYAML setuptools pycrypto>=2.6 six \
     requests docker-py  # docker inventory plugin
-RUN git clone http://github.com/ansible/ansible.git /opt/ansible && \
-    cd /opt/ansible && \
-    git reset --hard fbec8bfb90df1d2e8a0a4df7ac1d9879ca8f4dde && \
-    git submodule update --init
+RUN curl -Ol http://releases.ansible.com/ansible/ansible-2.3.1.0.tar.gz && \
+    tar xvf ansible-2.3.1.0.tar.gz -C /opt && \
+    pip install -r /opt/ansible-2.3.1.0/requirements.txt
+
+#git clone http://github.com/ansible/ansible.git /opt/ansible && \
+#    cd /opt/ansible && \
+#    git reset --hard fbec8bfb90df1d2e8a0a4df7ac1d9879ca8f4dde && \
+#    git submodule update --init
  
-ENV PATH /opt/ansible/bin:$PATH
-ENV PYTHONPATH $PYTHONPATH:/opt/ansible/lib
-ENV ANSIBLE_LIBRARY /opt/ansible/library
+#ENV PATH /opt/ansible/bin:$PATH
+#ENV PYTHONPATH $PYTHONPATH:/opt/ansible/lib
+#ENV ANSIBLE_LIBRARY /opt/ansible/library
+
+ENV PATH /opt/ansible-2.3.1.0/bin:$PATH
+ENV PYTHONPATH $PYTHONPATH:/opt/ansible-2.3.1.0/lib
+ENV ANSIBLE_LIBRARY /opt/ansible-2.3.1.0/library
 
 # setup ssh
 RUN mkdir /root/.ssh

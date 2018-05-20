@@ -1,11 +1,4 @@
-[opsmgr]
 opsmgr ansible_ssh_host=omserver ansible_ssh_port=22 ansible_ssh_user=admin
-
-[node1]
 node1 ansible_ssh_host=n1 ansible_ssh_port=22 ansible_ssh_user=admin
-
-[node2]
 node2 ansible_ssh_host=n2 ansible_ssh_port=22 ansible_ssh_user=admin
-
-[backup]
 backup ansible_ssh_host=bkp ansible_ssh_port=22 ansible_ssh_user=admin
