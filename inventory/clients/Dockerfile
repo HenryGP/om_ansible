@@ -1,15 +1,19 @@
 FROM centos:7
 
-RUN yum update -y && yum install -y openssh-server
-RUN mkdir /var/run/sshd
-RUN echo 'root:screencast' | chpasswd
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN yum -y update && yum install -y initscripts openssh openssh-server openssh-clients sudo passwd sed screen tmux byobu which vim-enhanced
+RUN sshd-keygen
+RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
 
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+# setup default user
+RUN useradd admin -G wheel -s /bin/bash -m
+RUN echo "admin:welcome" | chpasswd
+RUN echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
-ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
+# setup ssh
+RUN mkdir /home/admin/.ssh
+ADD keys/id_rsa.pub /home/admin/.ssh/authorized_keys
+RUN chown -R admin:admin /home/admin && chmod 700 /home/admin/.ssh && chmod 640 /home/admin/.ssh/authorized_keys
 
+# expose ports for ssh
 EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+#CMD ["/usr/sbin/sshd", "-D"]

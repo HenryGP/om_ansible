@@ -2,7 +2,7 @@ version: "2"
 
 services:
   provisioner:
-    build: ./inventory/provisioner
+    build: .
     hostname: provisioner
     command: tail -f /dev/null
     networks:
@@ -14,7 +14,7 @@ services:
     hostname: omserver
     ports:
       - "22"
-    command: tail -f /dev/null
+    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.100
@@ -26,7 +26,7 @@ services:
     ports:
       - "22"
     mem_limit: 512M
-    command: tail -f /dev/null
+    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.101
@@ -37,7 +37,7 @@ services:
     ports:
       - "22"
     mem_limit: 512M
-    command: tail -f /dev/null
+    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.102
@@ -48,7 +48,7 @@ services:
     ports:
       - "22"
     mem_limit: 512M
-    command: tail -f /dev/null
+    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.103

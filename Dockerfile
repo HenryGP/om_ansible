@@ -16,13 +16,17 @@ ENV PYTHONPATH $PYTHONPATH:/opt/ansible/lib
 ENV ANSIBLE_LIBRARY /opt/ansible/library
 
 # setup ssh
-#RUN mkdir /root/.ssh
-#ADD keys/ansible_id_rsa /root/.ssh/id_rsa
-#ADD keys/ansible_id_rsa.pub /root/.ssh/id_rsa.pub
+RUN mkdir /root/.ssh
+ADD /inventory/clients/keys/id_rsa /root/.ssh/id_rsa
+ADD /inventory/clients/keys/id_rsa.pub /root/.ssh/id_rsa.pub
+RUN chmod 700 /root/.ssh/id_rsa
  
 # extend Ansible
 # use an inventory directory for multiple inventories support
-#RUN mkdir -p /etc/ansible/inventory && \
-#    cp /opt/ansible/plugins/inventory/docker.py /etc/ansible/inventory/
-ADD ansible.cfg  /etc/ansible/ansible.cfg
-ADD hosts  /etc/ansible/inventory/hosts
+ADD inventory/provisioner/ansible.cfg  /etc/ansible/ansible.cfg
+ADD inventory/provisioner/hosts  /etc/ansible/inventory/hosts
+
+ADD tasks /root/tasks
+ADD files /root/files
+ADD vars /root/vars
+ADD om_ansible.yaml /root/om_ansible.yaml
