@@ -12,15 +12,13 @@ services:
   opsmgr:
     build: ./inventory/clients
     hostname: omserver
-#    cap_add:
-#      - SYS_ADMIN
-#    security_opt:
-#      - seccomp:unconfined
-#    volumes:
-#      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
-    command: /usr/sbin/sshd -D
+      - "8080:8080"
     networks:
       front:
         ipv4_address: 192.168.1.100
@@ -29,10 +27,13 @@ services:
   node1:
     build: ./inventory/clients
     hostname: n1
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro    
     ports:
       - "22"
     mem_limit: 512M
-    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.101
@@ -40,10 +41,13 @@ services:
   node2:
     build: ./inventory/clients
     hostname: n2
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
     mem_limit: 512M
-    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.102
@@ -51,10 +55,13 @@ services:
   backup:
     build: ./inventory/clients
     hostname: bkp
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
     mem_limit: 512M
-    command: /usr/sbin/sshd -D
     networks:
       front:
         ipv4_address: 192.168.1.103

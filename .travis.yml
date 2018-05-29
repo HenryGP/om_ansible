@@ -11,4 +11,4 @@ before_install:
   - docker-compose up -d
 
 script:
-  - echo "TEST"
+  - docker exec -it om_ansible_dev_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
