@@ -9,7 +9,7 @@ services:
 before_install:
   - docker-compose build
   - docker-compose up -d
-  - docker exec -it om_ansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml -i /etc/ansible/inventory/hosts
+  - docker exec -it omansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml -i /etc/ansible/inventory/hosts
 
 script:
 #  - docker exec -it om_ansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml -i /etc/ansible/inventory/hosts
