@@ -7,8 +7,7 @@ services:
   - docker
 
 env:
-  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin
-  - PLAYBOOKS_PATH=/root/tests/playbooks
+  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin PLAYBOOKS_PATH=/root/tests/playbooks
 
 before_install:
   - sudo apt-get update
