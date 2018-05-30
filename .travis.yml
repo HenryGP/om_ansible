@@ -8,6 +8,11 @@ services:
 
 before_install:
   - sudo apt-get update
+  - echo "192.168.1.99 provisioner" >> /etc/hosts
+  - echo "192.168.1.100 omserver" >> /etc/hosts
+  - echo "192.168.1.101 n1" >> /etc/hosts
+  - echo "192.168.1.102 n2" >> /etc/hosts
+  - echo "192.168.1.103 bkp" >> /etc/hosts
   - docker-compose build
   - docker-compose up -d
   - docker ps
