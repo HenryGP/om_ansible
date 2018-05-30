@@ -1,8 +1,8 @@
 ---
 - name: "Copy mongodb repository files"
   template:
-    src="../files/{{mongodb_repo36}}"
-    dest="/etc/yum.repos.d/{{mongodb_repo36}}"
+    src="../files/{{mongodb_repo34}}"
+    dest="/etc/yum.repos.d/{{mongodb_repo34}}"
     owner=root
     group=root
     mode="u=rw,g=r,o=r"

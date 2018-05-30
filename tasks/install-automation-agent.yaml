@@ -9,11 +9,11 @@
 - name: "Install mongodb shell"
   yum: name=mongodb-org-shell state=latest
 - name: get automation apikey
-  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
+  shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
   register: opsmanager_apikey
 - debug: var=opsmanager_apikey
 - name: get automation groupid
-  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
+  shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
   register: opsmanager_groupid
 - debug: var=opsmanager_groupid
 - name: download automation agent
