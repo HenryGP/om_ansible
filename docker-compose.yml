@@ -68,7 +68,6 @@ services:
 
 networks:
   front:
-  # use the bridge driver, but enable IPv6
     driver: bridge
     ipam:
       driver: default

@@ -14,8 +14,4 @@ before_install:
   - docker network ls
 
 script:
-#  - docker exec -it omansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml -i /etc/ansible/inventory/hosts
-  - docker exec -it omansible_provisioner_1 ping 192.168.1.100
-  - docker exec -it omansible_provisioner_1 ping 192.168.1.101
-  - docker exec -it omansible_provisioner_1 ping 192.168.1.102
-  - docker exec -it omansible_provisioner_1 ping 192.168.1.103
+  - docker exec -it omansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml -i /etc/ansible/inventory/hosts
