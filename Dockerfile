@@ -37,4 +37,5 @@ ADD inventory/provisioner/hosts  /etc/ansible/inventory/hosts
 ADD tasks /root/tasks
 ADD files /root/files
 ADD vars /root/vars
+ADD tests /root/tests
 ADD om_ansible.yaml /root/om_ansible.yaml
