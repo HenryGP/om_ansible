@@ -61,6 +61,7 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
+      - "9000:9000"
     mem_limit: 512M
     networks:
       front:

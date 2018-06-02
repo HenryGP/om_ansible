@@ -22,4 +22,4 @@ script:
   # Install Automation Agent on clients
   - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_auto_agents.yaml
   # Install minio S3
-#  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_s3.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_s3.yaml
