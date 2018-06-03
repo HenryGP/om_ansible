@@ -111,6 +111,7 @@ Access the following UIs using the web browser:
 ## Infrastructure <a name="infrastructure"></a>
 
 The default infrastructure consists of the following:
+
 |Host|IP address|Role|
 |-|-|-|
 |omserver|192.168.1.100|Ops Manager server + Application DB|
