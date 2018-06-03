@@ -1,0 +1,25 @@
+sudo: required
+
+notifications:
+  email: false
+
+services:
+  - docker
+
+env:
+  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin PLAYBOOKS_PATH=/root/tests/playbooks
+
+before_install:
+  - sudo apt-get update
+  - docker-compose build
+  - docker-compose up -d
+  - docker ps
+  - docker network ls
+
+script:
+  # Check installation of Backing databases and Ops Manager
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_om.yaml
+  # Install Automation Agent on clients
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_auto_agents.yaml
+  # Install minio S3
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_s3.yaml

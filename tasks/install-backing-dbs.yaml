@@ -43,9 +43,11 @@
   selinux:
     policy: targeted
     state: permissive
+  ignore_errors: yes #Applicable to containers
 - name: "Changing SELinux context"
   shell: setenforce 0
   become: yes
+  ignore_errors: yes #Applicable to containers
 - name: "Start mongod for the Application Database"
   service: name=mongod state=started
   become: yes

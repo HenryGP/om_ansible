@@ -1,0 +1,10 @@
+- name: "Getting clients ready"
+  hosts: node1 node2
+  become: yes
+  gather_facts: no
+  vars_files:
+    - ../../vars/om-install-vars.yaml
+  tasks:
+    #Install the Automation Agent on all clients
+    - name: "Install Automation Agents"
+      include: ../../tasks/install-automation-agent.yaml

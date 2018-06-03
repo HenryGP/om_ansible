@@ -1,0 +1,73 @@
+version: "2"
+
+services:
+  provisioner:
+    build: .
+    hostname: provisioner
+    command: tail -f /dev/null
+    networks:
+      front:
+        ipv4_address: 192.168.1.99
+
+  opsmgr:
+    build: ./inventory/clients
+    hostname: omserver
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    ports:
+      - "22"
+      - "8080:8080"
+    networks:
+      front:
+        ipv4_address: 192.168.1.100
+  
+  node1:
+    build: ./inventory/clients
+    hostname: n1
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro    
+    ports:
+      - "22"
+    networks:
+      front:
+        ipv4_address: 192.168.1.101
+
+  node2:
+    build: ./inventory/clients
+    hostname: n2
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    ports:
+      - "22"
+    networks:
+      front:
+        ipv4_address: 192.168.1.102
+
+  backup:
+    build: ./inventory/clients
+    hostname: bkp
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    ports:
+      - "22"
+      - "9000:9000"
+    networks:
+      front:
+        ipv4_address: 192.168.1.103
+
+networks:
+  front:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
