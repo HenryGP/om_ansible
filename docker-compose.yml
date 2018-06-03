@@ -22,7 +22,6 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.100
-    mem_limit: 4096M
   
   node1:
     build: ./inventory/clients
@@ -33,7 +32,6 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro    
     ports:
       - "22"
-    mem_limit: 512M
     networks:
       front:
         ipv4_address: 192.168.1.101
@@ -47,7 +45,6 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
-    mem_limit: 512M
     networks:
       front:
         ipv4_address: 192.168.1.102
@@ -62,7 +59,6 @@ services:
     ports:
       - "22"
       - "9000:9000"
-    mem_limit: 512M
     networks:
       front:
         ipv4_address: 192.168.1.103
