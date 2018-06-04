@@ -1,5 +1,5 @@
 ---
-- name: "General tasks on all servers"
+- name: "General tasks on all servers (will fail and be ignored when running on containers)"
   hosts: all
   become: yes
   gather_facts: no

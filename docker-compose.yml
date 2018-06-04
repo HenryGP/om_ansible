@@ -63,6 +63,20 @@ services:
       front:
         ipv4_address: 192.168.1.103
 
+  ldap:
+    build: ./inventory/ldap
+    hostname: ldapserver
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    ports:
+      - "22"
+      - "389:389"
+    networks:
+      front:
+        ipv4_address: 192.168.1.104
+
 networks:
   front:
     driver: bridge

@@ -1,0 +1,67 @@
+# groups OU
+dn: ou=dbRoles,dc=tsdocker,dc=com
+ou: groups
+objectClass: organizationalUnit
+
+# Groups for MongoDB Users
+dn: cn=readWriteAnyDatabase,ou=dbRoles,dc=tsdocker,dc=com
+objectClass: groupOfNames
+cn: readWriteAnyDatabase
+member: uid=writer,ou=dbUsers,dc=tsdocker,dc=com
+
+dn: cn=read,ou=dbRoles,dc=tsdocker,dc=com
+objectClass: groupOfNames
+cn: read
+member: uid=reader,ou=DbUsers,dc=tsdocker,dc=com
+
+dn: cn=dbAdmin,ou=dbRoles,dc=tsdocker,dc=com
+objectClass: groupOfNames
+cn: dbAdmin
+member: uid=dba,ou=dbUsers,dc=tsdocker,dc=com
+
+# Groups for Ops Manager Agents
+# Roles: ['clusterAdmin', 'dbAdminAnyDatabase',
+#        'readWriteAnyDatabase','userAdminAnyDatabase','restore']
+dn: cn=automation,ou=dbRoles,dc=tsdocker,dc=com
+objectClass: groupOfNames
+cn: automation
+member: uid=mms-automation,ou=dbUsers,dc=tsdocker,dc=com
+
+# Roles: [ { role: "clusterMonitor", db: "admin" } ]
+dn: cn=monitoring,ou=dbRoles,dc=tsdocker,dc=com
+objectClass: groupOfNames
+cn: monitoring
+member: uid=mms-monitoring,ou=dbUsers,dc=tsdocker,dc=com
+
+# Roles: [ { role: "backup", db: "admin" } ]
+dn: cn=backup,ou=dbRoles,dc=tsdocker,dc=com
+objectClass: groupOfNames
+cn: backup
+member: uid=mms-backup,ou=dbUsers,dc=tsdocker,dc=com
+
+#Groups for Ops Manager Users
+# groups OU
+dn: ou=omgroups,dc=tsdocker,dc=com
+ou: groups
+objectClass: top
+objectClass: organizationalUnit
+
+# Owners
+dn: cn=owners,ou=omgroups,dc=tsdocker,dc=com
+cn: owners
+objectClass: top
+objectClass: groupOfNames
+member: uid=owner,ou=omusers,dc=tsdocker,dc=com
+
+# Read only
+dn: cn=readers,ou=omgroups,dc=tsdocker,dc=com
+cn: readers
+objectClass: top
+objectClass: groupOfNames
+member: uid=reader,ou=omusers,dc=tsdocker,dc=com
+
+#Administrators
+dn: cn=owners,ou=omgroups,dc=tsdocker,dc=com
+changetype: modify
+add: member
+member: uid=admin,ou=omusers,dc=tsdocker,dc=com
