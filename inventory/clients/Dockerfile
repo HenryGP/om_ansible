@@ -35,4 +35,7 @@ RUN rm /usr/lib/tmpfiles.d/systemd-nologin.conf
 # expose port for ssh
 EXPOSE 22
 
+# expose for MongoDB installs
+EXPOSE 27000-30000
+
 CMD "/usr/sbin/init"
