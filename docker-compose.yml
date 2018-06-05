@@ -66,6 +66,7 @@ services:
   ldap:
     build: ./inventory/ldap
     hostname: ldapserver
+    mem_limit: 200m
     cap_add:
       - SYS_ADMIN
     volumes:

@@ -8,6 +8,8 @@ Minimalistic, disposable Ops Manager environment with Ansible.
 1. [Usage with Docker](#docker)
 1. [Usage with Vagrant](#vagrant)
 1. [Infrastructure](#infrastructure)
+1. [Additional features](#addedfeatures)
+   1. [LDAP](#ldapconfig)
 
 ## Installation <a name="installation"></a>
 
@@ -43,7 +45,7 @@ Minimalistic, disposable Ops Manager environment with Ansible.
    ```
 1. Provision containers by executing general Ansible task:
    ```
-   docker exec -it om_ansible_dev_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
+   docker exec -it om_ansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
    ```
    **NOTE** The plans following tasks are expected to fail on containers due to the nature of Docker containers:
    - Copy mongodb repository files (changing /etc/hosts)
@@ -118,5 +120,6 @@ The default infrastructure consists of the following:
 |n\[1-2\]|192.168.1.10\[1-2\]|client with Automation installed|
 |bkp|192.168.1.103|S3 storage|  
 |provisioner*|192.168.1.99|Ansible provisioner|
+|ldapserver*|192.168.1.104|OpenLDAP server|
 
-\* only if using Docker
+\* only available if using Docker
