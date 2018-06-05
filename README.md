@@ -43,7 +43,7 @@ Minimalistic, disposable Ops Manager environment with Ansible.
    ```
 1. Provision containers by executing general Ansible task:
    ```
-   docker exec -it om_ansible_dev_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
+   docker exec -it om_ansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
    ```
    **NOTE** The plans following tasks are expected to fail on containers due to the nature of Docker containers:
    - Copy mongodb repository files (changing /etc/hosts)
