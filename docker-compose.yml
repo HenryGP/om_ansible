@@ -9,7 +9,7 @@ services:
       front:
         ipv4_address: 192.168.1.99
 
-  opsmgr:
+  omserver:
     build: ./inventory/clients
     hostname: omserver
     cap_add:
@@ -23,7 +23,7 @@ services:
       front:
         ipv4_address: 192.168.1.100
   
-  node1:
+  n1:
     build: ./inventory/clients
     hostname: n1
     cap_add:
@@ -36,7 +36,7 @@ services:
       front:
         ipv4_address: 192.168.1.101
 
-  node2:
+  n2:
     build: ./inventory/clients
     hostname: n2
     cap_add:
@@ -49,7 +49,7 @@ services:
       front:
         ipv4_address: 192.168.1.102
 
-  backup:
+  bkp:
     build: ./inventory/clients
     hostname: bkp
     cap_add:
