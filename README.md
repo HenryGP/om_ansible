@@ -10,6 +10,9 @@ Minimalistic, disposable Ops Manager environment with Ansible.
 1. [Infrastructure](#infrastructure)
 1. [Additional features](#addedfeatures)
    1. [LDAP](#ldapconfig)
+      * [Database users](#mongodbusers)
+      * [Ops Manager Agents](#agentusers)
+      * [Ops Manager users](#omusers)
 
 ## Installation <a name="installation"></a>
 
@@ -123,3 +126,32 @@ The default infrastructure consists of the following:
 |ldapserver*|192.168.1.104|OpenLDAP server|
 
 \* only available if using Docker
+
+## Additional features <a name="addedfeatures"></a>
+
+The following section covers all additional features provided by om_ansible configurable once the environment is provisioned.
+
+### LDAP <a name="ldapconfig"></a>
+
+When using Docker, om_ansible will provision an additional container with an LDAP server ready to be used with Ops Manager or any of the managed deployments.
+
+#### MongoDB database users <a name="mongodbusers"></a>
+|User|MemberOf|
+|-|-|
+|uid=dba,ou=dbUsers,dc=tsdocker,dc=com|cn=dbAdmin,ou=dbRoles,dc=tsdocker,dc=com|
+|uid=writer,ou=dbUsers,dc=tsdocker,dc=com|cn=readWriteAnyDatabase,ou=dbRoles,dc=tsdocker,dc=com|
+|uid=reader,ou=DbUsers,dc=tsdocker,dc=com|cn=read,ou=dbRoles,dc=tsdocker,dc=com|
+
+#### Ops Manager Agents <a name="agentusers"></a>
+|User|MemberOf|
+|-|-|
+|uid=mms-automation,ou=dbUsers,dc=tsdocker,dc=com|cn=automation,ou=dbRoles,dc=tsdocker,dc=com|
+|uid=mms-monitoring,ou=dbUsers,dc=tsdocker,dc=com|cn=monitoring,ou=dbRoles,dc=tsdocker,dc=com|
+|uid=mms-backup,ou=dbUsers,dc=tsdocker,dc=com|cn=backup,ou=dbRoles,dc=tsdocker,dc=com|
+
+#### Ops Manager users <a name="omusers"></a>
+|User|MemberOf|
+|-|-|
+|uid=owner,ou=omusers,dc=tsdocker,dc=com|cn=owners,ou=omgroups,dc=tsdocker,dc=com|
+|uid=reader,ou=omusers,dc=tsdocker,dc=com|cn=readers,ou=omgroups,dc=tsdocker,dc=com|
+|uid=admin,ou=omusers,dc=tsdocker,dc=com|cn=owners,ou=omgroups,dc=tsdocker,dc=com|
