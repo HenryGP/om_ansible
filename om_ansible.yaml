@@ -5,7 +5,7 @@
   gather_facts: no
   ignore_errors: yes
   tasks:
-    - name: "Copy mongodb repository files"
+    - name: "Modifying /etc/hosts (will fail and be ignored when running on containers)"
       template: 
         src="files/hosts"
         dest="/etc/hosts"

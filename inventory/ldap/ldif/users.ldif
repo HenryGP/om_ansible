@@ -1,0 +1,81 @@
+#Start MongoDB Database Users
+## DB Users OU
+dn: ou=dbUsers,dc=tsdocker,dc=com
+ou: Users
+objectClass: organizationalUnit
+
+## DB Users
+dn: uid=dba,ou=dbUsers,dc=tsdocker,dc=com
+objectClass: inetOrgPerson
+cn: database
+sn: administrator
+uid: dba
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+dn: uid=reader,ou=dbUsers,dc=tsdocker,dc=com
+objectClass: inetOrgPerson
+cn: only
+sn: read
+uid: reader
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+dn: uid=writer,ou=dbUsers,dc=tsdocker,dc=com
+objectClass: inetOrgPerson
+cn: only
+sn: readandwrite
+uid: writer
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+#End MongoDB Database Users
+
+#Start Agent Users
+dn: uid=mms-automation,ou=dbUsers,dc=tsdocker,dc=com
+objectClass: inetOrgPerson
+cn: automation
+sn: agent
+uid: mms-automation
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+dn: uid=mms-monitoring,ou=dbUsers,dc=tsdocker,dc=com
+objectClass: inetOrgPerson
+cn: monitoring
+sn: agent
+uid: mms-monitoring
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+dn: uid=mms-backup,ou=dbUsers,dc=tsdocker,dc=com
+objectClass: inetOrgPerson
+cn: backup
+sn: agent
+uid: mms-backup
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+#End Agent Users
+
+#OM users
+#Ops Manager users OU
+dn: ou=omusers,dc=tsdocker,dc=com
+ou: omusers
+objectClass: top
+objectClass: organizationalUnit
+
+dn: uid=owner,ou=omusers,dc=tsdocker,dc=com
+uid: owner
+objectClass: top
+objectClass: account
+objectClass: simpleSecurityObject
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+dn: uid=reader,ou=omusers,dc=tsdocker,dc=com
+uid: reader
+objectClass: top
+objectClass: account
+objectClass: simpleSecurityObject
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu
+
+#Temporary addition
+dn: uid=admin,ou=omusers,dc=tsdocker,dc=com
+uid: admin
+objectClass: top
+objectClass: account
+objectClass: simpleSecurityObject
+userpassword: {SSHA}5DjT7IC/8qIUgruyLWJI4jTkqrcTzTUu

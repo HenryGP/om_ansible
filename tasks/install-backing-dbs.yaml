@@ -39,12 +39,12 @@
   service:
     name: mongod
     enabled: yes
-- name: "Set SELinux to permissive"
+- name: "Set SELinux to permissive (will fail and be ignored when running on containers)"
   selinux:
     policy: targeted
     state: permissive
   ignore_errors: yes #Applicable to containers
-- name: "Changing SELinux context"
+- name: "Changing SELinux context (will fail and be ignored when running on containers)"
   shell: setenforce 0
   become: yes
   ignore_errors: yes #Applicable to containers
