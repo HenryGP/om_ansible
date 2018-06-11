@@ -21,6 +21,8 @@
     mode="u=rw,g=r,o=r"
 - name: "Create directory for head database"
   file: path=/data/head state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
+- name: "Create directory for fsstore"
+  file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
   become: yes
@@ -42,7 +44,7 @@
     return_content: yes
   register: api_key
 - name: Saving API key for admin user in local server
-  local_action: copy content={{api_key.json.apiKey}} dest=/api_key.txt
+  local_action: copy content={{api_key.json.apiKey}} dest=/root/admin_user_api_key.yaml
 - name: API Key for admin user
   debug: var=api_key.json.apiKey
 - name: Moving auxiliary file
@@ -77,5 +79,5 @@
   register: opsmanager_groupid
 - name: Group ID
   debug: var=opsmanager_groupid.stdout_lines[0]
-
-
+- name: Saving group ID in local server
+  local_action: copy content={{opsmanager_groupid.stdout_lines[0]}} dest=/root/group_id.yaml
