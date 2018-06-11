@@ -47,3 +47,39 @@
     #Install minio and startup
     - name: "Installing minio"
       include: tasks/install-s3.yaml
+- name: "Enabling Backup Daemon"
+  hosts: opsmgr
+  become: yes
+  gather_facts: no
+  ignore_errors: no
+  tasks:
+    - include: tasks/api-enable-backup-daemon.yaml
+- name: "Creating S3 blockstore in Ops Manager"
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  ignore_errors: no
+  vars:
+    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
+    s3_access_key: "{{ lookup('file', '/root/s3_access_key.yaml') }}"
+    s3_secret_key: "{{ lookup('file', '/root/s3_secret_key.yaml') }}"
+  tasks:
+    - include: tasks/api-create-s3-blockstore.yaml
+- name: "Creating FSStore in Ops Manager"
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  ignore_errors: no
+  vars:
+    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
+  tasks:
+    - include: tasks/api-create-fs-store.yaml
+- name: "Creating Oplog Store in Ops Manager"
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  ignore_errors: no
+  vars:
+    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
+  tasks:
+    - include: tasks/api-create-oplog-store.yaml

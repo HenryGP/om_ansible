@@ -45,9 +45,13 @@
 - name: "getting access key"
   shell: "systemctl status minio -l | grep 'config host add' | awk '{print $13}'"
   register: access_key
+- name: "Saving access key in local file"
+  local_action: copy content={{access_key.stdout_lines[0]}} dest=/root/s3_access_key.yaml
 - name: "getting access key"
   shell: "systemctl status minio -l | grep 'config host add' | awk '{print $14}'"
   register: secret_key
+- name: "Saving secret key in local file"
+  local_action: copy content={{secret_key.stdout_lines[0]}} dest=/root/s3_secret_key.yaml
 - name: "Copying s3cmd configuration"
   template: 
     src="../files/s3cfg"
@@ -73,6 +77,3 @@
   debug: var=access_key.stdout_lines[0]
 - name: "Displaying Secret Key"
   debug: var=secret_key.stdout_lines[0]
-
-
-  

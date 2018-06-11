@@ -1,0 +1,7 @@
+- name: "Enabling Backup Daemon"
+  hosts: omserver
+  become: yes
+  gather_facts: no
+  ignore_errors: no
+  tasks:
+    - include: ../../tasks/api-enable-backup-daemon.yaml
