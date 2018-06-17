@@ -1,8 +1,8 @@
 ---
 - name: "Copy mongodb repository files"
   template:
-    src="../files/{{mongodb_repo36}}"
-    dest="/etc/yum.repos.d/{{mongodb_repo36}}"
+    src="../files/{{mongodb_repo}}"
+    dest="/etc/yum.repos.d/{{mongodb_repo}}"
     owner=root
     group=root
     mode="u=rw,g=r,o=r"
@@ -39,15 +39,15 @@
   service:
     name: mongod
     enabled: yes
-- name: "Set SELinux to permissive (will fail and be ignored when running on containers)"
+- name: "Set SELinux to permissive"
   selinux:
     policy: targeted
     state: permissive
-  ignore_errors: yes #Applicable to containers
-- name: "Changing SELinux context (will fail and be ignored when running on containers)"
+  when: vms
+- name: "Changing SELinux context"
   shell: setenforce 0
   become: yes
-  ignore_errors: yes #Applicable to containers
+  when: vms
 - name: "Start mongod for the Application Database"
   service: name=mongod state=started
   become: yes

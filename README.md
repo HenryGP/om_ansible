@@ -50,11 +50,6 @@ Minimalistic, disposable Ops Manager environment with Ansible.
    ```
    docker exec -it om_ansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
    ```
-   **NOTE** The plans following tasks are expected to fail on containers due to the nature of Docker containers:
-   - Copy mongodb repository files (changing /etc/hosts)
-   - Set SELinux to permissive
-   - Changing SELinux context
-   These are the only tasks ignored by Ansible in case of failure, the rest will stop the execution in case of failure.
 1. Check the container names by executing `docker ps`
 1. ssh into an specific container:
    ```
@@ -89,6 +84,7 @@ Access the following UIs using the web browser:
      ```
      vagrant up opsmgr
      ```
+1. Set the variable `vms` in _vars/om-install-vars.yaml_ to `true`.
 1. Provision the started Virtual Machine:
    ```
    vagrant provision <vm_name>

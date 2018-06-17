@@ -1,7 +1,7 @@
 ---
 - name: "Download Ops Manager RPM"
   get_url:
-    url: "{{om_download_url36}}"
+    url: "{{om_download_url}}"
     dest: /tmp/mongodb-mms.rpm
     force_basic_auth: yes
 - name: "Install the RPM"
@@ -47,28 +47,19 @@
   local_action: copy content={{api_key.json.apiKey}} dest=/root/admin_user_api_key.yaml
 - name: API Key for admin user
   debug: var=api_key.json.apiKey
-- name: Moving auxiliary file
-  template: 
-     src="../files/group.txt"
-     dest="/tmp/group.txt"
-     owner=root 
-     group=root 
-     mode="u=rw,g=r,o=r"
 - name: "Create initial group"
-  shell: 'curl --user "admin:{{api_key.json.apiKey}}" --digest  --header "Accept: application/json"  --header "Content-Type: application/json"  --include  --request POST "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true" --data @/tmp/group.txt'
-#- name: "Create initial group"
-#  uri:
-#    url: "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true"
-#    method: POST
-#    validate_certs: no
-#    follow_redirects: all
-#    headers:
-#      Content-Type: "application/json"
-#    body_format: json
-#    body: "{{first_group_api_call}}"
-#    user: admin
-#    password: api_key.json.apiKey
-#    force_basic_auth: yes
+  uri:
+    url: "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true"
+    validate_certs: no
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: '{"name": "Initial group"}'
+    status_code: 201
+    return_content: yes
+    user: admin
+    password: "{{api_key.json.apiKey}}"
 - name: get automation apikey
   shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
   register: opsmanager_apikey

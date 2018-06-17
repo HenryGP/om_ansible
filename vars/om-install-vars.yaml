@@ -1,17 +1,15 @@
 ---
+# Virtual Machines vs Containers
+vms: false
 # MongoDB repositories for backing databases
-mongodb_repo34: mongodb-org-3.4.repo
-mongodb_repo36: mongodb-org-3.6.repo
+mongodb_repo: mongodb-org-3.6.repo
 # URL for Ops Manager packages
-om_download_url34: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-3.4.12.605-1.x86_64.rpm?_ga=2.88144147.925201454.1528718647-1232836180.1525792588&_gac=1.217238050.1526754764.EAIaIQobChMIhIeLhrSS2wIVEobtCh1MoQ62EAEYASAAEgJcdfD_BwE
-om_download_url36: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-3.6.6.47217.20180502T0927Z-1.x86_64.rpm?_ga=2.138187568.1274325080.1526283760-1232836180.1525792588
-om_download_url20: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-2.0.8.395-1.x86_64.rpm?_ga=2.135801265.1284655614.1517767447-1742101892.1511995425
+om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-3.6.6.47217.20180502T0927Z-1.x86_64.rpm?_ga=2.138187568.1274325080.1526283760-1232836180.1525792588
 # First user login credentials
 om_username: admin
 om_password: Password1!
 # API calls for first user
 first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "admin@mongodb.com","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
-first_group_api_call: {"name": "Initial group"}
 # minio 
 minio_url: https://dl.minio.io/server/minio/release/linux-amd64/minio
 s3cmd_url: https://github.com/s3tools/s3cmd/archive/master.zip
