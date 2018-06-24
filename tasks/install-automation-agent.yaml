@@ -8,22 +8,54 @@
     mode="u=rw,g=r,o=r"
 - name: "Install mongodb shell"
   yum: name=mongodb-org-shell state=latest
-- name: get automation apikey
-  shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
-  register: opsmanager_apikey
-- debug: var=opsmanager_apikey
+
 - name: get automation groupid
   shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
   register: opsmanager_groupid
 - debug: var=opsmanager_groupid
+
+- name: get automation apikey
+  shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
+  register: opsmanager_apikey
+  when: mongodb_repo == "mongodb-org-3.4.repo"
+
+- name: "Create Agent key with API call"
+  uri:
+    url: "http://192.168.1.100:8080/api/public/v1.0/groups/{{opsmanager_groupid.stdout_lines[0]}}/agentapikeys?pretty=true"
+    validate_certs: no
+    method: POST
+    #follow_redirects: all
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: '{"desc":"Initial API Key"}'
+    status_code: 201
+    return_content: yes
+    user: admin
+    password: "{{api_key}}"
+  register: opsmanager_apikey
+  when: not mongodb_repo == "mongodb-org-3.4.repo"
+
+- debug: var=opsmanager_apikey
+- debug: var=opsmanager_apikey.content
+- debug: var=(opsmanager_apikey.content|from_json)['key']
+
 - name: download automation agent
   get_url: url="http://192.168.1.100:8080/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" dest="/tmp/automation-agent.rpm"
 - name: install automation agent
   yum: name=/tmp/automation-agent.rpm state=present
+
 - name: update config mmsGroupId
   shell: perl -pi -e "s/mmsGroupId=*/mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+
 - name: update config mmsApiKey
   shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+  when: mongodb_repo == "mongodb-org-3.4.repo"
+
+- name: update config mmsApiKey
+  shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{(opsmanager_apikey.content|from_json)['key']}}/" /etc/mongodb-mms/automation-agent.config
+  when: not mongodb_repo == "mongodb-org-3.4.repo"
+
 - name: update config mmsBaseUrl
   shell: perl -pi -e "s|mmsBaseUrl=*|mmsBaseUrl=http://192.168.1.100:8080|" /etc/mongodb-mms/automation-agent.config
 - name: setup data directory

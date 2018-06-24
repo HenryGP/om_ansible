@@ -35,6 +35,8 @@
   ignore_errors: yes
   vars_files:
     - vars/om-install-vars.yaml
+  vars:
+    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
   tasks:
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
@@ -60,7 +62,8 @@
   hosts: localhost
   become: yes
   gather_facts: no
-  ignore_errors: no
+  vars_files:
+    - vars/om-install-vars.yaml
   vars:
     api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
     s3_access_key: "{{ lookup('file', '/root/s3_access_key.yaml') }}"
@@ -71,7 +74,8 @@
   hosts: localhost
   become: yes
   gather_facts: no
-  ignore_errors: no
+  vars_files:
+    - vars/om-install-vars.yaml
   vars:
     api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
   tasks:
@@ -80,7 +84,8 @@
   hosts: localhost
   become: yes
   gather_facts: no
-  ignore_errors: no
+  vars_files:
+    - vars/om-install-vars.yaml
   vars:
     api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
   tasks:
