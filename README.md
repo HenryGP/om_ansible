@@ -25,8 +25,15 @@ Minimalistic, disposable Ops Manager environment with Ansible.
 **To use with Docker**
 
 1. [Install Docker Compose](https://docs.docker.com/compose/install/)
-1. **IMPORTANT!** Start the Docker UI and raise the memory limit to at least 4GB. This will avoid any issues with the Ops Manager server particularly.
-   - If running on Mac OS refer to the documentation on [getting started with Docker for Mac](https://docs.docker.com/docker-for-mac/)
+1. **IMPORTANT!** Start the Docker UI and raise the memory limit to at least 4GB. This will avoid any issues with the Ops Manager server particularly. 
+   - Click on the Docker icon at the topbar and select `Preferences`:
+      
+      ![](files/docker_menu.png)
+   - Select 'Advanced' and increase the memory limit to *at least* 4GB.
+      
+      ![](files/docker_memory.png)
+  - Click on 'Apply and restart'
+
 
 **To use with Vagrant**
 1. [Download and install Virtual Box](https://www.virtualbox.org/wiki/Downloads)
