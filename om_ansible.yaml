@@ -36,7 +36,7 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
+    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
@@ -65,9 +65,9 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
-    s3_access_key: "{{ lookup('file', '/root/s3_access_key.yaml') }}"
-    s3_secret_key: "{{ lookup('file', '/root/s3_secret_key.yaml') }}"
+    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    s3_access_key: "{{ lookup('file', './vars/s3_access_key.yaml') }}"
+    s3_secret_key: "{{ lookup('file', './vars/s3_secret_key.yaml') }}"
   tasks:
     - include: tasks/api-create-s3-blockstore.yaml
 - name: "Creating FSStore in Ops Manager"
@@ -77,7 +77,7 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
+    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
     - include: tasks/api-create-fs-store.yaml
 - name: "Creating Oplog Store in Ops Manager"
@@ -87,6 +87,6 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
+    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
     - include: tasks/api-create-oplog-store.yaml

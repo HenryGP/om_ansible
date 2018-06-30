@@ -7,7 +7,9 @@ services:
   - docker
 
 env:
-  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin PLAYBOOKS_PATH=/root/tests/playbooks
+  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM34} MONGO=${MONGO_REPO_34}
+  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM36} MONGO=${MONGO_REPO_36}
+  - ANSIBLE_HOME=/opt/ansible-2.3.1.0/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM40} MONGO=${MONGO_REPO_40}
 
 before_install:
   - sudo apt-get update
@@ -18,16 +20,16 @@ before_install:
 
 script:
   # Check installation of Backing databases and Ops Manager
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_om.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_om.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Install Automation Agent on clients
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_auto_agents.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_auto_agents.yaml "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Install minio S3
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_s3.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_s3.yaml "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Configure S3 blockstore
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_s3_blockstore.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_s3_blockstore.yaml "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Configure Oplog Store
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_oplog_store.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_oplog_store.yaml "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Configure Filesystem Store
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_fsstore.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_fsstore.yaml "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Enable Backup Daemon
-  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_enable_backup_daemon.yaml
+  - docker exec -it omansible_provisioner_1 ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_enable_backup_daemon.yaml "mongodb_repo=${MONGO} om_download_url=${OM}"
