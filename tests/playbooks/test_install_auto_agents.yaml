@@ -5,7 +5,7 @@
   vars_files:
     - ../../vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    api_key: "{{ lookup('file', '../../vars/admin_user_api_key.yaml') }}"
   tasks:
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
