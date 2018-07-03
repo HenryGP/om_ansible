@@ -36,12 +36,12 @@
   register: opsmanager_apikey
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
-- debug: var=opsmanager_apikey
-- debug: var=opsmanager_apikey.content
 - debug: var=(opsmanager_apikey.content|from_json)['key']
+  when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: download automation agent
   get_url: url="http://192.168.1.100:8080/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" dest="/tmp/automation-agent.rpm"
+
 - name: install automation agent
   yum: name=/tmp/automation-agent.rpm state=present
 
@@ -58,7 +58,9 @@
 
 - name: update config mmsBaseUrl
   shell: perl -pi -e "s|mmsBaseUrl=*|mmsBaseUrl=http://192.168.1.100:8080|" /etc/mongodb-mms/automation-agent.config
+
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod
+
 - name: start agent
   service: name=mongodb-mms-automation-agent state=started

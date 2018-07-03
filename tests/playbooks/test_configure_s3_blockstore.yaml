@@ -10,6 +10,6 @@
   vars:
     api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
     s3_access_key: "{{ lookup('file', './vars/s3_access_key.yaml') }}"
-    s3_secret_key: "{{ lookup('file', './vars/s3_secret_key.yaml') }}"  s3_secret_key: "{{ lookup('file', '/root/s3_secret_key.yaml') }}"
+    s3_secret_key: "{{ lookup('file', './vars/s3_secret_key.yaml') }}"
   tasks:
     - include: ../../tasks/api-create-s3-blockstore.yaml
