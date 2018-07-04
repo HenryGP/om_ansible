@@ -11,3 +11,4 @@
     s3_secret_key: "{{ lookup('file', '../../vars/s3_secret_key.yaml') }}"
   tasks:
     - include: ../../tasks/api-create-s3-blockstore.yaml
+      when: not mongodb_repo == "mongodb-org-3.4.repo"

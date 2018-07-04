@@ -9,3 +9,4 @@
     api_key: "{{ lookup('file', '../../vars/admin_user_api_key.yaml') }}"
   tasks:
     - include: ../../tasks/api-create-oplog-store.yaml
+      when: not mongodb_repo == "mongodb-org-3.4.repo"
