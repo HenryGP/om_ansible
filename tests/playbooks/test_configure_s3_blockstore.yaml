@@ -3,9 +3,12 @@
   become: yes
   gather_facts: no
   ignore_errors: no
+  vars_files:
+    - ../../vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', '/root/admin_user_api_key.yaml') }}"
-    s3_access_key: "{{ lookup('file', '/root/s3_access_key.yaml') }}"
-    s3_secret_key: "{{ lookup('file', '/root/s3_secret_key.yaml') }}"
+    api_key: "{{ lookup('file', '../../vars/admin_user_api_key.yaml') }}"
+    s3_access_key: "{{ lookup('file', '../../vars/s3_access_key.yaml') }}"
+    s3_secret_key: "{{ lookup('file', '../../vars/s3_secret_key.yaml') }}"
   tasks:
     - include: ../../tasks/api-create-s3-blockstore.yaml
+      when: not mongodb_repo == "mongodb-org-3.4.repo"

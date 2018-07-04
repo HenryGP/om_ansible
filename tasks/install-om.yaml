@@ -44,7 +44,7 @@
     return_content: yes
   register: api_key
 - name: Saving API key for admin user in local server
-  local_action: copy content={{api_key.json.apiKey}} dest=/root/admin_user_api_key.yaml
+  local_action: copy content={{api_key.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
 - name: API Key for admin user
   debug: var=api_key.json.apiKey
 - name: "Create initial group"
@@ -65,12 +65,10 @@
 #  register: opsmanager_apikey
 #- name: API Key for agents
 #  debug: var=opsmanager_apikey.stdout_lines[0]
-
-
 - name: get automation groupid
   shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
   register: opsmanager_groupid
 - name: Group ID
   debug: var=opsmanager_groupid.stdout_lines[0]
 - name: Saving group ID in local server
-  local_action: copy content={{opsmanager_groupid.stdout_lines[0]}} dest=/root/group_id.yaml
+  local_action: copy content={{opsmanager_groupid.stdout_lines[0]}} dest=/root/vars/group_id.yaml
