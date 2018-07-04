@@ -17,7 +17,6 @@
 - name: get automation apikey
   shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
   register: opsmanager_apikey
-  when: mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: "Create Agent key with API call"
   uri:
@@ -33,10 +32,10 @@
     return_content: yes
     user: admin
     password: "{{api_key}}"
-  register: opsmanager_apikey
+  register: agents_apikey
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
-- debug: var=(opsmanager_apikey.content|from_json)['key']
+- debug: var=(agents_apikey.content|from_json)['key']
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: download automation agent
@@ -53,7 +52,7 @@
   when: mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsApiKey
-  shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{(opsmanager_apikey.content|from_json)['key']}}/" /etc/mongodb-mms/automation-agent.config
+  shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{(agents_apikey.content|from_json)['key']}}/" /etc/mongodb-mms/automation-agent.config
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsBaseUrl
