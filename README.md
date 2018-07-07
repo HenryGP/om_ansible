@@ -7,6 +7,7 @@ Minimalistic, disposable Ops Manager environment with Ansible.
 1. [Installation](#installtion)
 1. [Usage with Docker](#docker)
 1. [Usage with Vagrant](#vagrant)
+1. [Local and internet mode](#provisioningmodes)
 1. [Infrastructure](#infrastructure)
 1. [Additional features](#addedfeatures)
    1. [LDAP](#ldapconfig)
@@ -60,7 +61,7 @@ Minimalistic, disposable Ops Manager environment with Ansible.
 1. Check the container names by executing `docker ps`
 1. ssh into an specific container:
    ```
-   docker exec -ti <container_name> /bin/bash
+   docker exec -ti <container_name> bash
    ```
 1. Pause/resume environment:
    ```
@@ -115,6 +116,11 @@ Access the following UIs using the web browser:
    - Password: Password1!
 - S3 minio UI: http://192.168.1.103:9000
    - Credentials will be provided by Ansible when provisioning.
+
+## Local and internet mode <a name="provisioningmodes"></a>
+
+When provisioning the Ops Manager server, Ansible by default will proceed to download the required _rpm_ package from the URL specified in the `om_download_url` parameter under the _vars_ directory.
+If you have already downloaded a package, you can modify the _vars/om-install-vars.yaml_ and set the `local_mode` variable to `true`. Additionally, rename the downloaded package to _mongodb-mms.rpm_ and place it in the _files_ directory.
 
 ## Infrastructure <a name="infrastructure"></a>
 
