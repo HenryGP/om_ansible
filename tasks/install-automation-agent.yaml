@@ -44,6 +44,10 @@
 - name: install automation agent
   yum: name=/tmp/automation-agent.rpm state=present
 
+- name: enable Automation Agent service
+  service: name=mongodb-mms-automation-agent enabled=yes
+  become: yes
+
 - name: update config mmsGroupId
   shell: perl -pi -e "s/mmsGroupId=*/mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
 

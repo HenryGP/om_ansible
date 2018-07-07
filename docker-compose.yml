@@ -4,6 +4,7 @@ services:
   provisioner:
     build: .
     hostname: provisioner
+    container_name: provisioner
     command: tail -f /dev/null
     networks:
       front:
@@ -12,6 +13,7 @@ services:
   omserver:
     build: ./inventory/clients
     hostname: omserver
+    container_name: omserver
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -27,6 +29,8 @@ services:
   n1:
     build: ./inventory/clients
     hostname: n1
+    container_name: n1
+    mem_limit: 500m
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -40,6 +44,8 @@ services:
   n2:
     build: ./inventory/clients
     hostname: n2
+    container_name: n2
+    mem_limit: 500m
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -53,6 +59,8 @@ services:
   bkp:
     build: ./inventory/clients
     hostname: bkp
+    container_name: bkp
+    mem_limit: 500m
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -67,6 +75,7 @@ services:
   ldapserver:
     build: ./inventory/ldap
     hostname: ldapserver
+    container_name: ldapserver
     mem_limit: 500m
     cap_add:
       - SYS_ADMIN

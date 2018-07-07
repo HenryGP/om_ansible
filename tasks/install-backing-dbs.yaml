@@ -8,6 +8,7 @@
     mode="u=rw,g=r,o=r"
 - name: "Update yum"
   yum: name=* state=latest
+  when: vms
 - name: "Install MongoDB Enterprise dependencies"
   yum: state=present name={{ item }}
   with_items:

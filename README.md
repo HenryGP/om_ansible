@@ -55,7 +55,7 @@ Minimalistic, disposable Ops Manager environment with Ansible.
    ```
 1. Provision containers by executing general Ansible task:
    ```
-   docker exec -it om_ansible_provisioner_1 /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
+   docker exec -it provisioner /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
    ```
 1. Check the container names by executing `docker ps`
 1. ssh into an specific container:
