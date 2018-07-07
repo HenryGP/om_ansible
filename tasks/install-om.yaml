@@ -4,6 +4,17 @@
     url: "{{om_download_url}}"
     dest: /tmp/mongodb-mms.rpm
     force_basic_auth: yes
+  when: not local_mode
+
+- name: "Copy the local installer"
+  copy: 
+    src="../files/mongodb-mms.rpm"
+    dest="/tmp/mongodb-mms.rpm"
+    owner=root 
+    group=root 
+    mode="u=rwx,g=r,o=r"
+  when: local_mode
+
 - name: "Install the RPM"
   yum:
     name: /tmp/mongodb-mms.rpm
@@ -12,6 +23,7 @@
   service:
     name: mongodb-mms
     enabled: yes
+
 - name: "Copy configuration files"
   template: 
     src="../files/conf-mms.properties"
@@ -23,6 +35,10 @@
   file: path=/data/head state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 - name: "Create directory for fsstore"
   file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
+
+- name: "Enabling mongodb-mms service"
+  shell: ln -s /etc/systemd/system/mongodb-mms.service /etc/systemd/system/multi-user.target.wants/
+
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
   become: yes
