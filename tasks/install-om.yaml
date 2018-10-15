@@ -36,6 +36,14 @@
 - name: "Create directory for fsstore"
   file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 
+- name: "Copy SSL related files to Ops Manager server"
+  copy:
+    src="files/ssl"
+    dest="/certs"
+    owner=mongod
+    group=mongod
+    mode="u=rw,g=r,o=r"    
+
 - name: "Enabling mongodb-mms service"
   shell: ln -s /etc/systemd/system/mongodb-mms.service /etc/systemd/system/multi-user.target.wants/
 
