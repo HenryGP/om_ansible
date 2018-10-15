@@ -21,7 +21,7 @@ services:
     ports:
       - "22"
       - "8080:8080"
-      - "2599:2599"
+      - "25999:25999"
     networks:
       front:
         ipv4_address: 192.168.1.100

@@ -13,7 +13,7 @@
     headers:
       Content-Type: "application/json"
     body_format: json
-    body: '{"id":"s3bucket","assignmentEnabled": true,"awsAccessKey":"{{s3_access_key}}","awsSecretKey":"{{s3_secret_key}}","encryptedCredentials": false,"s3BucketEndpoint": "http://192.168.1.103:9000","s3BucketName": "ombucket","uri": "mongodb://192.168.1.100:27017","sseEnabled":true,"ssl":false,"pathStyleAccessEnabled":false}'
+    body: '{"id":"s3bucket","assignmentEnabled": true,"awsAccessKey":"{{s3_access_key}}","awsSecretKey":"{{s3_secret_key}}","encryptedCredentials": false,"s3BucketEndpoint": "http://192.168.1.103:9000","s3BucketName": "ombucket","uri": "mongodb://192.168.1.100:27017","sseEnabled":false,"ssl":false,"pathStyleAccessEnabled":false}'
     status_code: 201
     return_content: yes
     user: admin
