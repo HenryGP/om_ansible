@@ -60,7 +60,10 @@
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsBaseUrl
-  shell: perl -pi -e "s|mmsBaseUrl=*|mmsBaseUrl=http://192.168.1.100:8080|" /etc/mongodb-mms/automation-agent.config
+  replace:
+    path: /etc/mongodb-mms/automation-agent.config
+    regexp: "mmsBaseUrl=.*"
+    replace: "mmsBaseUrl=http://192.168.1.100:8080"
 
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod
