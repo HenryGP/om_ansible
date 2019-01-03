@@ -56,7 +56,7 @@
     delay: 1
 - name: "Create initial user"
   uri:
-    url: "http://192.168.1.100:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=0.0.0.0/0"
+    url: "http://192.168.1.100:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
     method: POST
     validate_certs: no
     follow_redirects: all
