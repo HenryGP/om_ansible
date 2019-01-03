@@ -43,12 +43,12 @@
 #  shell: "grep minio /var/log/messages | grep -E 'AccessKey|SecretKey' | awk '{print $7}' | head -n2"
 #  register: access_credentials
 - name: "getting access key"
-  shell: "systemctl status minio -l | grep 'config host add' | awk '{print $13}'"
+  shell: "grep 'MINIO_ACCESS_KEY' /opt/minio/minio.conf | awk '{gsub('=',' ');print $2}'"
   register: access_key
 - name: "Saving access key in local file"
   local_action: copy content={{access_key.stdout_lines[0]}} dest=/root/vars/s3_access_key.yaml
-- name: "getting access key"
-  shell: "systemctl status minio -l | grep 'config host add' | awk '{print $14}'"
+- name: "getting secret key"
+  shell: "grep 'MINIO_SECRET_KEY' /opt/minio/minio.conf | awk '{gsub('=',' ');print $2}'"
   register: secret_key
 - name: "Saving secret key in local file"
   local_action: copy content={{secret_key.stdout_lines[0]}} dest=/root/vars/s3_secret_key.yaml
