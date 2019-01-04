@@ -36,16 +36,8 @@
 - name: "Create directory for fsstore"
   file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 
-- name: "Copy SSL related files to Ops Manager server"
-  copy:
-    src="files/ssl"
-    dest="/certs"
-    owner=mongod
-    group=mongod
-    mode="u=rw,g=r,o=r"    
-
-- name: "Enabling mongodb-mms service"
-  shell: ln -s /etc/systemd/system/mongodb-mms.service /etc/systemd/system/multi-user.target.wants/
+#- name: "Enabling mongodb-mms service"
+#  shell: ln -s /etc/systemd/system/mongodb-mms.service /etc/systemd/system/multi-user.target.wants/
 
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
@@ -84,11 +76,7 @@
     return_content: yes
     user: admin
     password: "{{api_key.json.apiKey}}"
-#- name: get automation apikey
-#  shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
-#  register: opsmanager_apikey
-#- name: API Key for agents
-#  debug: var=opsmanager_apikey.stdout_lines[0]
+    
 - name: get automation groupid
   shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
   register: opsmanager_groupid

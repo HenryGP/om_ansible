@@ -115,7 +115,8 @@ Access the following UIs using the web browser:
    - User: admin
    - Password: Password1!
 - S3 minio UI: http://192.168.1.103:9000
-   - Credentials will be provided by Ansible when provisioning.
+   - Access key: minio
+   - Secret key: miniostorage
 
 ## Local and internet mode <a name="provisioningmodes"></a>
 
