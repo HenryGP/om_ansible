@@ -1,9 +1,5 @@
 - name: "Print variable"
   debug: var=api_key
-- name: "Print variable"
-  debug: var=s3_access_key
-- name: "Print variable"
-  debug: var=s3_secret_key
 - name: "Configure S3 Blockstore"
   uri:
     url: "http://192.168.1.100:8080/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
@@ -13,7 +9,7 @@
     headers:
       Content-Type: "application/json"
     body_format: json
-    body: '{"id":"s3bucket","assignmentEnabled": true,"awsAccessKey":"{{s3_access_key}}","awsSecretKey":"{{s3_secret_key}}","encryptedCredentials": false,"s3BucketEndpoint": "http://192.168.1.103:9000","s3BucketName": "ombucket","uri": "mongodb://192.168.1.100:27017","sseEnabled":false,"ssl":false,"pathStyleAccessEnabled":false}'
+    body: '{"id":"s3bucket","assignmentEnabled": true,"awsAccessKey":"minio","awsSecretKey":"miniostorage","encryptedCredentials": false,"s3BucketEndpoint": "http://192.168.1.103:9000","s3BucketName": "ombucket","uri": "mongodb://192.168.1.100:27017","sseEnabled":false,"ssl":false,"pathStyleAccessEnabled":false}'
     status_code: 201
     return_content: yes
     user: admin

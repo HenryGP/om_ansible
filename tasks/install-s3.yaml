@@ -42,26 +42,26 @@
 #- name: "Getting access and secret key"
 #  shell: "grep minio /var/log/messages | grep -E 'AccessKey|SecretKey' | awk '{print $7}' | head -n2"
 #  register: access_credentials
-- name: "getting access key"
-  shell: "grep 'MINIO_ACCESS_KEY' /opt/minio/minio.conf | awk '{gsub('=',' ');print $2}'"
-  register: access_key
-- name: "Saving access key in local file"
-  local_action: copy content={{access_key.stdout_lines[0]}} dest=/root/vars/s3_access_key.yaml
-- name: "getting secret key"
-  shell: "grep 'MINIO_SECRET_KEY' /opt/minio/minio.conf | awk '{gsub('=',' ');print $2}'"
-  register: secret_key
-- name: "Saving secret key in local file"
-  local_action: copy content={{secret_key.stdout_lines[0]}} dest=/root/vars/s3_secret_key.yaml
+#- name: "getting access key"
+#  shell: "grep 'MINIO_ACCESS_KEY' /opt/minio/minio.conf | awk '{gsub('=',' ');print $2}'"
+#  register: access_key
+#- name: "Saving access key in local file"
+#  local_action: copy content={{access_key.stdout_lines[0]}} dest=/root/vars/s3_access_key.yaml
+#- name: "getting secret key"
+#  shell: "grep 'MINIO_SECRET_KEY' /opt/minio/minio.conf | awk '{gsub('=',' ');print $2}'"
+#  register: secret_key
+#- name: "Saving secret key in local file"
+#  local_action: copy content={{secret_key.stdout_lines[0]}} dest=/root/vars/s3_secret_key.yaml
 - name: "Copying s3cmd configuration"
   template: 
     src="../files/s3cfg"
     dest="/root/.s3cfg"
     owner=minio
     group=minio
-- name: "Registering access key"
-  shell: echo 'access_key = {{access_key.stdout_lines[0]}}' >> /root/.s3cfg
-- name: "Registering access key"
-  shell: echo 'secret_key = {{secret_key.stdout_lines[0]}}' >> /root/.s3cfg 
+#- name: "Registering access key"
+#  shell: echo 'access_key = {{access_key.stdout_lines[0]}}' >> /root/.s3cfg
+#- name: "Registering access key"
+#  shell: echo 'secret_key = {{secret_key.stdout_lines[0]}}' >> /root/.s3cfg 
 - name: "Install unzip"
   yum: name=unzip state=latest
 - name: "Installing Python dateutil"
@@ -73,7 +73,7 @@
     remote_src: yes
 - name: "Creating S3 bucket"
   shell: /opt/minio/bin/s3cmd-master/s3cmd mb s3://ombucket
-- name: "Displaying Access Key"
-  debug: var=access_key.stdout_lines[0]
-- name: "Displaying Secret Key"
-  debug: var=secret_key.stdout_lines[0]
+#- name: "Displaying Access Key"
+#  debug: var=access_key.stdout_lines[0]
+#- name: "Displaying Secret Key"
+#  debug: var=secret_key.stdout_lines[0]
