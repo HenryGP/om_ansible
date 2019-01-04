@@ -107,3 +107,19 @@
   tasks:
     - include: tasks/api-create-oplog-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
+
+- name: "General tasks on all servers"
+  hosts: all
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  vars_files:
+    - vars/om-install-vars.yaml
+  tasks:
+    - name: "Copy SSL related files to Ops Manager server"
+      copy:
+            src="files/ssl"
+            dest="/certs"
+            owner=mongod
+            group=mongod
+            mode="u=rw,g=r,o=r"
