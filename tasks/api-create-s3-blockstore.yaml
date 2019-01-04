@@ -9,7 +9,21 @@
     headers:
       Content-Type: "application/json"
     body_format: json
-    body: '{"id":"s3bucket","assignmentEnabled": true,"awsAccessKey":"minio","awsSecretKey":"miniostorage","encryptedCredentials": false,"s3BucketEndpoint": "http://192.168.1.103:9000","s3BucketName": "ombucket","uri": "mongodb://192.168.1.100:27017","sseEnabled":false,"ssl":false,"pathStyleAccessEnabled":false}'
+    body: '{"assignmentEnabled": true,
+            "awsAccessKey": "minio",
+            "awsSecretKey": "miniostorage",
+            "encryptedCredentials": false,
+            "id": "s3storage",
+            "labels": [],
+            "loadFactor": 1,
+            "pathStyleAccessEnabled": false,
+            "s3BucketEndpoint": "http://192.168.1.103:9000",
+            "s3BucketName": "ombucket",
+            "s3MaxConnections": 50,
+            "sseEnabled": false,
+            "ssl": false,
+            "uri": "mongodb://192.168.1.100:27017"
+        }'
     status_code: 201
     return_content: yes
     user: admin
