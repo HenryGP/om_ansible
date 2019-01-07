@@ -16,7 +16,11 @@ RUN service slapd start \
     && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/users.ldif \
     && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/groups.ldif \
     && rm -rf /tmp/slapd-deb.conf /tmp/*.ldif \
-    && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com
+    && ldapmodify -Y external -H ldapi:/// -f /tmp/slapdlog.ldif \
+    && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com \
+    && cp /tmp/10-slapd.conf /etc/rsyslog.d/10-slapd.conf \
+    && service slapd restart \
+    && service rsyslog restart
 
 EXPOSE 389
 
