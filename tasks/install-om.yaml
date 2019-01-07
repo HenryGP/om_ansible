@@ -36,9 +36,6 @@
 - name: "Create directory for fsstore"
   file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 
-#- name: "Enabling mongodb-mms service"
-#  shell: ln -s /etc/systemd/system/mongodb-mms.service /etc/systemd/system/multi-user.target.wants/
-
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
   become: yes
