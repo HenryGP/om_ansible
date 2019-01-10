@@ -15,6 +15,22 @@
         mode="u=rw,g=r,o=r"
       when: vms
 
+- name: "General tasks on all servers"
+  hosts: all
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  vars_files:
+    - vars/om-install-vars.yaml
+  tasks:
+    - name: "Copy SSL related files to Ops Manager server"
+      copy:
+            src="files/ssl"
+            dest="/certs"
+            owner=mongod
+            group=mongod
+            mode="u=rw,g=r,o=r"
+
 - name: Installing Ops Manager
   hosts: opsmgr
   become: yes
@@ -78,8 +94,6 @@
     - vars/om-install-vars.yaml
   vars:
     api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
-    s3_access_key: "{{ lookup('file', './vars/s3_access_key.yaml') }}"
-    s3_secret_key: "{{ lookup('file', './vars/s3_secret_key.yaml') }}"
   tasks:
     - include: tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
@@ -107,19 +121,3 @@
   tasks:
     - include: tasks/api-create-oplog-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
-
-- name: "General tasks on all servers"
-  hosts: all
-  become: yes
-  gather_facts: no
-  ignore_errors: yes
-  vars_files:
-    - vars/om-install-vars.yaml
-  tasks:
-    - name: "Copy SSL related files to Ops Manager server"
-      copy:
-            src="files/ssl"
-            dest="/certs"
-            owner=mongod
-            group=mongod
-            mode="u=rw,g=r,o=r"
