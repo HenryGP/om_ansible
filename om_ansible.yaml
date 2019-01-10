@@ -15,22 +15,6 @@
         mode="u=rw,g=r,o=r"
       when: vms
 
-- name: "General tasks on all servers"
-  hosts: all
-  become: yes
-  gather_facts: no
-  ignore_errors: yes
-  vars_files:
-    - vars/om-install-vars.yaml
-  tasks:
-    - name: "Copy SSL related files to Ops Manager server"
-      copy:
-            src="files/ssl"
-            dest="/certs"
-            owner=mongod
-            group=mongod
-            mode="u=rw,g=r,o=r"
-
 - name: Installing Ops Manager
   hosts: opsmgr
   become: yes
@@ -42,6 +26,13 @@
     # Install the Application database
     - name: "Installing Application Database"
       include: tasks/install-backing-dbs.yaml
+    - name: "Copy SSL related files to Ops Manager server"
+      copy:
+            src="files/ssl"
+            dest="/certs"
+            owner=mongod
+            group=mongod
+            mode="u=rw,g=r,o=r"
     # Install Ops Manager
     - name: "Installing Ops Manager Server"
       include: tasks/install-om.yaml
@@ -66,6 +57,22 @@
         owner=mongod
         group=mongod
         mode="u=rw,g=r,o=r"    
+
+- name: "General tasks on all servers"
+  hosts: all
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  vars_files:
+    - vars/om-install-vars.yaml
+  tasks:
+    - name: "Copy SSL related files to Ops Manager server"
+      copy:
+            src="files/ssl"
+            dest="/certs"
+            owner=mongod
+            group=mongod
+            mode="u=rw,g=r,o=r"
 
 - name: "Setting up S3 storage"
   hosts: backup
