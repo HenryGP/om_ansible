@@ -56,16 +56,16 @@ Minimalistic, disposable Ops Manager environment with Ansible.
    ```
 1. Provision containers by executing general Ansible task:
    ```
-   docker exec -it provisioner /opt/ansible-2.3.1.0/bin/ansible-playbook /root/om_ansible.yaml
+   docker-compose exec provisioner ansible-playbook /root/om_ansible.yaml
    ```
 1. Check the container names by executing `docker ps`
 1. ssh into an specific container:
    ```
-   docker exec -ti <container_name> bash
+   docker-compose exec <container_name> bash
    ```
 1. Pause/resume environment:
    ```
-   docker-compose pause/unpause
+   docker-compose [pause|unpause]
    ```
 1. Destroy the containers:
    ``` 
