@@ -2,7 +2,7 @@
   debug: var=api_key
 - name: "Configure S3 Blockstore"
   uri:
-    url: "http://192.168.1.100:8080/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
+    url: "http://omserver:8080/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
     validate_certs: no
     method: POST
     headers:
@@ -21,7 +21,7 @@
             "s3MaxConnections": 50,
             "sseEnabled": false,
             "ssl": false,
-            "uri": "mongodb://192.168.1.100:27017"
+            "uri": "mongodb://omserver:27017"
         }'
     status_code: 201
     return_content: yes

@@ -45,7 +45,7 @@
     delay: 1
 - name: "Create initial user"
   uri:
-    url: "http://192.168.1.100:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
+    url: "http://omserver:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
     method: POST
     validate_certs: no
     follow_redirects: all
@@ -62,7 +62,7 @@
   debug: var=api_key.json.apiKey
 - name: "Create initial group"
   uri:
-    url: "http://192.168.1.100:8080/api/public/v1.0/groups?pretty=true"
+    url: "http://omserver:8080/api/public/v1.0/groups?pretty=true"
     validate_certs: no
     method: POST
     headers:
