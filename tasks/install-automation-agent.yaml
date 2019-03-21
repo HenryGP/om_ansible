@@ -27,17 +27,17 @@
     - tcp_wrappers-libs
 
 - name: get automation groupid
-  shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
+  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
   register: opsmanager_groupid
 - debug: var=opsmanager_groupid
 
 - name: get automation apikey
-  shell: mongo 192.168.1.100:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
+  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
   register: opsmanager_apikey
 
 - name: "Create Agent key with API call"
   uri:
-    url: "http://192.168.1.100:8080/api/public/v1.0/groups/{{opsmanager_groupid.stdout_lines[0]}}/agentapikeys?pretty=true"
+    url: "http://omserver:8080/api/public/v1.0/groups/{{opsmanager_groupid.stdout_lines[0]}}/agentapikeys?pretty=true"
     validate_certs: no
     method: POST
     #follow_redirects: all
@@ -56,7 +56,7 @@
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: download automation agent
-  get_url: url="http://192.168.1.100:8080/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" dest="/tmp/automation-agent.rpm"
+  get_url: url="http://omserver:8080/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" dest="/tmp/automation-agent.rpm"
 
 - name: install automation agent
   yum: name=/tmp/automation-agent.rpm state=present
@@ -80,7 +80,7 @@
   replace:
     path: /etc/mongodb-mms/automation-agent.config
     regexp: "mmsBaseUrl=.*"
-    replace: "mmsBaseUrl=http://192.168.1.100:8080"
+    replace: "mmsBaseUrl=http://omserver:8080"
 
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod
