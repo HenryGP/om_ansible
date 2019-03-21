@@ -74,21 +74,21 @@
 - name: update config mmsApiKey
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
-    regext: '^mmsApiKey='
+    regexp: '^mmsApiKey='
     line: 'mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}'
   when: mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsApiKey
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
-    regext: '^mmsApiKey='
+    regexp: '^mmsApiKey='
     line: "mmsApiKey={{(agents_apikey.content|from_json)['key']}}"
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsBaseUrl
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
-    regext: '^mmsBaseUrl='
+    regexp: '^mmsBaseUrl='
     line: 'mmsBaseUrl=http://omserver:8080'  
 
 - name: setup data directory
