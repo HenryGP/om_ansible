@@ -82,7 +82,7 @@
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
     regext: '^mmsApiKey='
-    line: 'mmsApiKey={{(agents_apikey.content|from_json)['key']}}'
+    line: "mmsApiKey={{(agents_apikey.content|from_json)['key']}}"
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsBaseUrl
