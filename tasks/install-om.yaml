@@ -44,6 +44,7 @@
     port: 8080
     delay: 120
     sleep: 30
+    timeout: 900
 - name: "Create initial user"
   uri:
     url: "http://omserver:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
