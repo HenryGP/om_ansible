@@ -48,7 +48,7 @@
   service_facts:
   register: services_state
 
-- name: Debug
+- name: 'Debug'
   debug:
     var: services_state
 
