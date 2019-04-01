@@ -44,14 +44,15 @@
     port: 8080
     timeout: 600
 
-- name: 'collect facts about system services'
-  service_facts:
+- name: 'Debug service'
+  command: systemctl status {{ item }}
+  with_items: 'mongodb-mms'
   register: services_state
 
-- name: 'Debug'
+- name: 'Print debug flag'
   debug:
     var: services_state
-
+  
 - name: "Create initial user"
   uri:
     url: "http://omserver:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
