@@ -18,7 +18,6 @@
             "pathStyleAccessEnabled": false,
             "s3BucketEndpoint": "http://192.168.1.103:9000",
             "s3BucketName": "ombucket",
-            "s3MaxConnections": 50,
             "sseEnabled": false,
             "ssl": false,
             "uri": "mongodb://omserver:27017"
