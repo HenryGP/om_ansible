@@ -1,7 +1,7 @@
 ---
 # Virtual Machines vs Containers
 vms: false
-local_mode: false
+local_mode: true
 # MongoDB repositories for backing databases
 mongodb_repo: mongodb-org-4.0.repo
 # URL for Ops Manager packages
