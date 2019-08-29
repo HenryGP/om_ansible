@@ -24,26 +24,124 @@
     name: mongodb-mms
     enabled: yes
 
-- name: "Copy configuration files"
-  template: 
-    src="../files/conf-mms.properties"
-    dest="/opt/mongodb/mms/conf/conf-mms.properties"
-    owner=root 
-    group=root 
-    mode="u=rw,g=r,o=r"
 - name: "Create directory for head database"
   file: path=/data/head state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
+
 - name: "Create directory for fsstore"
   file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
+
+- name: Modify startup config to speedup process
+  replace:
+    path: /opt/mongodb/mms/conf/mms.conf
+    regexp: '^JAVA_MMS_UI_OPTS="\${JAVA_MMS_UI_OPTS} -Dxgen\.webServerGzipEnabled=true.*'
+    replace: 'JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dxgen.webServerGzipEnabled=true -Dskip.migrate=true -Dskip.agent.download=true -Dskip.clear.lock=true"'
+
+- name: Adding centralUrl to configuration
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.centralUrl=.*'
+    line: 'mms.centralUrl=http://omserver:8080'
+
+- name: Replacing mongoUri
+  replace:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mongo.mongoUri=.*'
+    replace: 'mongo.mongoUri=mongodb://omserver:27017'
+
+- name: Adding mms.fromEmailAddr
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.fromEmailAddr='
+    line: mms.fromEmailAddr=om@mongodb.com
+
+- name: Adding mms.adminEmailAddr
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.adminEmailAddr='
+    line: mms.adminEmailAddr=om@mongodb.com
+
+- name: Adding mms.replyToEmailAddr
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.replyToEmailAddr='
+    line: mms.replyToEmailAddr=om@mongodb.com
+
+- name: Adding mms.adminEmailAddr
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.adminEmailAddr='
+    line: mms.adminEmailAddr=om@mongodb.com
+
+- name: Adding mms.emailDaoClass
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.emailDaoClass='
+    line: mms.emailDaoClass=com.xgen.svc.core.dao.email.JavaEmailDao
+
+- name: Adding mms.mail.transport
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.mail.transport='
+    line: mms.mail.transport=smtp
+
+- name: Adding mms.mail.hostname
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.mail.hostname='
+    line: mms.mail.hostname=localhost
+
+- name: Adding mms.mail.port
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.mail.port='
+    line: mms.mail.port=80
+    
+- name: Adding mms.ignoreInitialUiSetup
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.ignoreInitialUiSetup='
+    line: mms.ignoreInitialUiSetup=true
+
+- name: Adding mongodb.release.autoDownload
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mongodb.release.autoDownload='
+    line: mongodb.release.autoDownload=true
+
+- name: Adding mongodb.release.autoDownload.enterprise
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mongodb.release.autoDownload.enterprise='
+    line: mongodb.release.autoDownload.enterprise=true
+
+- name: Adding brs.queryable.pem
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^brs.queryable.pem='
+    line: brs.queryable.pem=/certs/ssl/queryable.pem
+
+- name: Adding brs.queryable.lruCacheCapacityMB
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^brs.queryable.lruCacheCapacityMB='
+    line: brs.queryable.lruCacheCapacityMB=256
+
+- name: Adding mms.preflight.run
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.preflight.run='
+    line: mms.preflight.run=true
 
 - name: "Start mongodb-mms service"
   service: name=mongodb-mms state=started
   become: yes
+
 - name: "Wait for port 8080 to become available"
   wait_for:
     port: 8080
     delay: 120
     sleep: 30
+
 - name: "Create initial user"
   uri:
     url: "http://omserver:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
@@ -57,10 +155,13 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: api_key
+
 - name: Saving API key for admin user in local server
   local_action: copy content={{api_key.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
+
 - name: API Key for admin user
   debug: var=api_key.json.apiKey
+
 - name: "Create initial group"
   uri:
     url: "http://omserver:8080/api/public/v1.0/groups?pretty=true"
