@@ -66,21 +66,30 @@
   become: yes
 
 - name: update config mmsGroupId
-  shell: perl -pi -e "s/mmsGroupId=*/mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+  lineinfile:
+    path: /etc/mongodb-mms/automation-agent.config
+    regexp: '^mmsGroupId='
+    line: 'mmsGroupId={{opsmanager_groupid.stdout_lines[0]}}'
 
 - name: update config mmsApiKey
-  shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}/" /etc/mongodb-mms/automation-agent.config
+  lineinfile:
+    path: /etc/mongodb-mms/automation-agent.config
+    regexp: '^mmsApiKey='
+    line: 'mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}'
   when: mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsApiKey
-  shell: perl -pi -e "s/mmsApiKey=*/mmsApiKey={{(agents_apikey.content|from_json)['key']}}/" /etc/mongodb-mms/automation-agent.config
+  lineinfile:
+    path: /etc/mongodb-mms/automation-agent.config
+    regexp: '^mmsApiKey='
+    line: "mmsApiKey={{(agents_apikey.content|from_json)['key']}}"
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsBaseUrl
-  replace:
+  lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
-    regexp: "mmsBaseUrl=.*"
-    replace: "mmsBaseUrl=http://omserver:8080"
+    regexp: '^mmsBaseUrl='
+    line: 'mmsBaseUrl=http://omserver:8080'  
 
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod
