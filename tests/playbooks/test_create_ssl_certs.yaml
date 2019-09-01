@@ -12,6 +12,10 @@
   become: yes
   gather_facts: no
   tasks:
+    - name: Create directory for certificates over all hosts
+      file:
+        path: /certs
+        state: directory
     - name: "Moving ca.pem into /certs"
       copy:
         src="../../files/ssl/ca.pem"
