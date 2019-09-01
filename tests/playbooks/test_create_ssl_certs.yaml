@@ -14,7 +14,7 @@
   tasks:
     - name: "Moving ca.pem into /certs"
       copy:
-        src="files/ssl/ca.pem"
+        src="../../files/ssl/ca.pem"
         dest="/certs"
         owner=root
         group=root
@@ -27,7 +27,7 @@
   tasks:
     - name: "Moving queryable.pem into /certs"
       copy:
-        src="files/ssl/queryable.pem"
+        src="../../files/ssl/queryable.pem"
         dest="/certs"
         owner=root
         group=root
@@ -40,7 +40,7 @@
   tasks:
     - name: "Copying client certs"
       copy:
-            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_client.pem"
+            src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_client.pem"
             dest="/certs"
             owner=root
             group=root
@@ -60,7 +60,7 @@
   tasks:
     - name: "Copying server certs to /certs"
       copy:
-            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_server.pem"
+            src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_server.pem"
             dest="/certs"
             owner=root
             group=root
