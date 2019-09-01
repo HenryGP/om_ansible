@@ -1,0 +1,67 @@
+---
+- name: "Generating SSL certificates"
+  hosts: localhost # Runs on the provisioner and later distributes certs
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: "Creating PEM files"
+      include: ../../tasks/ssl-creation.yaml
+
+- name: "Distributing CA on all hosts"
+  hosts: all 
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: "Moving ca.pem into /certs"
+      copy:
+        src="files/ssl/ca.pem"
+        dest="/certs"
+        owner=root
+        group=root
+        mode="u=rw,g=r,o=r"
+
+- name: "Distributing queryable.pem on Ops Manager host"
+  hosts: opsmgr 
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: "Moving queryable.pem into /certs"
+      copy:
+        src="files/ssl/queryable.pem"
+        dest="/certs"
+        owner=root
+        group=root
+        mode="u=rw,g=r,o=r"
+
+- name: "Distributing SSL certificates on clients"
+  hosts: node1 node2 
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: "Copying client certs"
+      copy:
+            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_client.pem"
+            dest="/certs"
+            owner=root
+            group=root
+            mode="u=rw,g=r,o=r"
+    - name: "Copying internalAut certs"
+      copy:
+            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem"
+            dest="/certs"
+            owner=root
+            group=root
+            mode="u=rw,g=r,o=r"
+
+- name: "Distributing SSL certificates on servers"
+  hosts: opsmgr node1 node2 backup 
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: "Copying server certs to /certs"
+      copy:
+            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_server.pem"
+            dest="/certs"
+            owner=root
+            group=root
+            mode="u=rw,g=r,o=r"

@@ -118,7 +118,7 @@
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^brs.queryable.pem='
-    line: brs.queryable.pem=/certs/ssl/queryable.pem
+    line: brs.queryable.pem=/certs/queryable.pem
 
 - name: Adding brs.queryable.lruCacheCapacityMB
   lineinfile:

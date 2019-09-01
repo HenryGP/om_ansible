@@ -14,6 +14,10 @@
         group=root 
         mode="u=rw,g=r,o=r"
       when: vms
+    - name: Create directory for certificates over all hosts
+      file:
+        path: /certs
+        state: directory
 
 - name: "Generating SSL certificates"
   hosts: localhost # Runs on the provisioner and later distributes certs
@@ -30,7 +34,20 @@
   tasks:
     - name: "Moving ca.pem into /certs"
       copy:
-        src="files/ssl"
+        src="files/ssl/ca.pem"
+        dest="/certs"
+        owner=root
+        group=root
+        mode="u=rw,g=r,o=r"
+
+- name: "Distributing queryable.pem on Ops Manager host"
+  hosts: opsmgr 
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: "Moving queryable.pem into /certs"
+      copy:
+        src="files/ssl/queryable.pem"
         dest="/certs"
         owner=root
         group=root
@@ -116,18 +133,6 @@
   tasks:
     - include: tasks/api-enable-backup-daemon.yaml
 
-- name: "Creating S3 blockstore in Ops Manager"
-  hosts: localhost
-  become: yes
-  gather_facts: no
-  vars_files:
-    - vars/om-install-vars.yaml
-  vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
-  tasks:
-    - include: tasks/api-create-s3-blockstore.yaml
-      when: not mongodb_repo == "mongodb-org-3.4.repo"
-
 - name: "Creating FSStore in Ops Manager"
   hosts: localhost
   become: yes
@@ -150,4 +155,16 @@
     api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
     - include: tasks/api-create-oplog-store.yaml
+      when: not mongodb_repo == "mongodb-org-3.4.repo"
+
+- name: "Creating S3 blockstore in Ops Manager"
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  vars_files:
+    - vars/om-install-vars.yaml
+  vars:
+    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+  tasks:
+    - include: tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"

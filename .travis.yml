@@ -20,17 +20,19 @@ before_install:
   - docker network ls
 
 script:
+  # Check creation of SSL certs
+  - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_create_ssl_certs.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Check installation of Backing databases and Ops Manager
   - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_om.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Install Automation Agent on clients
   - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_auto_agents.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Install minio S3
   - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_install_s3.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
-  # Configure S3 blockstore
-  - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_s3_blockstore.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
+  # Enable Backup Daemon
+  - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_enable_backup_daemon.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"  
   # Configure Oplog Store
   - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_oplog_store.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
   # Configure Filesystem Store
   - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_fsstore.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
-  # Enable Backup Daemon
-  - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_enable_backup_daemon.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
+  # Configure S3 blockstore
+  - docker exec -it provisioner ${ANSIBLE_HOME}/ansible-playbook ${PLAYBOOKS_PATH}/test_configure_s3_blockstore.yaml --extra-vars "mongodb_repo=${MONGO} om_download_url=${OM}"
