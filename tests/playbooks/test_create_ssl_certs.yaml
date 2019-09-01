@@ -47,7 +47,7 @@
             mode="u=rw,g=r,o=r"
     - name: "Copying internalAut certs"
       copy:
-            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem"
+            src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem"
             dest="/certs"
             owner=root
             group=root
