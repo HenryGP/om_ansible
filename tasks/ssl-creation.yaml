@@ -1,0 +1,107 @@
+---
+- name: Generate 4096 bits, RSA private keys
+  openssl_privatekey:
+    path: /root/files/ssl/{{ item }}.key
+  with_items:
+    - omserver
+    - n1
+    - n2
+    - bkp
+
+- name: Generate client certificate requests
+  openssl_csr:
+    path: /root/files/ssl/{{ item }}_client.csr
+    privatekey_path: /root/files/ssl/{{ item }}.key
+    common_name: "{{ item }}"
+    extended_key_usage: clientAuth
+  with_items:
+    - n1
+    - n2
+
+- name: Generate server certificate requests
+  openssl_csr:
+    path: /root/files/ssl/{{ item }}_server.csr
+    privatekey_path: /root/files/ssl/{{ item }}.key
+    common_name: "{{ item }}"
+    extended_key_usage: serverAuth
+  with_items:
+    - omserver
+    - n1
+    - n2
+    - bkp
+
+- name: Generate internalAuth (server + client) certificate requests
+  openssl_csr:
+    path: /root/files/ssl/{{ item }}_internal.csr
+    privatekey_path: /root/files/ssl/{{ item }}.key
+    common_name: "{{ item }}"
+    extended_key_usage: 
+      - serverAuth
+      - clientAuth
+  with_items:
+    - n1
+    - n2
+
+- name: Generate an OpenSSL certificate for clients signed with om_ansible CA
+  openssl_certificate:
+    path: /root/files/ssl/{{ item }}_client.pem
+    csr_path: /root/files/ssl/{{ item }}_client.csr
+    ownca_path: /root/files/ssl/ca.pem
+    ownca_privatekey_path: /root/files/ssl/ca.pem
+    provider: ownca
+  with_items:
+    - n1
+    - n2
+
+- name: Generate an OpenSSL certificate for clients signed with om_ansible CA
+  openssl_certificate:
+    path: /root/files/ssl/{{ item }}_server.pem
+    csr_path: /root/files/ssl/{{ item }}_server.csr
+    ownca_path: /root/files/ssl/ca.pem
+    ownca_privatekey_path: /root/files/ssl/ca.pem
+    provider: ownca
+  with_items:
+    - omserver
+    - n1
+    - n2
+    - bkp
+
+- name: Generate an OpenSSL certificate for internalAuth (server + client) signed with om_ansible CA
+  openssl_certificate:
+    path: /root/files/ssl/{{ item }}_internal.pem
+    csr_path: /root/files/ssl/{{ item }}_internal.csr
+    ownca_path: /root/files/ssl/ca.pem
+    ownca_privatekey_path: /root/files/ssl/ca.pem
+    provider: ownca
+  with_items:
+    - n1
+    - n2
+
+- name: Client cert + key concatenation
+  lineinfile: 
+    dest: /root/files/ssl/{{ item }}_client.pem
+    regexp: -----BEGIN RSA PRIVATE KEY----- 
+    line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
+  with_items:
+    - n1
+    - n2
+
+- name: Server cert + key concatenation
+  lineinfile: 
+    dest: /root/files/ssl/{{ item }}_server.pem
+    regexp: -----BEGIN RSA PRIVATE KEY----- 
+    line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
+  with_items:
+    - omserver
+    - n1
+    - n2
+    - bkp 
+
+- name: Internal cert + key concatenation
+  lineinfile: 
+    dest: /root/files/ssl/{{ item }}_internal.pem
+    regexp: -----BEGIN RSA PRIVATE KEY----- 
+    line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
+  with_items:
+    - n1
+    - n2     
