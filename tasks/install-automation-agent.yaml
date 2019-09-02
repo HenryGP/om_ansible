@@ -40,7 +40,7 @@
 
 - name: "Create Agent key with API call"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/groups/{{opsmanager_groupid.stdout_lines[0]}}/agentapikeys?pretty=true"
+    url: "{{ om_url }}/api/public/v1.0/groups/{{opsmanager_groupid.stdout_lines[0]}}/agentapikeys?pretty=true"
     validate_certs: no
     method: POST
     #follow_redirects: all
@@ -59,7 +59,10 @@
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: download automation agent
-  get_url: url="http://omserver:8080/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" dest="/tmp/automation-agent.rpm"
+  get_url: 
+    url: "{{ om_url }}/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" 
+    dest: "/tmp/automation-agent.rpm"
+    validate_certs: no
 
 - name: install automation agent
   yum: name=/tmp/automation-agent.rpm state=present
@@ -92,7 +95,14 @@
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
     regexp: '^mmsBaseUrl='
-    line: 'mmsBaseUrl=http://omserver:8080'  
+    line: 'mmsBaseUrl={{ om_url }}'  
+
+- name: Configure trusted MMS certificate parameter
+  lineinfile:
+    path: /etc/mongodb-mms/automation-agent.config
+    regexp: '^sslTrustedMMSServerCertificate='
+    line: 'sslTrustedMMSServerCertificate=/certs/ca.pem'
+  when: om_https
 
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod

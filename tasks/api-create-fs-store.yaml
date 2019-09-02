@@ -2,7 +2,7 @@
   debug: var=api_key
 - name: "Create FS Store"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/admin/backup/snapshot/fileSystemConfigs?pretty=true"
+    url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/fileSystemConfigs?pretty=true"
     validate_certs: no
     method: POST
     headers:
