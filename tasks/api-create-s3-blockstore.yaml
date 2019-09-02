@@ -2,7 +2,7 @@
   debug: var=api_key
 - name: "Configure S3 Blockstore"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
+    url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
     validate_certs: no
     method: POST
     headers:

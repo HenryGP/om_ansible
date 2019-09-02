@@ -10,5 +10,13 @@
     s3_access_key: "minio"
     s3_secret_key: "miniostorage"
   tasks:
+    - name: Set Ops Manager URL for http
+      set_fact:
+        om_url: "http://omserver:8080"
+      when: not om_https
+    - name: Set Ops Manager URL for https
+      set_fact:
+        om_url: "https://omserver:8443"
+      when: om_https
     - include: ../../tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"

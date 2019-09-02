@@ -81,6 +81,7 @@
   lineinfile: 
     dest: /root/files/ssl/{{ item }}_client.pem
     regexp: -----BEGIN RSA PRIVATE KEY----- 
+    state: present
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - n1
@@ -90,6 +91,7 @@
   lineinfile: 
     dest: /root/files/ssl/{{ item }}_server.pem
     regexp: -----BEGIN RSA PRIVATE KEY----- 
+    state: present
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - omserver
@@ -101,6 +103,7 @@
   lineinfile: 
     dest: /root/files/ssl/{{ item }}_internal.pem
     regexp: -----BEGIN RSA PRIVATE KEY----- 
+    state: present
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - n1
