@@ -1,5 +1,5 @@
 - name: "Creating S3 blockstore in Ops Manager"
-  hosts: localhost
+  hosts: opsmgr
   become: yes
   gather_facts: no
   ignore_errors: no
