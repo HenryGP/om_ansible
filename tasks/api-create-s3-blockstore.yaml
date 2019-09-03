@@ -1,31 +1,66 @@
+---
 - name: "Print variable"
   debug: var=api_key
+- name: "Variable test"
+  command: rpm -q mongodb-mms.x86_64 --queryformat "%{VERSION}\n"
+  register: om_version
+
+- name: Set Ops Manager URL for https
+  set_fact:
+    call_body: '{  "assignmentEnabled": true,
+            "awsAccessKey": "minio",
+            "awsSecretKey": "miniostorage",
+            "pathStyleAccessEnabled":false,
+            "encryptedCredentials": false,
+            "id": "s3Store",
+            "labels": [],
+            "loadFactor": 50,
+            "s3MaxConnections":"50",
+            "s3BucketEndpoint": "http://192.168.1.103:9000", 
+            "s3BucketName": "ombucket",
+            "sseEnabled": false,
+            "ssl": false,
+            "uri": "mongodb://192.168.1.100:27017",
+            "acceptedTos":true
+        }'
+  when: om_version.stdout_lines[0] is version_compare("4.2",">=")  
+
+- name: Set Ops Manager URL for https
+  set_fact:
+    call_body: '{
+        "assignmentEnabled": true,
+        "awsAccessKey": "minio",
+        "awsSecretKey": "miniostorage",
+        "encryptedCredentials": false,
+        "id": "s3storage",
+        "labels": [],
+        "loadFactor": 1,
+        "pathStyleAccessEnabled": false,
+        "s3MaxConnections":"50",
+        "s3BucketEndpoint": "http://192.168.1.103:9000",
+        "s3BucketName": "ombucket",
+        "sseEnabled": false,
+        "ssl": false,
+        "uri": "mongodb://192.168.1.100:27017"
+    }'
+  when: om_version.stdout_lines[0] is version_compare("4.2","<")  
+  
+- name: "Printing result of API call"
+  debug: var=call_body
+
 - name: "Configure S3 Blockstore"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
+    url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
     validate_certs: no
     method: POST
     headers:
       Content-Type: "application/json"
     body_format: json
-    body: '{"assignmentEnabled": true,
-            "awsAccessKey": "minio",
-            "awsSecretKey": "miniostorage",
-            "encryptedCredentials": false,
-            "id": "s3storage",
-            "labels": [],
-            "loadFactor": 1,
-            "pathStyleAccessEnabled": false,
-            "s3BucketEndpoint": "http://192.168.1.103:9000",
-            "s3BucketName": "ombucket",
-            "sseEnabled": false,
-            "ssl": false,
-            "uri": "mongodb://omserver:27017"
-        }'
+    body: '{{ call_body }}'
     status_code: 201
     return_content: yes
-    user: admin
+    user: '{{ om_username }}'
     password: "{{api_key}}"
-  register: result
+    register: result
 - name: "Printing result of API call"
   debug: var=result

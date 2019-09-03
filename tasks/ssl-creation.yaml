@@ -80,7 +80,7 @@
 - name: Client cert + key concatenation
   lineinfile: 
     dest: /root/files/ssl/{{ item }}_client.pem
-    regexp: -----BEGIN RSA PRIVATE KEY----- 
+    regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - n1
@@ -89,7 +89,7 @@
 - name: Server cert + key concatenation
   lineinfile: 
     dest: /root/files/ssl/{{ item }}_server.pem
-    regexp: -----BEGIN RSA PRIVATE KEY----- 
+    regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - omserver
@@ -100,7 +100,7 @@
 - name: Internal cert + key concatenation
   lineinfile: 
     dest: /root/files/ssl/{{ item }}_internal.pem
-    regexp: -----BEGIN RSA PRIVATE KEY----- 
+    regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - n1

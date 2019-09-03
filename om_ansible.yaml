@@ -18,6 +18,14 @@
       file:
         path: /certs
         state: directory
+    - name: Set Ops Manager URL for http
+      set_fact:
+        om_url: "http://omserver:8080"
+      when: not om_https
+    - name: Set Ops Manager URL for https
+      set_fact:
+        om_url: "https://omserver:8443"
+      when: om_https
 
 - name: "Generating SSL certificates"
   hosts: localhost # Runs on the provisioner and later distributes certs
@@ -53,34 +61,6 @@
         group=root
         mode="u=rw,g=r,o=r"
 
-- name: Installing Ops Manager
-  hosts: opsmgr
-  become: yes
-  gather_facts: no
-  vars_files:
-    - vars/om-install-vars.yaml
-  tasks:
-    # Install the Application database
-    - name: "Installing Application Database"
-      include: tasks/install-backing-dbs.yaml
-    # Install Ops Manager
-    - name: "Installing Ops Manager Server"
-      include: tasks/install-om.yaml
-
-- name: "Getting clients ready"
-  hosts: node1 node2
-  become: yes
-  gather_facts: no
-  ignore_errors: yes
-  vars_files:
-    - vars/om-install-vars.yaml
-  vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
-  tasks:
-    #Install the Automation Agent on all clients
-    - name: "Install Automation Agents"
-      include: tasks/install-automation-agent.yaml  
-
 - name: "Distributing SSL certificates on clients"
   hosts: node1 node2 
   become: yes
@@ -114,6 +94,34 @@
             group=root
             mode="u=rw,g=r,o=r"
 
+- name: Installing Ops Manager
+  hosts: opsmgr
+  become: yes
+  gather_facts: no
+  vars_files:
+    - vars/om-install-vars.yaml
+  tasks:
+    # Install the Application database
+    - name: "Installing Application Database"
+      include: tasks/install-backing-dbs.yaml
+    # Install Ops Manager
+    - name: "Installing Ops Manager Server"
+      include: tasks/install-om.yaml
+
+- name: "Getting clients ready"
+  hosts: node1 node2
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  vars_files:
+    - vars/om-install-vars.yaml
+  vars:
+    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+  tasks:
+    #Install the Automation Agent on all clients
+    - name: "Install Automation Agents"
+      include: tasks/install-automation-agent.yaml  
+
 - name: "Setting up S3 storage"
   hosts: backup
   become: yes
@@ -142,6 +150,14 @@
   vars:
     api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
+    - name: Set Ops Manager URL for http
+      set_fact:
+        om_url: "http://omserver:8080"
+      when: not om_https
+    - name: Set Ops Manager URL for https
+      set_fact:
+        om_url: "https://omserver:8443"
+      when: om_https
     - include: tasks/api-create-fs-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 
@@ -154,6 +170,14 @@
   vars:
     api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
+    - name: Set Ops Manager URL for http
+      set_fact:
+        om_url: "http://omserver:8080"
+      when: not om_https
+    - name: Set Ops Manager URL for https
+      set_fact:
+        om_url: "https://omserver:8443"
+      when: om_https
     - include: tasks/api-create-oplog-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 
@@ -166,5 +190,13 @@
   vars:
     api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
   tasks:
+    - name: Set Ops Manager URL for http
+      set_fact:
+        om_url: "http://omserver:8080"
+      when: not om_https
+    - name: Set Ops Manager URL for https
+      set_fact:
+        om_url: "https://omserver:8443"
+      when: om_https
     - include: tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"

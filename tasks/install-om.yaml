@@ -40,7 +40,14 @@
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.centralUrl=.*'
-    line: 'mms.centralUrl=http://omserver:8080'
+    line: 'mms.centralUrl={{ om_url }}'
+
+- name: Adding server PEM file to configuration
+  lineinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    regexp: '^mms.https.PEMKeyFile=.*'
+    line: 'mms.https.PEMKeyFile=/certs/omserver_server.pem'    
+  when: om_https
 
 - name: Replacing mongoUri
   replace:
@@ -140,10 +147,17 @@
   wait_for:
     port: 8080
     timeout: 600
+  when: not om_https
+
+- name: "Wait for port 8443 to become available"
+  wait_for:
+    port: 8443
+    timeout: 600
+  when: om_https
 
 - name: "Create initial user"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
+    url: "{{ om_url }}/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
     method: POST
     validate_certs: no
     follow_redirects: all
@@ -163,7 +177,7 @@
 
 - name: "Create initial group"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/groups?pretty=true"
+    url: "{{ om_url }}/api/public/v1.0/groups?pretty=true"
     validate_certs: no
     method: POST
     headers:

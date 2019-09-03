@@ -1,8 +1,9 @@
+---
 - name: "Print variable"
   debug: var=api_key
 - name: "Create Oplog Store"
   uri:
-    url: "http://omserver:8080/api/public/v1.0/admin/backup/oplog/mongoConfigs?pretty=true"
+    url: "{{ om_url }}/api/public/v1.0/admin/backup/oplog/mongoConfigs?pretty=true"
     validate_certs: no
     method: POST
     headers:
@@ -11,7 +12,7 @@
     body: '{"id":"oplog1","assignmentEnabled" : true,"encryptedCredentials" : false,"uri" : "mongodb://omserver:27017","ssl" : false}'
     status_code: 201
     return_content: yes
-    user: admin
+    user: '{{ om_username }}'
     password: "{{api_key}}"
   register: result
 - name: "Printing result of API call"
