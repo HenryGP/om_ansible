@@ -44,7 +44,26 @@
         "uri": "mongodb://192.168.1.100:27017"
     }'
   when: om_version.stdout_lines[0] is version_compare("4.2","<")  
-  
+
+- name: Set Ops Manager URL for https
+  set_fact:
+    call_body: '{
+        "assignmentEnabled": true,
+        "awsAccessKey": "minio",
+        "awsSecretKey": "miniostorage",
+        "encryptedCredentials": false,
+        "id": "s3storage",
+        "labels": [],
+        "loadFactor": 1,
+        "pathStyleAccessEnabled": false,
+        "s3BucketEndpoint": "http://192.168.1.103:9000",
+        "s3BucketName": "ombucket",
+        "sseEnabled": false,
+        "ssl": false,
+        "uri": "mongodb://192.168.1.100:27017"
+    }'
+  when: om_version.stdout_lines[0] is version_compare("3.6","<=") 
+
 - name: "Printing result of API call"
   debug: var=call_body
 
