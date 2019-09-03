@@ -43,7 +43,7 @@
         "ssl": false,
         "uri": "mongodb://192.168.1.100:27017"
     }'
-  when: om_version.stdout_lines[0] is version_compare("4.2","<")  
+  when: om_version.stdout_lines[0] is version_compare("4.2","<") and om_version.stdout_lines[0] is version_compare("4.0",">=")
 
 - name: Set Ops Manager URL for https
   set_fact:
@@ -62,7 +62,7 @@
         "ssl": false,
         "uri": "mongodb://192.168.1.100:27017"
     }'
-  when: om_version.stdout_lines[0] is version_compare("3.6","<=") 
+  when: om_version.stdout_lines[0] is version_compare("4.0","<") 
 
 - name: "Printing result of API call"
   debug: var=call_body
