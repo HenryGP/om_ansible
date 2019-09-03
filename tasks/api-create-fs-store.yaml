@@ -1,3 +1,4 @@
+---
 - name: "Print variable"
   debug: var=api_key
 - name: "Create FS Store"
@@ -11,7 +12,7 @@
     body: '{"id":"fsstore","assignmentEnabled" : false,"loadFactor" : 50,"mmapv1CompressionSetting" : "GZIP","storePath" : "/data/fsstore","wtCompressionSetting" : "NONE"}'
     status_code: 201
     return_content: yes
-    user: admin
+    user: '{{ om_username }}'
     password: "{{api_key}}"
   register: result
 - name: "Printing result of API call"
