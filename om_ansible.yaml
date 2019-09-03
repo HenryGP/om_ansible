@@ -60,6 +60,7 @@
         owner=root
         group=root
         mode="u=rw,g=r,o=r"
+
 - name: "Distributing SSL certificates on clients"
   hosts: node1 node2 
   become: yes
@@ -181,7 +182,7 @@
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: "Creating S3 blockstore in Ops Manager"
-  hosts: opsmgr
+  hosts: localhost
   become: yes
   gather_facts: no
   vars_files:
