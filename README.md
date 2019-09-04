@@ -25,5 +25,15 @@ The default infrastructure consists of the following components:
 
 \* only available if using Docker
 
+## Access to UIs
+Once the infrastructure has been provisioned, the following UIs can be accessed:
+- Ops Manager UI: 
+   - URL: http://localhost:8080 or https://localhost:8443 if [https for Ops Manager](https://github.com/HenryGP/om_ansible/wiki/Security#https-for-ops-manager-server-) was enabled. 
+   - User: admin
+   - Password: Password1!
+- S3 minio UI: http://localhost:9000
+   - Access key: minio
+   - Secret key: miniostorage
+
 ## Further information and resources
 Please refer to this repository's [wiki page](https://github.com/HenryGP/om_ansible/wiki) for more details. 
