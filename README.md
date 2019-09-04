@@ -2,7 +2,7 @@
 
 Minimalistic, disposable Ops Manager environment with Ansible.
 
-# Quickstart
+## Quickstart
 1. Create a local directory to use as home for OM Ansible and clone this repository into that directory:
    ```
    mkdir ~/om_ansible
@@ -12,7 +12,7 @@ Minimalistic, disposable Ops Manager environment with Ansible.
    1. [Usage with Docker](https://github.com/HenryGP/om_ansible/wiki/Usage-with-Docker)
    1. [Usage with Vagrant](https://github.com/HenryGP/om_ansible/wiki/Usage-with-Vagrant)
 
-# Infrastructure
+## Infrastructure
 The default infrastructure consists of the following components:
 
 |Host|IP address|Role|
@@ -25,5 +25,5 @@ The default infrastructure consists of the following components:
 
 \* only available if using Docker
 
-# Further information and resources
+## Further information and resources
 Please refer to this repository's [wiki page](https://github.com/HenryGP/om_ansible/wiki) for more details. 
