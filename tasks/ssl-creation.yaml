@@ -17,6 +17,7 @@
   with_items:
     - n1
     - n2
+    - omserver
 
 - name: Generate server certificate requests
   openssl_csr:
@@ -29,13 +30,14 @@
     - n1
     - n2
     - bkp
+    - kmip
 
 - name: Generate internalAuth (server + client) certificate requests
   openssl_csr:
     path: /root/files/ssl/{{ item }}_internal.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
-    extended_key_usage: 
+    extended_key_usage:
       - serverAuth
       - clientAuth
   with_items:
@@ -52,6 +54,7 @@
   with_items:
     - n1
     - n2
+    - omserver
 
 - name: Generate an OpenSSL certificate for clients signed with om_ansible CA
   openssl_certificate:
@@ -65,6 +68,7 @@
     - n1
     - n2
     - bkp
+    - kmip
 
 - name: Generate an OpenSSL certificate for internalAuth (server + client) signed with om_ansible CA
   openssl_certificate:
@@ -78,16 +82,17 @@
     - n2
 
 - name: Client cert + key concatenation
-  lineinfile: 
+  lineinfile:
     dest: /root/files/ssl/{{ item }}_client.pem
     regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - n1
     - n2
+    - omserver
 
 - name: Server cert + key concatenation
-  lineinfile: 
+  lineinfile:
     dest: /root/files/ssl/{{ item }}_server.pem
     regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
@@ -95,13 +100,14 @@
     - omserver
     - n1
     - n2
-    - bkp 
+    - bkp
+    - kmip
 
 - name: Internal cert + key concatenation
-  lineinfile: 
+  lineinfile:
     dest: /root/files/ssl/{{ item }}_internal.pem
     regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
   with_items:
     - n1
-    - n2     
+    - n2

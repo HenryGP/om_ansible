@@ -7,11 +7,11 @@
     - vars/om-install-vars.yaml
   tasks:
     - name: "Modifying /etc/hosts"
-      template: 
+      template:
         src="files/hosts"
         dest="/etc/hosts"
-        owner=root 
-        group=root 
+        owner=root
+        group=root
         mode="u=rw,g=r,o=r"
       when: vms
     - name: Create directory for certificates over all hosts
@@ -36,7 +36,7 @@
       include: tasks/ssl-creation.yaml
 
 - name: "Distributing CA on all hosts"
-  hosts: all 
+  hosts: all
   become: yes
   gather_facts: no
   tasks:
@@ -49,7 +49,7 @@
         mode="u=rw,g=r,o=r"
 
 - name: "Distributing queryable.pem on Ops Manager host"
-  hosts: opsmgr 
+  hosts: opsmgr
   become: yes
   gather_facts: no
   tasks:
@@ -62,7 +62,7 @@
         mode="u=rw,g=r,o=r"
 
 - name: "Distributing SSL certificates on clients"
-  hosts: node1 node2 
+  hosts: node1 node2 opsmgr
   become: yes
   gather_facts: yes
   tasks:
@@ -73,6 +73,12 @@
             owner=root
             group=root
             mode="u=rw,g=r,o=r"
+
+- name: "Distributing SSL certificates internals for client"
+  hosts: node1 node2
+  become: yes
+  gather_facts: yes
+  tasks:
     - name: "Copying internalAut certs"
       copy:
             src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem"
@@ -82,7 +88,7 @@
             mode="u=rw,g=r,o=r"
 
 - name: "Distributing SSL certificates on servers"
-  hosts: opsmgr node1 node2 backup 
+  hosts: opsmgr node1 node2 backup kmip
   become: yes
   gather_facts: yes
   tasks:
@@ -120,7 +126,7 @@
   tasks:
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
-      include: tasks/install-automation-agent.yaml  
+      include: tasks/install-automation-agent.yaml
 
 - name: "Setting up S3 storage"
   hosts: backup
@@ -182,7 +188,7 @@
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: "Creating S3 blockstore in Ops Manager"
-  hosts: localhost
+  hosts: opsmgr
   become: yes
   gather_facts: no
   vars_files:
@@ -200,3 +206,24 @@
       when: om_https
     - include: tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
+
+- name: "Distributing key file on KMIP"
+  hosts: kmip
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: "Copying key to /certs"
+      copy:
+            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}.key"
+            dest="/certs"
+            owner=root
+            group=root
+            mode="u=rw,g=r,o=r"
+
+- name: "Starting PyKmip server"
+  hosts: kmip
+  become: yes
+  tasks:
+    - service:
+        name: pykmip
+        state: started

@@ -26,7 +26,7 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.100
-  
+
   n1:
     build: ./inventory/clients
     hostname: n1
@@ -35,7 +35,7 @@ services:
     cap_add:
       - SYS_ADMIN
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro    
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
     networks:
@@ -88,6 +88,24 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.104
+
+  kmip:
+    build:
+      context: .
+      dockerfile: ./inventory/kmip/Dockerfile
+    hostname: kmip
+    container_name: kmip
+    mem_limit: 500m
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    ports:
+      - "22"
+      - "5696:5696"
+    networks:
+      front:
+        ipv4_address: 192.168.1.105
 
 networks:
   front:
