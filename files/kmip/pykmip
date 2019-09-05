@@ -1,0 +1,39 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:     pykmip
+# Required-Start:   $remote_fs $syslog
+# Required-Stop:    $remote_fs $syslog
+# Default-Start:    2 3 4 5
+# Default-Stop:
+### END INIT INFO
+
+set -e
+
+PID_FILE=/tmp/pykmip.pid
+case "$1" in
+  start)
+    /usr/bin/pykmip-server & echo $! > $PID_FILE
+    ;;
+  stop)
+    kill `cat $PID_FILE`
+    ;;
+  status)
+    if [ ! -f $PID_FILE ]; then
+      echo "No PIDFILE"
+      exit 1
+    fi
+    if kill -0 `cat $PID_FILE`; then
+      echo "PyKMIP running with PID " `cat $PID_FILE`
+      exit 0
+    else
+      echo "PyKMIP NOT running with PID " `cat $PID_FILE`
+      exit 1
+    fi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/pykmip {start|stop}"
+    exit 1
+esac
+
+exit 0
