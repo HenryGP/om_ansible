@@ -227,3 +227,6 @@
     - service:
         name: pykmip
         state: started
+    - service:
+        name: pykmip
+        enabled: yes

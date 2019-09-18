@@ -22,6 +22,7 @@ The default infrastructure consists of the following components:
 |bkp|192.168.1.103|S3 storage|  
 |provisioner*|192.168.1.99|Ansible provisioner|
 |ldapserver*|192.168.1.104|OpenLDAP server|
+|kmip*|192.168.1.105|KMIP server|
 
 \* only available if using Docker
 
