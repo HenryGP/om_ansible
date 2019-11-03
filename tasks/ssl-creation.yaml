@@ -47,7 +47,7 @@
 
 - name: Generate an OpenSSL certificate for clients signed with om_ansible CA
   openssl_certificate:
-    path: /root/files/ssl/{{ item }}_client.pem
+    path: /root/files/ssl/{{ item }}_client.crt
     csr_path: /root/files/ssl/{{ item }}_client.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
@@ -59,7 +59,7 @@
 
 - name: Generate an OpenSSL certificate for clients signed with om_ansible CA
   openssl_certificate:
-    path: /root/files/ssl/{{ item }}_server.pem
+    path: /root/files/ssl/{{ item }}_server.crt
     csr_path: /root/files/ssl/{{ item }}_server.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
@@ -73,7 +73,7 @@
 
 - name: Generate an OpenSSL certificate for internalAuth (server + client) signed with om_ansible CA
   openssl_certificate:
-    path: /root/files/ssl/{{ item }}_internal.pem
+    path: /root/files/ssl/{{ item }}_internal.crt
     csr_path: /root/files/ssl/{{ item }}_internal.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
@@ -82,21 +82,74 @@
     - n1
     - n2
 
-- name: Client cert + key concatenation
-  lineinfile:
-    dest: /root/files/ssl/{{ item }}_client.pem
-    regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
-    line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
+- name: Checking if client pem file exists
+  stat: 
+    path: /root/files/ssl/{{ item }}_client.pem
+  register: clientpemstat
   with_items:
     - n1
     - n2
     - omserver
 
-- name: Server cert + key concatenation
+- debug:
+    msg: File exists {{ item.stat.path }}
+    verbosity: 2
+  with_items: "{{ clientpemstat.results }}"
+  when: item.stat.exists == true
+
+- name: Get information on existing client pem files keys
+  openssl_privatekey_info:
+    path: "{{ item.stat.path }}"
+  register: clientkeyresult
+  with_items: "{{ clientpemstat.results }}"
+  when: item.stat.exists == true
+
+- debug:
+    var: clientkeyresult
+    verbosity: 2
+
+- name: Get information on existing client pem files certs
+  openssl_certificate_info:
+    path: "{{ item.stat.path }}"
+  register: clientcertresult
+  with_items: "{{ clientpemstat.results }}"
+  when: item.stat.exists == true
+
+- debug:
+    var: clientcertresult
+    verbosity: 2
+
+- debug:
+    msg: Debug cert = {{ clientcertresult.results[item == item.item] }} and key = {{ clientkeyresult.results[item == item.item] }}
+    verbosity: 3
+  with_items: "{{ clientpemstat.results }}"
+  when: item.stat.exists == true
+
+# - assert:
+#     that:
+#       - "{{ clientcertresult.results[item == item.item].public_key == clientkeyresult.results[item == item.item].public_key }}"
+#   with_items: "{{ clientpemstat.results }}"
+#   when: item.stat.exists == true
+
+- name: Create client PEM file
+  copy:
+    src: /root/files/ssl/{{ item.item }}_client.crt
+    dest: /root/files/ssl/{{ item.item }}_client.pem
+  with_items: "{{ clientpemstat.results }}"
+  when: item.stat.exists == false  
+
+- name: Client cert + key concatenation
   lineinfile:
-    dest: /root/files/ssl/{{ item }}_server.pem
+    dest: /root/files/ssl/{{ item.item }}_client.pem
     regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
-    line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
+    line: "{{ lookup('file', '/root/files/ssl/{{ item.item }}.key') }}"
+  with_items: "{{ clientpemstat.results }}"
+  when: item.stat.exists == false
+
+- name: Checking if server pem file exists
+  stat: 
+    path: /root/files/ssl/{{ item }}_server.pem
+  register: serverpemstat
   with_items:
     - omserver
     - n1
@@ -104,11 +157,120 @@
     - bkp
     - kmip
 
-- name: Internal cert + key concatenation
+- debug:
+    msg: File exists {{ item.stat.path }}
+    verbosity: 2
+  with_items: "{{ serverpemstat.results }}"
+  when: item.stat.exists == true
+
+- name: Get information on existing server pem files keys
+  openssl_privatekey_info:
+    path: "{{ item.stat.path }}"
+  register: serverkeyresult
+  with_items: "{{ serverpemstat.results }}"
+  when: item.stat.exists == true
+
+- debug:
+    var: serverkeyresult
+    verbosity: 2
+
+- name: Get information on existing server pem files certs
+  openssl_certificate_info:
+    path: "{{ item.stat.path }}"
+  register: servercertresult
+  with_items: "{{ serverpemstat.results }}"
+  when: item.stat.exists == true
+
+- debug:
+    var: servercertresult
+    verbosity: 2
+
+- debug:
+    msg: Debug cert = {{ servercertresult.results[item == item.item] }} and key = {{ serverkeyresult.results[item == item.item] }}
+    verbosity: 3
+  with_items: "{{ serverpemstat.results }}"
+  when: item.stat.exists == true
+
+# - assert:
+#     that:
+#       - servercertresult.results[item == item.item].public_key == serverkeyresult.results[item == item.item].public_key
+#   with_items: "{{ serverpemstat.results }}"
+#   when: item.stat.exists == true
+
+- name: Create server PEM file
+  copy:
+    src: /root/files/ssl/{{ item.item }}_server.crt
+    dest: /root/files/ssl/{{ item.item }}_server.pem
+  with_items: "{{ serverpemstat.results }}"
+  when: item.stat.exists == false  
+
+- name: Server cert + key concatenation
   lineinfile:
-    dest: /root/files/ssl/{{ item }}_internal.pem
+    dest: /root/files/ssl/{{ item.item }}_server.pem
     regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
-    line: "{{ lookup('file', '/root/files/ssl/{{ item }}.key') }}"
+    line: "{{ lookup('file', '/root/files/ssl/{{ item.item }}.key') }}"
+  with_items: "{{ serverpemstat.results }}"
+  when: item.stat.exists == false
+
+- name: Checking if internal pem file exists
+  stat: 
+    path: /root/files/ssl/{{ item }}_internal.pem
+  register: internalpemstat
   with_items:
     - n1
     - n2
+
+- debug:
+    msg: File exists {{ item.stat.path }}
+    verbosity: 2
+  with_items: "{{ internalpemstat.results }}"
+  when: item.stat.exists == true
+
+- name: Get information on existing internal pem files keys
+  openssl_privatekey_info:
+    path: "{{ item.stat.path }}"
+  register: internalkeyresult
+  with_items: "{{ internalpemstat.results }}"
+  when: item.stat.exists == true
+
+- debug:
+    var: internalkeyresult
+    verbosity: 2
+
+- name: Get information on existing internal pem files certs
+  openssl_certificate_info:
+    path: "{{ item.stat.path }}"
+  register: internalcertresult
+  with_items: "{{ internalpemstat.results }}"
+  when: item.stat.exists == true
+
+- debug:
+    var: internalcertresult
+    verbosity: 2
+
+- debug:
+    msg: Debug cert = {{ internalcertresult.results[item == item.item] }} and key = {{ internalkeyresult.results[item == item.item] }}
+    verbosity: 3
+  with_items: "{{ internalpemstat.results }}"
+  when: item.stat.exists == true
+
+# - assert:
+#     that:
+#       - "{{ internalcertresult.results[item == item.item].public_key == internalkeyresult.results[item == item.item].public_key }}"
+#   with_items: "{{ internalpemstat.results }}"
+#   when: item.stat.exists == true
+
+- name: Create internal PEM file
+  copy:
+    src: /root/files/ssl/{{ item.item }}_internal.crt
+    dest: /root/files/ssl/{{ item.item }}_internal.pem
+  with_items: "{{ internalpemstat.results }}"
+  when: item.stat.exists == false
+
+- name: Internal cert + key concatenation
+  lineinfile:
+    dest: /root/files/ssl/{{ item.item }}_internal.pem
+    regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
+    line: "{{ lookup('file', '/root/files/ssl/{{ item.item }}.key') }}"
+  with_items: "{{ internalpemstat.results }}"
+  when: item.stat.exists == false
