@@ -12,12 +12,22 @@
     url: "{{minio_url}}"
     dest: /opt/minio/bin/minio
     force_basic_auth: yes
-- name: "Adjusting file permissions"
+  when: not local_mode
+- name: "Adjusting minio binary permissions"
   file:
     path: /opt/minio/bin/minio
     owner: minio
     group: minio
     mode: 0744
+  when: not local mode
+- name: "Copy local minio binary"
+  copy: 
+    src: "../files/minio"
+    dest: "/opt/minio/bin/minio"
+    owner: minio 
+    group: minio 
+    mode: 0744
+  when: local_mode
 - name: "Placing minio configuration file"
   template: 
     src="../files/minio.conf"
