@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     opsmgr.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 4096]
+      v.customize ["modifyvm", :id, "--memory", 8192]
       v.customize ["modifyvm", :id, "--name", "omserver"]
     end
   end
@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
 
     node1.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "n1"]
     end
   end
@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
 
     node2.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "n2"]
     end
   end
@@ -67,10 +67,15 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "om_ansible.yaml"
+  config.vm.define 'controller' do |machine|
+    machine.vm.network "private_network", ip: "172.17.177.11"
+
+    machine.vm.provision :ansible_local do |ansible|
+      ansible.playbook       = "om_ansible.yaml"
+      ansible.verbose        = true
+      ansible.install        = true
+      ansible.limit          = "all" # or only "nodes" group, etc.
+      ansible.inventory_path = "inventory"
+    end
   end
-=begin
-ansible.verbose = "vvv"
-=end
 end
