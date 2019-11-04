@@ -19,7 +19,7 @@
     owner: minio
     group: minio
     mode: 0744
-  when: not local mode
+  when: not local_mode
 - name: "Copy local minio binary"
   copy: 
     src: "../files/minio"
