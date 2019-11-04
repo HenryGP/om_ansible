@@ -30,11 +30,11 @@
 - name: "Create directory for fsstore"
   file: path=/data/fsstore state=directory mode=0755 owner=mongodb-mms group=mongodb-mms
 
-- name: Modify startup config to speedup process
-  replace:
-    path: /opt/mongodb/mms/conf/mms.conf
-    regexp: '^JAVA_MMS_UI_OPTS="\${JAVA_MMS_UI_OPTS} -Dxgen\.webServerGzipEnabled=true.*'
-    replace: 'JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dxgen.webServerGzipEnabled=true -Dskip.migrate=true -Dskip.agent.download=true -Dskip.clear.lock=true"'
+# - name: Modify startup config to speedup process
+#   replace:
+#     path: /opt/mongodb/mms/conf/mms.conf
+#     regexp: '^JAVA_MMS_UI_OPTS="\${JAVA_MMS_UI_OPTS} -Dxgen\.webServerGzipEnabled=true.*'
+#     replace: 'JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dxgen.webServerGzipEnabled=true -Dskip.migrate=true -Dskip.agent.download=true -Dskip.clear.lock=true"'
 
 - name: Adding centralUrl to configuration
   lineinfile:
@@ -139,20 +139,33 @@
     regexp: '^mms.preflight.run='
     line: mms.preflight.run=true
 
+- name: "Create conf dir to increase SystemD timeout for mongodb-mms service"
+  file:
+    path: /etc/systemd/system/mongodb-mms.service.d
+    state: directory
+
+- name: "Increase SystemD timeout for mongodb-mms service"
+  copy:
+    content: "[Service]\nTimeoutStartSec=900"
+    dest: "/etc/systemd/system/mongodb-mms.service.d/increase-timeout.conf"
+
 - name: "Start mongodb-mms service"
-  service: name=mongodb-mms state=started
-  become: yes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+    name: mongodb-mms.service
 
 - name: "Wait for port 8080 to become available"
   wait_for:
     port: 8080
-    timeout: 600
+    timeout: 900
   when: not om_https
 
 - name: "Wait for port 8443 to become available"
   wait_for:
     port: 8443
-    timeout: 600
+    timeout: 900
   when: om_https
 
 - name: "Create initial user"
