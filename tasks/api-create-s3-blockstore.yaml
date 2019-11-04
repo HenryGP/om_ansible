@@ -79,6 +79,6 @@
     body: "{{ call_body }}"
     status_code: 201
     return_content: yes
-    user: "{{ om_username }}"
-    password: "{{ api_key }}"
-    register: result
+    url_username: "{{ om_username }}"
+    url_password: "{{ api_key }}"
+  register: result
