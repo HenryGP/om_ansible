@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   
   config.vm.define "opsmgr" do |opsmgr|
-    opsmgr.vm.box = "bento/centos-7.3"
+    opsmgr.vm.box = "bento/centos-7"
     opsmgr.vm.hostname = 'omserver'
 
     opsmgr.vm.network :private_network, ip: "192.168.1.100"
@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "node1" do |node1|
-    node1.vm.box = "bento/centos-7.3"
+    node1.vm.box = "bento/centos-7"
     node1.vm.hostname = 'n1'
 
     node1.vm.network :private_network, ip: "192.168.1.101"
@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "node2" do |node2|
-    node2.vm.box = "bento/centos-7.3"
+    node2.vm.box = "bento/centos-7"
     node2.vm.hostname = 'n2'
 
     node2.vm.network :private_network, ip: "192.168.1.102"
@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
   end
 	
   config.vm.define "backup" do |backup|
-    backup.vm.box = "bento/centos-7.3"
+    backup.vm.box = "bento/centos-7"
     backup.vm.hostname = 'bkp'
 
     backup.vm.network :private_network, ip: "192.168.1.103"
