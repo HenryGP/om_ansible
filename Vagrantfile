@@ -68,8 +68,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define 'controller' do |machine|
-    machine.vm.network "private_network", ip: "172.17.177.11"
-
+    machine.vm.network "private_network", ip: "192.168.1.104"
+    machine.vm.box = "bento/centos-7"
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook       = "om_ansible.yaml"
       ansible.verbose        = true
