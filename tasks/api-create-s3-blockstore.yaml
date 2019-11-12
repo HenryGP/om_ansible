@@ -81,4 +81,4 @@
     return_content: yes
     user: "{{ om_username }}"
     password: "{{ api_key }}"
-    register: result
+  register: result
