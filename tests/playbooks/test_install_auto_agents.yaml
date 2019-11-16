@@ -1,5 +1,5 @@
 - name: "Getting clients ready"
-  hosts: node1 node2
+  hosts: node1 node2 node3
   become: yes
   gather_facts: no
   vars_files:

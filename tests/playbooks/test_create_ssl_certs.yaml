@@ -38,7 +38,7 @@
         mode="u=rw,g=r,o=r"
 
 - name: "Distributing SSL certificates on clients"
-  hosts: node1 node2 
+  hosts: node1 node2 node3
   become: yes
   gather_facts: yes
   tasks:
@@ -58,7 +58,7 @@
             mode="u=rw,g=r,o=r"
 
 - name: "Distributing SSL certificates on servers"
-  hosts: opsmgr node1 node2 backup 
+  hosts: opsmgr node1 node2 node3 backup 
   become: yes
   gather_facts: yes
   tasks:
