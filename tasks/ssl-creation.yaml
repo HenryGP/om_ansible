@@ -6,6 +6,7 @@
     - omserver
     - n1
     - n2
+    - n3
     - bkp
     - kmip
 
@@ -18,6 +19,7 @@
   with_items:
     - n1
     - n2
+    - n3
     - omserver
 
 - name: Generate server certificate requests
@@ -30,6 +32,7 @@
     - omserver
     - n1
     - n2
+    - n3
     - bkp
     - kmip
 
@@ -44,6 +47,7 @@
   with_items:
     - n1
     - n2
+    - n3
 
 - name: Generate an OpenSSL certificate for clients signed with om_ansible CA
   openssl_certificate:
@@ -55,6 +59,7 @@
   with_items:
     - n1
     - n2
+    - n3
     - omserver
 
 - name: Generate an OpenSSL certificate for clients signed with om_ansible CA
@@ -68,6 +73,7 @@
     - omserver
     - n1
     - n2
+    - n3
     - bkp
     - kmip
 
@@ -81,6 +87,7 @@
   with_items:
     - n1
     - n2
+    - n3
 
 - name: Checking if client pem file exists
   stat: 
@@ -89,6 +96,7 @@
   with_items:
     - n1
     - n2
+    - n3
     - omserver
 
 - debug:
@@ -154,6 +162,7 @@
     - omserver
     - n1
     - n2
+    - n3
     - bkp
     - kmip
 
@@ -219,6 +228,7 @@
   with_items:
     - n1
     - n2
+    - n3
 
 - debug:
     msg: File exists {{ item.stat.path }}
