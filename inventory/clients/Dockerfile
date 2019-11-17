@@ -2,7 +2,7 @@ FROM centos:7
 
 ENV container=docker
 RUN yum -y update && \
-    yum install -y less-458-9.el7.x86_64 initscripts openssh openssh-server openssh-clients sudo passwd sed screen tmux byobu which vim-enhanced
+    yum install -y less initscripts openssh openssh-server openssh-clients sudo passwd sed screen tmux byobu which vim-enhanced numactl rsync
 RUN sshd-keygen
 RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
 
