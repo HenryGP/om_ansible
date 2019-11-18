@@ -1,4 +1,21 @@
 ---
+- name: "Install Postfix smtp server"
+  yum:
+    name: postfix
+    state: present
+
+- name: "Configuring Postfix"
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^inet_protocols =.*'
+    line: 'inet_protocols = ipv4'    
+
+- name: "Starting Postfix"
+  service:
+    name: postfix
+    enabled: yes
+    state: restarted
+
 - name: "Download Ops Manager RPM"
   get_url:
     url: "{{om_download_url}}"
@@ -59,25 +76,25 @@
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.fromEmailAddr='
-    line: mms.fromEmailAddr=om@mongodb.com
+    line: mms.fromEmailAddr=mongodb-mms@omserver.localdomain
 
 - name: Adding mms.adminEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.adminEmailAddr='
-    line: mms.adminEmailAddr=om@mongodb.com
+    line: mms.adminEmailAddr=mongodb-mms@omserver.localdomain
 
 - name: Adding mms.replyToEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.replyToEmailAddr='
-    line: mms.replyToEmailAddr=om@mongodb.com
+    line: mms.replyToEmailAddr=mongodb-mms@omserver.localdomain
 
 - name: Adding mms.adminEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.adminEmailAddr='
-    line: mms.adminEmailAddr=om@mongodb.com
+    line: mms.adminEmailAddr=mongodb-mms@omserver.localdomain
 
 - name: Adding mms.emailDaoClass
   lineinfile:
@@ -101,7 +118,7 @@
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.mail.port='
-    line: mms.mail.port=80
+    line: mms.mail.port=25
     
 - name: Adding mms.ignoreInitialUiSetup
   lineinfile:
