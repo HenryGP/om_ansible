@@ -26,6 +26,8 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.100
+    security_opt:
+      - seccomp:unconfined
 
   n1:
     build: ./inventory/clients
@@ -41,6 +43,8 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.101
+    security_opt:
+      - seccomp:unconfined
 
   n2:
     build: ./inventory/clients
@@ -56,6 +60,8 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.102
+    security_opt:
+      - seccomp:unconfined
 
   n3:
     build: ./inventory/clients
@@ -71,6 +77,8 @@ services:
     networks:
       front:
         ipv4_address: 192.168.1.106
+    security_opt:
+      - seccomp:unconfined
 
   bkp:
     build: ./inventory/clients
