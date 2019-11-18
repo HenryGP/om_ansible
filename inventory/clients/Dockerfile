@@ -2,7 +2,7 @@ FROM centos:7
 
 ENV container=docker
 RUN yum -y update && \
-    yum install -y less initscripts openssh openssh-server openssh-clients sudo passwd sed screen tmux byobu which vim-enhanced numactl rsync openldap-clients
+    yum install -y less initscripts openssh openssh-server openssh-clients sudo passwd sed screen tmux byobu which vim-enhanced numactl rsync openldap-clients man
 RUN sshd-keygen
 RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
 
