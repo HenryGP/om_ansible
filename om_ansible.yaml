@@ -98,7 +98,7 @@
             state: link
 
 - name: "Distributing SSL certificates on servers"
-  hosts: opsmgr node1 node2 node3 backup kmip
+  hosts: opsmgr node1 node2 node3 backup kmip ldapserver
   become: yes
   gather_facts: yes
   tasks:

@@ -9,6 +9,7 @@
     - n3
     - bkp
     - kmip
+    - ldapserver
 
 - name: Generate client certificate requests
   openssl_csr:
@@ -35,6 +36,7 @@
     - n3
     - bkp
     - kmip
+    - ldapserver
 
 - name: Generate internalAuth (server + client) certificate requests
   openssl_csr:
@@ -62,7 +64,7 @@
     - n3
     - omserver
 
-- name: Generate an OpenSSL certificate for clients signed with om_ansible CA
+- name: Generate an OpenSSL certificate for servers signed with om_ansible CA
   openssl_certificate:
     path: /root/files/ssl/{{ item }}_server.crt
     csr_path: /root/files/ssl/{{ item }}_server.csr
@@ -76,6 +78,7 @@
     - n3
     - bkp
     - kmip
+    - ldapserver
 
 - name: Generate an OpenSSL certificate for internalAuth (server + client) signed with om_ansible CA
   openssl_certificate:
@@ -165,6 +168,7 @@
     - n3
     - bkp
     - kmip
+    - ldapserver
 
 - debug:
     msg: File exists {{ item.stat.path }}
