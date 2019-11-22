@@ -1,0 +1,9 @@
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /certs/ca.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /certs/ldapserver_server.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /certs/ldapserver_server.pem

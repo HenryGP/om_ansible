@@ -1,15 +1,29 @@
-FROM ubuntu:16.04
+# Use phusion/baseimage as base image. To make your builds
+# reproducible, make sure you lock down to a specific version, not
+# to `latest`! See
+# https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
+# for a list of version numbers.
+FROM phusion/baseimage:0.11
 
 # Install and configure OpenLDAP binaries
 ENV DEBIAN_FRONTEND=noninteractive
 ADD conf/slapd-deb.conf /tmp
 RUN apt-get update && \
-    apt-get install rsyslog openssh-client openssh-server sudo -y && \
+    apt-get install openssh-client openssh-server sudo -y && \
     cat /tmp/slapd-deb.conf | debconf-set-selections && \
     apt-get install ldap-utils slapd -y 
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN rm -f /etc/service/sshd/down
+
+# Regenerate SSH host keys. baseimage-docker does not contain any, so you
+# have to do that yourself. You may also comment out this instruction; the
+# init system will auto-generate one during boot.
+RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 # setup user for ansible
-RUN useradd admin -G wheel -s /bin/bash -m && \
+RUN useradd admin -s /bin/bash -m && \
     echo "admin:welcome" | chpasswd && \
     echo "admin:x:${uid}:${gid}:Abc,,,:/home/admin:/bin/bash" >> /etc/passwd && \
     echo "admin:x:${uid}:" >> /etc/group && \
@@ -19,27 +33,11 @@ RUN useradd admin -G wheel -s /bin/bash -m && \
 
 # setup ssh
 RUN mkdir /home/admin/.ssh
-ADD inventory/kmip/keys/id_rsa.pub /home/admin/.ssh/authorized_keys
+ADD keys/id_rsa.pub /home/admin/.ssh/authorized_keys
 RUN chown -R admin:admin /home/admin && chmod 700 /home/admin/.ssh && chmod 640 /home/admin/.ssh/authorized_keys
-RUN systemctl enable sshd
 
-
-ADD conf/10-slapd.conf /etc/rsyslog.d/10-slapd.conf
 # Copy ldif files and configure memberOf, users and groups
 ADD ldif/*.ldif /tmp/
-RUN service slapd start \
-    && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com \
-    && ldapmodify -Y external -H ldapi:/// -f /tmp/slapdlog.ldif \
-    && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/memberof.ldif \ 
-    && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/refint.ldif \
-    && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/users.ldif \
-    && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/groups.ldif \
-    && rm -rf /tmp/*.conf /tmp/*.ldif \
-    && service rsyslog stop \
-    && service slapd stop \
-    && service rsyslog start \
-    #&& service slapd start \
-    && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com 
 
 EXPOSE 389
 
@@ -47,7 +45,5 @@ EXPOSE 636
 
 EXPOSE 22
 
-# disabled to allow ansible use
-#CMD /usr/sbin/slapd -d 1 -h 'ldap:/// ldapi:///' -g openldap -u openldap -F /etc/ldap/slapd.d
-
-CMD "/usr/sbin/init"
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
