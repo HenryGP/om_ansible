@@ -57,6 +57,7 @@
     csr_path: /root/files/ssl/{{ item }}_client.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
+    ownca_not_after: +825d
     provider: ownca
   with_items:
     - n1
@@ -70,6 +71,7 @@
     csr_path: /root/files/ssl/{{ item }}_server.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
+    ownca_not_after: +825d
     provider: ownca
   with_items:
     - omserver
@@ -86,6 +88,7 @@
     csr_path: /root/files/ssl/{{ item }}_internal.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
+    ownca_not_after: +825d
     provider: ownca
   with_items:
     - n1
