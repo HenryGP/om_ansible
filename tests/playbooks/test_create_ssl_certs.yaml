@@ -98,7 +98,7 @@
   tasks:
     - name: "Copying key to /certs"
       copy:
-            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}.key"
+            src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}.key"
             dest="/certs"
             owner=root
             group=root
