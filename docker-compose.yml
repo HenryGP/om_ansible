@@ -6,6 +6,7 @@ services:
     hostname: provisioner
     container_name: provisioner
     command: tail -f /dev/null
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.99
@@ -23,6 +24,7 @@ services:
       - "8080:8080"
       - "8443:8443"
       - "25999:25999"
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.100
@@ -40,6 +42,7 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.101
@@ -57,6 +60,7 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "22"
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.102
@@ -92,6 +96,7 @@ services:
     ports:
       - "22"
       - "9000:9000"
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.103
@@ -108,6 +113,7 @@ services:
     ports:
       - "22"
       - "389:389"
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.104
@@ -126,6 +132,7 @@ services:
     ports:
       - "22"
       - "5696:5696"
+    privileged: true
     networks:
       front:
         ipv4_address: 192.168.1.105
