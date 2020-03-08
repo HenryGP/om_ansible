@@ -1,5 +1,7 @@
 opsmgr ansible_ssh_host=omserver ansible_ssh_port=22 ansible_ssh_user=admin
 node1 ansible_ssh_host=n1 ansible_ssh_port=22 ansible_ssh_user=admin
 node2 ansible_ssh_host=n2 ansible_ssh_port=22 ansible_ssh_user=admin
+node3 ansible_ssh_host=n3 ansible_ssh_port=22 ansible_ssh_user=admin
 backup ansible_ssh_host=bkp ansible_ssh_port=22 ansible_ssh_user=admin
 kmip ansible_ssh_host=kmip ansible_ssh_port=22 ansible_ssh_user=admin
+ldapserver ansible_ssh_host=ldapserver ansible_ssh_port=22 ansible_ssh_user=admin

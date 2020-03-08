@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   
   config.vm.define "opsmgr" do |opsmgr|
-    opsmgr.vm.box = "bento/centos-7.3"
+    opsmgr.vm.box = "bento/centos-7"
     opsmgr.vm.hostname = 'omserver'
 
     opsmgr.vm.network :private_network, ip: "192.168.1.100"
@@ -14,13 +14,13 @@ Vagrant.configure("2") do |config|
 
     opsmgr.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 4096]
+      v.customize ["modifyvm", :id, "--memory", 8192]
       v.customize ["modifyvm", :id, "--name", "omserver"]
     end
   end
 
   config.vm.define "node1" do |node1|
-    node1.vm.box = "bento/centos-7.3"
+    node1.vm.box = "bento/centos-7"
     node1.vm.hostname = 'n1'
 
     node1.vm.network :private_network, ip: "192.168.1.101"
@@ -30,13 +30,13 @@ Vagrant.configure("2") do |config|
 
     node1.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "n1"]
     end
   end
 
   config.vm.define "node2" do |node2|
-    node2.vm.box = "bento/centos-7.3"
+    node2.vm.box = "bento/centos-7"
     node2.vm.hostname = 'n2'
 
     node2.vm.network :private_network, ip: "192.168.1.102"
@@ -46,13 +46,13 @@ Vagrant.configure("2") do |config|
 
     node2.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--memory", 1024]
       v.customize ["modifyvm", :id, "--name", "n2"]
     end
   end
 	
   config.vm.define "backup" do |backup|
-    backup.vm.box = "bento/centos-7.3"
+    backup.vm.box = "bento/centos-7"
     backup.vm.hostname = 'bkp'
 
     backup.vm.network :private_network, ip: "192.168.1.103"
@@ -67,10 +67,15 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "om_ansible.yaml"
+  config.vm.define 'controller' do |machine|
+    machine.vm.network "private_network", ip: "192.168.1.104"
+    machine.vm.box = "bento/centos-7"
+    machine.vm.provision :ansible_local do |ansible|
+      ansible.playbook       = "om_ansible.yaml"
+      ansible.verbose        = true
+      ansible.install        = true
+      ansible.limit          = "all" # or only "nodes" group, etc.
+      ansible.inventory_path = "inventory"
+    end
   end
-=begin
-ansible.verbose = "vvv"
-=end
 end

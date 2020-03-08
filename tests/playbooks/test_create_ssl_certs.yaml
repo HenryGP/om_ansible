@@ -38,7 +38,7 @@
         mode="u=rw,g=r,o=r"
 
 - name: "Distributing SSL certificates on clients"
-  hosts: node1 node2 
+  hosts: node1 node2 node3 opsmgr
   become: yes
   gather_facts: yes
   tasks:
@@ -49,6 +49,17 @@
             owner=root
             group=root
             mode="u=rw,g=r,o=r"
+    - name: "Creating symbolic link `/certs/client.pem on each server"
+      file:
+            src: /certs/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_client.pem
+            dest: /certs/client.pem
+            state: link
+
+- name: "Distributing SSL certificates internals for client"
+  hosts: node1 node2 node3
+  become: yes
+  gather_facts: yes
+  tasks:
     - name: "Copying internalAut certs"
       copy:
             src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem"
@@ -56,15 +67,38 @@
             owner=root
             group=root
             mode="u=rw,g=r,o=r"
+    - name: "Creating symbolic link `/certs/internal.pem on each server"
+      file:
+            src: /certs/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem
+            dest: /certs/internal.pem
+            state: link
 
 - name: "Distributing SSL certificates on servers"
-  hosts: opsmgr node1 node2 backup 
+  hosts: opsmgr node1 node2 node3 backup 
   become: yes
   gather_facts: yes
   tasks:
     - name: "Copying server certs to /certs"
       copy:
             src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_server.pem"
+            dest="/certs"
+            owner=root
+            group=root
+            mode="u=rw,g=r,o=r"
+    - name: "Creating symbolic link `/certs/server.pem on each server"
+      file:
+            src: /certs/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_server.pem
+            dest: /certs/server.pem
+            state: link
+
+- name: "Distributing key file on KMIP"
+  hosts: kmip
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: "Copying key to /certs"
+      copy:
+            src="../../files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}.key"
             dest="/certs"
             owner=root
             group=root
