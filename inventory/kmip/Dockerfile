@@ -4,7 +4,8 @@ ENV container=docker
 # the second yum install is needed, yum is not able to install python at the same time of epel-release
 RUN yum -y update && \
     yum install -y epel-release less-458-9.el7.x86_64 initscripts openssh openssh-server openssh-clients sudo passwd sed screen tmux byobu which vim-enhanced && \
-    yum -y install python-pip && yum clean all
+    yum -y install python3-pip && yum clean all
+RUN pip3 install --upgrade pip
 RUN sshd-keygen
 RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
 
@@ -34,7 +35,7 @@ RUN systemctl enable sshd
 
 RUN rm /usr/lib/tmpfiles.d/systemd-nologin.conf
 
-RUN pip install pykmip
+RUN pip3 install pykmip
 
 COPY files/kmip/policy.json /etc/pykmip/policies/policy.json
 COPY files/kmip/server.conf /etc/pykmip/server.conf
