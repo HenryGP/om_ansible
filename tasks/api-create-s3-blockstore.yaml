@@ -68,6 +68,24 @@
 - name: "Printing API call body"
   debug: var=call_body
 
+- name: "Check if S3 exists"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/s3Configs/s3Store?pretty=true"
+    validate_certs: no
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: "{{ call_body }}"
+    status_code: 200, 404
+    return_content: yes
+    user: "{{ om_username }}"
+    password: "{{ api_key }}"
+  register: s3_created
+
+- name: "Printing API call body"
+  debug: var=s3_created
+
 - name: "Configure S3 Blockstore"
   uri:
     url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/s3Configs?pretty=true"
@@ -82,3 +100,4 @@
     user: "{{ om_username }}"
     password: "{{ api_key }}"
   register: result
+  when: s3_created.status == 404
