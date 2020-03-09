@@ -64,9 +64,5 @@
     src: "{{s3cmd_url}}"
     dest: /opt/minio/bin
     remote_src: yes
-- name: "Query for bucket existence"
-  shell: "/opt/minio/bin/s3cmd-master/s3cmd ls | awk '{print $3}'"
-  register: bucket_name
 - name: "Creating S3 bucket"
   shell: /opt/minio/bin/s3cmd-master/s3cmd mb s3://ombucket
-  when: bucket_name.stdout != "s3://ombucket"
