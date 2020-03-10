@@ -185,6 +185,18 @@
     timeout: 900
   when: om_https
 
+- name: "Check if the initial user has been created"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/users/byName/admin"
+    method: GET
+    validate_certs: no
+    follow_redirects: all
+    headers:
+      Content-Type: "application/json"
+    status_code: 200, 401, 404
+    return_content: yes
+  register: user_exists
+
 - name: "Create initial user"
   uri:
     url: "{{ om_url }}/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
@@ -198,12 +210,31 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: user_create_result
+  when: user_exists.status == 401 or user_exists.status == 404
 
 - name: Saving API key for admin user in local server
   local_action: copy content={{user_create_result.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
+  when: user_exists.status == 401 or user_exists.status == 404
 
 - name: API Key for admin user
   debug: var=user_create_result.json.apiKey
+  when: user_exists.status == 401 or user_exists.status == 404
+
+- name: "Check if the initial group has been created"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/groups/Initial%20Group?pretty=true"
+    validate_certs: no
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    status_code: 200, 404
+    return_content: yes
+    user: admin
+    password: "{{user_create_result.json.apiKey}}"
+  register: project_created
+
+- name: "Printing result of API call"
+  debug: var=project_created
 
 - name: "Create initial group"
   uri:
@@ -218,11 +249,9 @@
     return_content: yes
     user: admin
     password: "{{user_create_result.json.apiKey}}"
-    
-- name: get automation groupid
-  shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
-  register: opsmanager_groupid
-- name: Group ID
-  debug: var=opsmanager_groupid.stdout_lines[0]
+  when: project_created.status == 404
+  register: project
+
 - name: Saving group ID in local server
-  local_action: copy content={{opsmanager_groupid.stdout_lines[0]}} dest=/root/vars/group_id.yaml
+  local_action: copy content={{project.content.id}} dest=/root/vars/group_id.yaml
+  when: project_created.status == 404

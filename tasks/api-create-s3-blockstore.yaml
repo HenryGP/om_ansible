@@ -75,8 +75,6 @@
     method: GET
     headers:
       Content-Type: "application/json"
-    body_format: json
-    body: "{{ call_body }}"
     status_code: 200, 404
     return_content: yes
     user: "{{ om_username }}"
