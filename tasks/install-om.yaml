@@ -236,6 +236,10 @@
 - name: "Printing result of API call"
   debug: var=project_created
 
+- name: Saving group ID in local server
+  local_action: copy content={{project_created.content.id}} dest=/root/vars/group_id.yaml
+  when: project_created.status == 200
+
 - name: "Create initial group"
   uri:
     url: "{{ om_url }}/api/public/v1.0/groups?pretty=true"
@@ -252,6 +256,9 @@
   when: project_created.status == 404
   register: project
 
+- name: "Printing result of API call"
+  debug: var=project
+
 - name: Saving group ID in local server
-  local_action: copy content={{project.content.id}} dest=/root/vars/group_id.yaml
+  local_action: copy content={{project.id}} dest=/root/vars/group_id.yaml
   when: project_created.status == 404
