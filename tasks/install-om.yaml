@@ -210,15 +210,20 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: user_create_result
-  when: user_exists.status == 401 or user_exists.status == 404
+  when: user_exists.status == 404
+
+- name: Check that admin_user_api_key.yaml exists
+  stat:
+    path: /root/vars/admin_user_api_key.yaml
+  register: admin_api_key_file
 
 - name: Saving API key for admin user in local server
   local_action: copy content={{user_create_result.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
-  when: user_exists.status == 401 or user_exists.status == 404
+  when: admin_api_key_file.stat.exists == False or user_create_result.skipped == False
 
 - name: API Key for admin user
   debug: var=user_create_result.json.apiKey
-  when: user_exists.status == 401 or user_exists.status == 404
+  when: user_create_result.status = 200
 
 - name: "Check if the initial group has been created"
   uri:
@@ -236,9 +241,14 @@
 - name: "Printing result of API call"
   debug: var=project_created
 
-- name: Saving group ID in local server
+- name: Check that group_id.yaml exists
+  stat:
+    path: /root/vars/group_id.yaml
+  register: group_id_file
+
+- name: Saving API key for admin user in local server
   local_action: copy content={{project_created.content.id}} dest=/root/vars/group_id.yaml
-  when: project_created.status == 200
+  when: group_id_file.stat.exists == False 
 
 - name: "Create initial group"
   uri:
@@ -259,6 +269,11 @@
 - name: "Printing result of API call"
   debug: var=project
 
-- name: Saving group ID in local server
-  local_action: copy content={{project.id}} dest=/root/vars/group_id.yaml
-  when: project_created.status == 404
+- name: Check that group_id.yaml exists
+  stat:
+    path: /root/vars/group_id.yaml
+  register: group_id_file
+
+- name: Saving API key for admin user in local server
+  local_action: copy content={{project.json.id}}} dest=/root/vars/group_id.yaml
+  when: group_id_file.stat.exists == False
