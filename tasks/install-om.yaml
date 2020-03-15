@@ -240,9 +240,9 @@
     return_content: yes
     user: admin
     password: "{{user_create_result.json.apiKey}}"
-  when: group_id_file.stat.exists == false
+  when: group_id_file.stat.exists == false and admin_api_key_file.stat.exists == false
   register: project
 
 - name: Saving API key for admin user in local server
-  local_action: copy content={{project.content.id}} dest=/root/vars/group_id.yaml
+  local_action: copy content={{project.json.id}} dest=/root/vars/group_id.yaml
   when: group_id_file.stat.exists == false
