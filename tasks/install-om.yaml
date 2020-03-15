@@ -185,6 +185,10 @@
     timeout: 900
   when: om_https
 
+- name: Check that admin_user_api_key.yaml exists
+  local_action: stat path=/root/vars/admin_user_api_key.yaml
+  register: admin_api_key_file
+
 - name: "Check if the initial user has been created"
   uri:
     url: "{{ om_url }}/api/public/v1.0/users/byName/admin"
@@ -193,9 +197,12 @@
     follow_redirects: all
     headers:
       Content-Type: "application/json"
-    status_code: 200, 401, 404
+    status_code: 200
     return_content: yes
+    user: admin
+    password: "{{ api_key }}"
   register: user_exists
+  when: admin_api_key_file.stat.exists == true
 
 - name: "Create initial user"
   uri:
@@ -210,45 +217,15 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: user_create_result
-  when: user_exists.status == 404
-
-- name: Check that admin_user_api_key.yaml exists
-  stat:
-    path: /root/vars/admin_user_api_key.yaml
-  register: admin_api_key_file
+  when: admin_api_key_file.stat.exists == false
 
 - name: Saving API key for admin user in local server
   local_action: copy content={{user_create_result.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
-  when: admin_api_key_file.stat.exists == False or user_create_result.skipped == False
-
-- name: API Key for admin user
-  debug: var=user_create_result.json.apiKey
-  when: user_create_result.status = 200
-
-- name: "Check if the initial group has been created"
-  uri:
-    url: "{{ om_url }}/api/public/v1.0/groups/Initial%20Group?pretty=true"
-    validate_certs: no
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    status_code: 200, 404
-    return_content: yes
-    user: admin
-    password: "{{user_create_result.json.apiKey}}"
-  register: project_created
-
-- name: "Printing result of API call"
-  debug: var=project_created
+  when: admin_api_key_file.stat.exists == false
 
 - name: Check that group_id.yaml exists
-  stat:
-    path: /root/vars/group_id.yaml
+  local_action: stat path=/root/vars/group_id.yaml
   register: group_id_file
-
-- name: Saving API key for admin user in local server
-  local_action: copy content={{project_created.content.id}} dest=/root/vars/group_id.yaml
-  when: group_id_file.stat.exists == False 
 
 - name: "Create initial group"
   uri:
@@ -263,17 +240,9 @@
     return_content: yes
     user: admin
     password: "{{user_create_result.json.apiKey}}"
-  when: project_created.status == 404
+  when: group_id_file.stat.exists == false
   register: project
 
-- name: "Printing result of API call"
-  debug: var=project
-
-- name: Check that group_id.yaml exists
-  stat:
-    path: /root/vars/group_id.yaml
-  register: group_id_file
-
 - name: Saving API key for admin user in local server
-  local_action: copy content={{project.json.id}}} dest=/root/vars/group_id.yaml
-  when: group_id_file.stat.exists == False
+  local_action: copy content={{project.content.id}} dest=/root/vars/group_id.yaml
+  when: group_id_file.stat.exists == false
