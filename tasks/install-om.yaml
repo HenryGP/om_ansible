@@ -185,6 +185,25 @@
     timeout: 900
   when: om_https
 
+- name: Check that admin_user_api_key.yaml exists
+  local_action: stat path=/root/vars/admin_user_api_key.yaml
+  register: admin_api_key_file
+
+- name: "Check if the initial user has been created"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/users/byName/admin"
+    method: GET
+    validate_certs: no
+    follow_redirects: all
+    headers:
+      Content-Type: "application/json"
+    status_code: 200
+    return_content: yes
+    user: admin
+    password: "{{ api_key }}"
+  register: user_exists
+  when: admin_api_key_file.stat.exists == true
+
 - name: "Create initial user"
   uri:
     url: "{{ om_url }}/api/public/v1.0/unauth/users?pretty=true&whitelist=192.168.1.0/24"
@@ -198,12 +217,15 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: user_create_result
+  when: admin_api_key_file.stat.exists == false
 
 - name: Saving API key for admin user in local server
   local_action: copy content={{user_create_result.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
+  when: admin_api_key_file.stat.exists == false
 
-- name: API Key for admin user
-  debug: var=user_create_result.json.apiKey
+- name: Check that group_id.yaml exists
+  local_action: stat path=/root/vars/group_id.yaml
+  register: group_id_file
 
 - name: "Create initial group"
   uri:
@@ -218,11 +240,9 @@
     return_content: yes
     user: admin
     password: "{{user_create_result.json.apiKey}}"
-    
-- name: get automation groupid
-  shell: mongo 127.0.0.1:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
-  register: opsmanager_groupid
-- name: Group ID
-  debug: var=opsmanager_groupid.stdout_lines[0]
-- name: Saving group ID in local server
-  local_action: copy content={{opsmanager_groupid.stdout_lines[0]}} dest=/root/vars/group_id.yaml
+  when: group_id_file.stat.exists == false and admin_api_key_file.stat.exists == false
+  register: project
+
+- name: Saving API key for admin user in local server
+  local_action: copy content={{project.json.id}} dest=/root/vars/group_id.yaml
+  when: group_id_file.stat.exists == false

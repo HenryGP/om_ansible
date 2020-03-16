@@ -3,6 +3,22 @@
   debug: var=api_key
 - name: "Create FS Store"
   uri:
+    url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/fileSystemConfigs/fsstore?pretty=true"
+    validate_certs: no
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    status_code: 200, 404
+    return_content: yes
+    user: '{{ om_username }}'
+    password: "{{api_key}}"
+  register: fs_created
+
+- name: "Printing result of API call"
+  debug: var=fs_created
+
+- name: "Create FS Store"
+  uri:
     url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/fileSystemConfigs?pretty=true"
     validate_certs: no
     method: POST
@@ -10,10 +26,8 @@
       Content-Type: "application/json"
     body_format: json
     body: '{"id":"fsstore","assignmentEnabled" : false,"loadFactor" : 50,"mmapv1CompressionSetting" : "GZIP","storePath" : "/data/fsstore","wtCompressionSetting" : "NONE"}'
-    status_code: 201
+    status_code: "201"
     return_content: yes
     user: '{{ om_username }}'
     password: "{{api_key}}"
-  register: result
-- name: "Printing result of API call"
-  debug: var=result
+  when: fs_created.status == 404
