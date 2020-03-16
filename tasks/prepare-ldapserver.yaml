@@ -20,20 +20,20 @@
     port: 389
     timeout: 900
 
-#- name: "Setting slapd options"
-#  shell: |
-#    ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com \
-#    && ldapmodify -Y external -H ldapi:/// -f /tmp/slapdlog.ldif \
-#    && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/memberof.ldif \ 
-#    && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/refint.ldif \
-#    && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/users.ldif \
-#    && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/groups.ldif \
-#    && ldapmodify -Y external -H ldapi:/// -f /tmp/olcSSL.ldif \
-#    && rm -rf /tmp/*.conf /tmp/*.ldif \
-#   && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com 
+- name: "Setting slapd options"
+  shell: |
+    ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com \
+    && ldapmodify -Y external -H ldapi:/// -f /tmp/slapdlog.ldif \
+    && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/memberof.ldif \ 
+    && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/refint.ldif \
+    && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/users.ldif \
+    && ldapadd -x -D cn=admin,dc=tsdocker,dc=com -w Password1! -f /tmp/groups.ldif \
+    && ldapmodify -Y external -H ldapi:/// -f /tmp/olcSSL.ldif \
+    && rm -rf /tmp/*.conf /tmp/*.ldif \
+    && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com 
 
-#- name: "Setting slapd TLS options"
-#  shell: ldapmodify -Y external -H ldapi:/// -f /tmp/olcSSL.ldif
+- name: "Setting slapd TLS options"
+  shell: ldapmodify -Y external -H ldapi:/// -f /tmp/olcSSL.ldif
 
 - name: "Configuring default Slapd settings"
   lineinfile:
@@ -47,14 +47,14 @@
     regexp: '^TLS_CACERT .*'
     line: 'TLS_CACERT /certs/ca.pem'
 
-#- name: "Re-starting Slapd to enable TLS"
-#  service:
-#    name: slapd
-#    enabled: yes
-#    state: restarted
+- name: "Re-starting Slapd to enable TLS"
+  service:
+    name: slapd
+    enabled: yes
+    state: restarted
 
-#- name: "Wait for port 636 to become available"
-#  wait_for:
-#    host: ldapserver
-#   port: 636
-#    timeout: 900
+- name: "Wait for port 636 to become available"
+  wait_for:
+    host: ldapserver
+    port: 636
+    timeout: 900
