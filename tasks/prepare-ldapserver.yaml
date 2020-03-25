@@ -32,9 +32,6 @@
     && rm -rf /tmp/*.conf /tmp/*.ldif \
     && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com 
 
-- name: "Setting slapd TLS options"
-  shell: ldapmodify -Y external -H ldapi:/// -f /tmp/olcSSL.ldif
-
 - name: "Configuring default Slapd settings"
   lineinfile:
     path: /etc/default/slapd
