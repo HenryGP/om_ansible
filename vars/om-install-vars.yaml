@@ -1,7 +1,7 @@
 ---
 # Virtual Machines vs Containers
-vms: false
-local_mode: false
+vms: False
+local_mode: False
 # MongoDB repositories for backing databases
 mongodb_repo: mongodb-org-4.2.repo
 # URL for Ops Manager packages
@@ -10,7 +10,7 @@ om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.9
 om_username: admin
 om_password: Password1!
 # Enable https for Ops Manager
-om_https: false
+om_https: False
 # API calls for first user 
 first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "mongodb-mms@omserver.localdomain","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
 # minio 
