@@ -1,19 +1,3 @@
-- name: "Fixing slapd init.d script stop bug"
-  lineinfile:
-    path: /etc/init.d/slapd
-    regexp: '{{item.From}}'
-    line: '{{item.To}}'
-    state: present
-  with_items:
-    - { From: '.*start-stop-daemon --stop.*', To: 'reason="`start-stop-daemon --stop --oknodo --retry TERM/60 \'}
-    - { From: '.*--exec \$SLAPD', To: ' --name slapd 2>&1`"'}
-
-- name: "Starting Slapd"
-  service:
-    name: slapd
-    enabled: yes
-    state: started
-
 - name: "Wait for port 389 to become available"
   wait_for:
     host: ldapserver
@@ -32,9 +16,6 @@
     && rm -rf /tmp/*.conf /tmp/*.ldif \
     && ldapsearch -x -w Password1! -D cn=admin,dc=tsdocker,dc=com -b dc=tsdocker,dc=com 
 
-- name: "Setting slapd TLS options"
-  shell: ldapmodify -Y external -H ldapi:/// -f /tmp/olcSSL.ldif
-
 - name: "Configuring default Slapd settings"
   lineinfile:
     path: /etc/default/slapd
@@ -48,10 +29,8 @@
     line: 'TLS_CACERT /certs/ca.pem'
 
 - name: "Re-starting Slapd to enable TLS"
-  service:
-    name: slapd
-    enabled: yes
-    state: restarted
+  shell: |
+    /usr/bin/sv -w 120 restart slapd
 
 - name: "Wait for port 636 to become available"
   wait_for:

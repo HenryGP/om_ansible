@@ -39,6 +39,12 @@ RUN chown -R admin:admin /home/admin && chmod 700 /home/admin/.ssh && chmod 640 
 # Copy ldif files and configure memberOf, users and groups
 ADD ldif/*.ldif /tmp/
 
+# prepare slapd service
+RUN mkdir -p /etc/service/slapd
+#RUN echo -e '#!/bin/sh\nSLAPD_OPTIONS=""\n\nif [ -f "/etc/default/slapd" ]; then\n   . /etc/default/slapd\nfi\n\nif [ ! -d /var/run/openldap ]; then\n    install -d -o $SLAPD_USER -g $SLAPD_GROUP -m 755 /var/run/openldap\nfi\nif [ -z "$SLAPD_SERVICES" ]; then\n    exec /usr/sbin/slapd -d 0 -u $SLAPD_USER -g $SLAPD_GROUP $SLAPD_OPTIONS\nelse\n    exec /usr/sbin/slapd -d 0 -u $SLAPD_USER -g $SLAPD_GROUP -h "$SLAPD_SERVICES" $SLAPD_OPTIONS\nfi' > /etc/service/slapd/run
+COPY slapd.runsv /etc/service/slapd/run
+RUN chmod 755 /etc/service/slapd/run
+
 EXPOSE 389
 
 EXPOSE 636
@@ -47,3 +53,4 @@ EXPOSE 22
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
+
