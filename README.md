@@ -18,9 +18,9 @@ The default infrastructure consists of the following components:
 |Host|IP address|Role|
 |-|-|-|
 |omserver.om_ansible_front|192.168.1.100|Ops Manager server + Application DB|
-|n\[1-2\].om_ansible_front|192.168.1.10\[1-2\]|client with Automation installed|
+|n\[1-3\].om_ansible_front|192.168.1.10\[1-2\]|client with Automation installed|
 |bkp.om_ansible_front|192.168.1.103|S3 storage|  
-|provisioneri.om_ansible_front*|192.168.1.99|Ansible provisioner|
+|provisioner.om_ansible_front*|192.168.1.99|Ansible provisioner|
 |ldapserver.om_ansible_front*|192.168.1.104|OpenLDAP server|
 |kmip.om_ansible_front*|192.168.1.105|KMIP server|
 
