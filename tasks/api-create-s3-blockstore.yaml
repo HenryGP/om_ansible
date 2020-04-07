@@ -11,10 +11,6 @@
             om_version: "{{ ansible_facts.packages['mongodb-mms'][0].version }}"
   when: "'mongodb-mms' in ansible_facts.packages"
 
-- debug:
-    var: ansible_facts.packages['mongodb-mms'][0].version
-    var: om_version
-
 - name: Set Ops Manager URL for https
   set_fact:
     call_body: '{  "assignmentEnabled": true,

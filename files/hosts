@@ -1,7 +1,7 @@
-192.168.1.100   omserver
-192.168.1.101   n1
-192.168.1.102   n2
-192.168.1.106   n3
-192.168.1.103   bkp
-192.168.1.104   ldapserver
+192.168.1.100   omserver omserver.om_ansible_front
+192.168.1.101   n1 n1.om_ansible_front
+192.168.1.102   n2  n2.om_ansible_front 
+192.168.1.106   n3 n3.om_ansible_front
+192.168.1.103   bkp bkp.om_ansible_front
+192.168.1.104   ldapserver ldapserver.om_ansible_front
 127.0.0.1   localhost

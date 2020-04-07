@@ -30,12 +30,12 @@
         - tcp_wrappers-libs
 
 - name: get automation groupid
-  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
+  shell: mongo omserver.om_ansible_front:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
   register: opsmanager_groupid
 - debug: var=opsmanager_groupid
 
 - name: get automation apikey
-  shell: mongo omserver:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
+  shell: mongo omserver.om_ansible_front:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
   register: opsmanager_apikey
 
 - name: "Create Agent key with API call"

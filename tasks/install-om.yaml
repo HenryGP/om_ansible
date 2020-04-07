@@ -70,31 +70,31 @@
   replace:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mongo.mongoUri=.*'
-    replace: 'mongo.mongoUri=mongodb://omserver:27017'
+    replace: 'mongo.mongoUri=mongodb://omserver.om_ansible_front:27017'
 
 - name: Adding mms.fromEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.fromEmailAddr='
-    line: mms.fromEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.fromEmailAddr=mongodb-mms@omserver.om_ansible_front
 
 - name: Adding mms.adminEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.adminEmailAddr='
-    line: mms.adminEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.adminEmailAddr=mongodb-mms@omserver.om_ansible_front
 
 - name: Adding mms.replyToEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.replyToEmailAddr='
-    line: mms.replyToEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.replyToEmailAddr=mongodb-mms@omserver.om_ansible_front
 
 - name: Adding mms.adminEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.adminEmailAddr='
-    line: mms.adminEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.adminEmailAddr=mongodb-mms@omserver.om_ansible_front
 
 - name: Adding mms.emailDaoClass
   lineinfile:

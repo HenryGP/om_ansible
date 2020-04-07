@@ -16,6 +16,7 @@
     path: /root/files/ssl/{{ item }}_client.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
+    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.om_ansible_front"
     extended_key_usage: clientAuth
   with_items:
     - n1
@@ -28,6 +29,7 @@
     path: /root/files/ssl/{{ item }}_server.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
+    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.om_ansible_front"
     extended_key_usage: serverAuth
   with_items:
     - omserver
@@ -43,6 +45,7 @@
     path: /root/files/ssl/{{ item }}_internal.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
+    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.om_ansible_front"
     extended_key_usage:
       - serverAuth
       - clientAuth

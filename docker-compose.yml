@@ -3,7 +3,7 @@ version: "2"
 services:
   provisioner:
     build: .
-    hostname: provisioner
+    hostname: provisioner.om_ansible_front
     container_name: provisioner
     command: tail -f /dev/null
     privileged: true
@@ -13,8 +13,9 @@ services:
 
   omserver:
     build: ./inventory/clients
-    hostname: omserver
+    hostname: omserver.om_ansible_front
     container_name: omserver
+#   mem_limit: 16g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -33,9 +34,10 @@ services:
 
   n1:
     build: ./inventory/clients
-    hostname: n1
+    hostname: n1.om_ansible_front
     container_name: n1
     mem_limit: 500m
+#   mem_limit: 2g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -51,9 +53,10 @@ services:
 
   n2:
     build: ./inventory/clients
-    hostname: n2
+    hostname: n2.om_ansible_front
     container_name: n2
     mem_limit: 500m
+#   mem_limit: 2g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -69,9 +72,10 @@ services:
 
   n3:
     build: ./inventory/clients
-    hostname: n3
+    hostname: n3.om_ansible_front
     container_name: n3
     mem_limit: 500m
+#   mem_limit: 2g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -86,7 +90,7 @@ services:
 
   bkp:
     build: ./inventory/clients
-    hostname: bkp
+    hostname: bkp.om_ansible_front
     container_name: bkp
     mem_limit: 500m
     cap_add:
@@ -103,7 +107,7 @@ services:
 
   ldapserver:
     build: ./inventory/ldap
-    hostname: ldapserver
+    hostname: ldapserver.om_ansible_front
     container_name: ldapserver
     mem_limit: 500m
     cap_add:
@@ -123,7 +127,7 @@ services:
     build:
       context: .
       dockerfile: ./inventory/kmip/Dockerfile
-    hostname: kmip
+    hostname: kmip.om_ansible_front
     container_name: kmip
     mem_limit: 500m
     cap_add:
