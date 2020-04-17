@@ -1,7 +1,7 @@
 ---
 # Virtual Machines vs Containers
 vms: false
-local_mode: false
+local_mode: true
 # MongoDB repositories for backing databases
 mongodb_repo: mongodb-org-4.2.repo
 # URL for Ops Manager packages
@@ -10,9 +10,9 @@ om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.9
 om_username: admin
 om_password: Password1!
 # Enable https for Ops Manager
-om_https: false
+om_https: true
 # API calls for first user 
-first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "mongodb-mms@omserver.om_ansible_front","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
+first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "mongodb-mms@omserver.omansible.int","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
 # minio 
 minio_url: https://dl.minio.io/server/minio/release/linux-amd64/minio
 s3cmd_url: https://github.com/s3tools/s3cmd/archive/master.zip
