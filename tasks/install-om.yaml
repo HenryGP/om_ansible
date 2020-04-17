@@ -53,6 +53,13 @@
 #     regexp: '^JAVA_MMS_UI_OPTS="\${JAVA_MMS_UI_OPTS} -Dxgen\.webServerGzipEnabled=true.*'
 #     replace: 'JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dxgen.webServerGzipEnabled=true -Dskip.migrate=true -Dskip.agent.download=true -Dskip.clear.lock=true"'
 
+- name: "Set hostname for OM processes"
+  blockinfile:
+    path: /opt/mongodb/mms/conf/mms.conf
+    block: |
+      JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dmms.system.hostname=$(hostname -f)"
+      JAVA_DAEMON_OPTS="${JAVA_DAEMON_OPTS} -Dmms.system.hostname=$(hostname -f)"
+
 - name: Adding centralUrl to configuration
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
