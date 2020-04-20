@@ -10,7 +10,7 @@ om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.1
 om_username: admin
 om_password: Password1!
 # Enable https for Ops Manager
-om_https: true
+om_https: false
 # API calls for first user 
 first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "mongodb-mms@omserver.omansible.int","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
 # minio 
