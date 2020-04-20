@@ -20,11 +20,11 @@
         state: directory
     - name: Set Ops Manager URL for http
       set_fact:
-        om_url: "http://omserver:8080"
+        om_url: "http://omserver.omansible.int:8080"
       when: not om_https
     - name: Set Ops Manager URL for https
       set_fact:
-        om_url: "https://omserver:8443"
+        om_url: "https://omserver.omansible.int:8443"
       when: om_https
 
 - name: "Generating SSL certificates"
@@ -197,11 +197,11 @@
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
-        om_url: "http://omserver:8080"
+        om_url: "http://omserver.omansible.int:8080"
       when: not om_https
     - name: Set Ops Manager URL for https
       set_fact:
-        om_url: "https://omserver:8443"
+        om_url: "https://omserver.omansible.int:8443"
       when: om_https
     - include: tasks/api-create-fs-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
@@ -217,11 +217,11 @@
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
-        om_url: "http://omserver:8080"
+        om_url: "http://omserver.omansible.int:8080"
       when: not om_https
     - name: Set Ops Manager URL for https
       set_fact:
-        om_url: "https://omserver:8443"
+        om_url: "https://omserver.omansible.int:8443"
       when: om_https
     - include: tasks/api-create-oplog-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
@@ -237,11 +237,11 @@
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
-        om_url: "http://omserver:8080"
+        om_url: "http://omserver.omansible.int:8080"
       when: not om_https
     - name: Set Ops Manager URL for https
       set_fact:
-        om_url: "https://omserver:8443"
+        om_url: "https://omserver.omansible.int:8443"
       when: om_https
     - include: tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"

@@ -25,7 +25,7 @@
     headers:
       Content-Type: "application/json"
     body_format: json
-    body: '{"id":"oplog1","assignmentEnabled" : true,"encryptedCredentials" : false,"uri" : "mongodb://omserver:27017","ssl" : false}'
+    body: '{"id":"oplog1","assignmentEnabled" : true,"encryptedCredentials" : false,"uri" : "mongodb://omserver.omansible.int:27017","ssl" : false}'
     status_code: 201
     return_content: yes
     user: '{{ om_username }}'

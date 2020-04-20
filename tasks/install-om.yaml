@@ -53,6 +53,13 @@
 #     regexp: '^JAVA_MMS_UI_OPTS="\${JAVA_MMS_UI_OPTS} -Dxgen\.webServerGzipEnabled=true.*'
 #     replace: 'JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dxgen.webServerGzipEnabled=true -Dskip.migrate=true -Dskip.agent.download=true -Dskip.clear.lock=true"'
 
+- name: "Set hostname for OM processes"
+  blockinfile:
+    path: /opt/mongodb/mms/conf/mms.conf
+    block: |
+      JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dmms.system.hostname=$(hostname -f)"
+      JAVA_DAEMON_OPTS="${JAVA_DAEMON_OPTS} -Dmms.system.hostname=$(hostname -f)"
+
 - name: Adding centralUrl to configuration
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
@@ -70,31 +77,31 @@
   replace:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mongo.mongoUri=.*'
-    replace: 'mongo.mongoUri=mongodb://omserver:27017'
+    replace: 'mongo.mongoUri=mongodb://omserver.omansible.int:27017'
 
 - name: Adding mms.fromEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.fromEmailAddr='
-    line: mms.fromEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.fromEmailAddr=mongodb-mms@omserver.omansible.int
 
 - name: Adding mms.adminEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.adminEmailAddr='
-    line: mms.adminEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.adminEmailAddr=mongodb-mms@omserver.omansible.int
 
 - name: Adding mms.replyToEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.replyToEmailAddr='
-    line: mms.replyToEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.replyToEmailAddr=mongodb-mms@omserver.omansible.int
 
 - name: Adding mms.adminEmailAddr
   lineinfile:
     path: /opt/mongodb/mms/conf/conf-mms.properties
     regexp: '^mms.adminEmailAddr='
-    line: mms.adminEmailAddr=mongodb-mms@omserver.localdomain
+    line: mms.adminEmailAddr=mongodb-mms@omserver.omansible.int
 
 - name: Adding mms.emailDaoClass
   lineinfile:

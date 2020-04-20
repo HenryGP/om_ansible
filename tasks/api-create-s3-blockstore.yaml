@@ -1,10 +1,15 @@
 ---
 - name: "Print variable"
   debug: var=api_key
-  
-- name: "Determining Ops Manager version prior to API call"
-  command: rpm -q mongodb-mms.x86_64 --queryformat "%{VERSION}\n"
-  register: om_version
+
+- name: "Gather the rpm package facts"
+  package_facts:
+    manager: auto
+
+- name: "show and store mongodb-mms version"
+  set_fact:
+            om_version: "{{ ansible_facts.packages['mongodb-mms'][0].version }}"
+  when: "'mongodb-mms' in ansible_facts.packages"
 
 - name: Set Ops Manager URL for https
   set_fact:
@@ -24,7 +29,7 @@
             "uri": "mongodb://192.168.1.100:27017",
             "acceptedTos":true
         }'
-  when: om_version.stdout_lines[0] is version_compare("4.2",">=")  
+  when: om_version is defined and om_version is version_compare("4.2",">=")  
 
 - name: Set Ops Manager URL for https
   set_fact:
@@ -44,7 +49,7 @@
         "ssl": false,
         "uri": "mongodb://192.168.1.100:27017"
     }'
-  when: om_version.stdout_lines[0] is version_compare("4.2","<") and om_version.stdout_lines[0] is version_compare("4.0",">=")
+  when: om_version is defined and om_version is version_compare("4.2","<") and om_version is version_compare("4.0",">=")
 
 - name: Set Ops Manager URL for https
   set_fact:
@@ -63,10 +68,11 @@
         "ssl": false,
         "uri": "mongodb://192.168.1.100:27017"
     }'
-  when: om_version.stdout_lines[0] is version_compare("4.0","<") 
+  when: om_version is defined and om_version is version_compare("4.0","<") 
 
 - name: "Printing API call body"
   debug: var=call_body
+  when: om_version is defined
 
 - name: "Check if S3 exists"
   uri:
@@ -80,9 +86,11 @@
     user: "{{ om_username }}"
     password: "{{ api_key }}"
   register: s3_created
+  when: om_version is defined
 
 - name: "Printing API call body"
   debug: var=s3_created
+  when: om_version is defined
 
 - name: "Configure S3 Blockstore"
   uri:
@@ -98,4 +106,4 @@
     user: "{{ om_username }}"
     password: "{{ api_key }}"
   register: result
-  when: s3_created.status == 404
+  when: om_version is defined and s3_created.status == 404
