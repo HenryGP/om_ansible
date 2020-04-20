@@ -49,7 +49,7 @@
         "ssl": false,
         "uri": "mongodb://192.168.1.100:27017"
     }'
-  when: om_version is defined and om_version is version_compare("4.2","<") and om_version.stdout_lines[0] is version_compare("4.0",">=")
+  when: om_version is defined and om_version is version_compare("4.2","<") and om_version is version_compare("4.0",">=")
 
 - name: Set Ops Manager URL for https
   set_fact:
