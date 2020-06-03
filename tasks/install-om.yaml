@@ -16,6 +16,45 @@
     enabled: yes
     state: restarted
 
+# Looking the Ops manager link based on the OM version requested in om_version
+
+- name: "Looking for OM version"
+  uri:
+    url: "https://s3.amazonaws.com/info-mongodb-com/com-download-center/ops_manager_{{om_version}}.json"
+    method: GET
+    return_content: yes
+    status_code: 200
+    body_format: json
+  register: json_om_version 
+  when: om_version is defined
+
+- set_fact:
+    platform_query: "platform[?arch=='x86_64']"
+    package_format_query: "[?package_format=='rpm'].packages"
+    link_query: "links[?name=='rpm'].download_link"
+  when: om_version is defined
+
+- set_fact:
+    om_packages: "{{json_om_version.json | json_query(platform_query) | json_query(package_format_query) }}"
+  when: om_version is defined
+
+# for 4.2.x responsed, packages is a doc, while in lower versions, it's a array
+- set_fact:
+    om_packages: "{{om_packages[0]}}"
+  when: om_packages[0][0] is defined
+
+- set_fact:
+    om_links: "{{ om_packages[0] | json_query(link_query) }}"
+  when: om_version is defined
+
+# Only set the om_download_url variable if it is not already set in the vars file
+# This is for the om_download_url take precedence over om_version 
+# in case a specific build is needed.
+
+- set_fact:
+    om_download_url: "{{ om_links[0] }}"
+  when: om_download_url is not defined
+
 - name: "Download Ops Manager RPM"
   get_url:
     url: "{{om_download_url}}"
