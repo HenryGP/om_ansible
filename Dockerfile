@@ -9,6 +9,9 @@ RUN pip install --upgrade pip
 # Install latest (stable) Ansible version
 RUN pip install ansible
 
+# Install jmespath needed to parse json outputs
+RUN pip install jmespath
+
 # setup ssh
 RUN mkdir /root/.ssh
 ADD /inventory/clients/keys/id_rsa /root/.ssh/id_rsa
@@ -25,3 +28,4 @@ ADD files /root/files
 ADD vars /root/vars
 ADD tests /root/tests
 ADD om_ansible.yaml /root/om_ansible.yaml
+
