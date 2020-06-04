@@ -30,13 +30,18 @@
 
 - set_fact:
     platform_query: "platform[?arch=='x86_64']"
-    os_query: "[?os=='Red Hat + CentOS 6, 7 / SUSE 12 / Amazon Linux'].packages[0]"
+    package_format_query: "[?package_format=='rpm'].packages"
     link_query: "links[?name=='rpm'].download_link"
   when: om_version is defined
 
 - set_fact:
-    om_packages: "{{json_om_version.json | json_query(platform_query) | json_query(os_query) }}"
+    om_packages: "{{json_om_version.json | json_query(platform_query) | json_query(package_format_query) }}"
   when: om_version is defined
+
+# for 4.2.x responsed, packages is a doc, while in lower versions, it's a array
+- set_fact:
+    om_packages: "{{om_packages[0]}}"
+  when: om_packages[0][0] is defined
 
 - set_fact:
     om_links: "{{ om_packages[0] | json_query(link_query) }}"
