@@ -4,8 +4,12 @@ vms: false
 local_mode: false
 # MongoDB repositories for backing databases
 mongodb_repo: mongodb-org-4.2.repo
-# URL for Ops Manager packages
-om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.12.56844.20200408T2127Z-1.x86_64.rpm
+# Ops Manaher version. (format: X.X.X)
+om_version: 4.2.14
+
+# URL for Ops Manager packages. If om_version was set, this setting will take precedence and overwrite it.
+# om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.12.56844.20200408T2127Z-1.x86_64.rpm
+
 # First user login credentials
 om_username: admin
 om_password: Password1!
