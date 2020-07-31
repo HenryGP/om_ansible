@@ -20,7 +20,7 @@
   lineinfile:
     path: /etc/default/slapd
     regexp: '^SLAPD_SERVICES=.*'
-    line: 'SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"'    
+    line: 'SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"'
 
 - name: "Configuring client ldap settings"
   lineinfile:

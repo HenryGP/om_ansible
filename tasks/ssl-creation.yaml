@@ -153,7 +153,7 @@
     src: /root/files/ssl/{{ item.item }}_client.crt
     dest: /root/files/ssl/{{ item.item }}_client.pem
   with_items: "{{ clientpemstat.results }}"
-  when: item.stat.exists == false  
+  when: item.stat.exists == false
 
 - name: Client cert + key concatenation
   lineinfile:
@@ -164,7 +164,7 @@
   when: item.stat.exists == false
 
 - name: Checking if server pem file exists
-  stat: 
+  stat:
     path: /root/files/ssl/{{ item }}_server.pem
   register: serverpemstat
   with_items:
@@ -221,7 +221,7 @@
     src: /root/files/ssl/{{ item.item }}_server.crt
     dest: /root/files/ssl/{{ item.item }}_server.pem
   with_items: "{{ serverpemstat.results }}"
-  when: item.stat.exists == false  
+  when: item.stat.exists == false
 
 - name: Server cert + key concatenation
   lineinfile:
@@ -232,7 +232,7 @@
   when: item.stat.exists == false
 
 - name: Checking if internal pem file exists
-  stat: 
+  stat:
     path: /root/files/ssl/{{ item }}_internal.pem
   register: internalpemstat
   with_items:
