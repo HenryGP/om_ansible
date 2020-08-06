@@ -1,36 +1,36 @@
 ---
 - name: "Copy mongodb repository files"
-  template: 
+  template:
     src="../files/{{mongodb_repo}}"
     dest="/etc/yum.repos.d/{{mongodb_repo}}"
-    owner=root 
-    group=root 
+    owner=root
+    group=root
     mode="u=rw,g=r,o=r"
 - name: "Install mongodb shell"
   yum: name=mongodb-org-shell state=latest
 
 - name: "Install MongoDB Enterprise dependencies"
-  yum: 
+  yum:
     name: "{{ packages }}"
     state: present
   vars:
     packages:
-        - cyrus-sasl 
-        - cyrus-sasl-gssapi 
-        - cyrus-sasl-plain 
-        - krb5-libs 
-        - libcurl 
-        - libpcap 
-        - lm_sensors-libs 
-        - net-snmp 
-        - net-snmp-agent-libs 
-        - openldap 
-        - openssl 
-        - rpm-libs 
+        - cyrus-sasl
+        - cyrus-sasl-gssapi
+        - cyrus-sasl-plain
+        - krb5-libs
+        - libcurl
+        - libpcap
+        - lm_sensors-libs
+        - net-snmp
+        - net-snmp-agent-libs
+        - openldap
+        - openssl
+        - rpm-libs
         - tcp_wrappers-libs
 
 - name: get automation groupid
-  shell: mongo omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)" 
+  shell: mongo omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)"
   register: opsmanager_groupid
 - debug: var=opsmanager_groupid
 
@@ -59,7 +59,7 @@
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: download automation agent
-  get_url: 
+  get_url:
     url: "{{ om_url }}/download/agent/automation/mongodb-mms-automation-agent-manager-latest.x86_64.rhel7.rpm" 
     dest: "/tmp/automation-agent.rpm"
     validate_certs: no
@@ -95,7 +95,7 @@
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
     regexp: '^mmsBaseUrl='
-    line: 'mmsBaseUrl={{ om_url }}'  
+    line: 'mmsBaseUrl={{ om_url }}'
 
 - name: Configure trusted MMS certificate parameter
   lineinfile:

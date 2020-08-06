@@ -8,7 +8,7 @@
 - name: "Create data directory"
   file: path=/opt/minio/data state=directory mode=0755 owner=minio group=minio
 - name: "Downloading minio binary"
-  get_url: 
+  get_url:
     url: "{{minio_url}}"
     dest: /opt/minio/bin/minio
     force_basic_auth: yes
@@ -21,21 +21,21 @@
     mode: 0744
   when: not local_mode
 - name: "Copy local minio binary"
-  copy: 
+  copy:
     src: "../files/minio"
     dest: "/opt/minio/bin/minio"
-    owner: minio 
-    group: minio 
+    owner: minio
+    group: minio
     mode: 0744
   when: local_mode
 - name: "Placing minio configuration file"
-  template: 
+  template:
     src="../files/minio.conf"
     dest="/opt/minio/minio.conf"
     owner=minio
     group=minio
 - name: "Setting up minio as a systemd service"
-  template: 
+  template:
     src="../files/minio.service"
     dest="/etc/systemd/system/minio.service"
 - name: "Enable minio service"

@@ -22,14 +22,35 @@
             "labels": [],
             "loadFactor": 50,
             "s3MaxConnections":"50",
-            "s3BucketEndpoint": "http://192.168.1.103:9000", 
+            "s3BucketEndpoint": "http://192.168.1.103:9000",
+            "s3BucketName": "ombucket",
+            "sseEnabled": false,
+            "disableProxyS3": false,
+            "ssl": false,
+            "uri": "mongodb://192.168.1.100:27017",
+            "acceptedTos":true
+        }'
+  when: om_version is defined and om_version is version_compare("4.4",">=")
+
+- name: Set Ops Manager URL for https
+  set_fact:
+    call_body: '{  "assignmentEnabled": true,
+            "awsAccessKey": "minio",
+            "awsSecretKey": "miniostorage",
+            "pathStyleAccessEnabled":false,
+            "encryptedCredentials": false,
+            "id": "s3Store",
+            "labels": [],
+            "loadFactor": 50,
+            "s3MaxConnections":"50",
+            "s3BucketEndpoint": "http://192.168.1.103:9000",
             "s3BucketName": "ombucket",
             "sseEnabled": false,
             "ssl": false,
             "uri": "mongodb://192.168.1.100:27017",
             "acceptedTos":true
         }'
-  when: om_version is defined and om_version is version_compare("4.2",">=")  
+  when: om_version is defined and om_version is version_compare("4.4","<") and om_version is version_compare("4.2",">=")
 
 - name: Set Ops Manager URL for https
   set_fact:
@@ -68,7 +89,7 @@
         "ssl": false,
         "uri": "mongodb://192.168.1.100:27017"
     }'
-  when: om_version is defined and om_version is version_compare("4.0","<") 
+  when: om_version is defined and om_version is version_compare("4.0","<")
 
 - name: "Printing API call body"
   debug: var=call_body
