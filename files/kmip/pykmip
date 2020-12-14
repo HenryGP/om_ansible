@@ -13,7 +13,7 @@ set -e
 PID_FILE=/tmp/pykmip.pid
 case "$1" in
   start)
-    /usr/bin/pykmip-server & echo $! > $PID_FILE
+    /usr/local/bin/pykmip-server & echo $! > $PID_FILE
     ;;
   stop)
     kill `cat $PID_FILE`

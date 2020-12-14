@@ -78,6 +78,13 @@
             src: /certs/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_client.pem
             dest: /certs/client.pem
             state: link
+    - name: "Copy the kmip client certificate"
+      copy: 
+            src="files/ssl/kmip_client.pem"
+            dest="/certs"
+            owner=root
+            group=root
+            mode="u=rw,g=r,o=r"
 
 - name: "Distributing SSL certificates internals for client"
   hosts: node1 node2 node3
