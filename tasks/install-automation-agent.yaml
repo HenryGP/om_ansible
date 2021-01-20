@@ -102,7 +102,14 @@
     path: /etc/mongodb-mms/automation-agent.config
     regexp: '^sslTrustedMMSServerCertificate='
     line: 'sslTrustedMMSServerCertificate=/certs/ca.pem'
-  when: om_https
+  when: om_https and om_version is version_compare("4.4","<")
+
+- name: Configure trusted MMS certificate parameter
+  lineinfile:
+    path: /etc/mongodb-mms/automation-agent.config
+    regexp: '^httpsCAFile='
+    line: 'httpsCAFile=/certs/ca.pem'
+  when: om_https and om_version is version_compare("4.4",">=")
 
 - name: setup data directory
   file: path=/data state=directory mode=0755 owner=mongod group=mongod
