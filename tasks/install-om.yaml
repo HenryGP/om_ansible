@@ -238,12 +238,12 @@
 - name: Check that global_owner_private_key.yaml exists
   local_action: stat path=/root/vars/global_owner_private_key.yaml
   register: global_owner_private_key
-  when: om_version is version_compare("4.2",">=")
+  when: om_version is version_compare("4.4",">=")
 
 - name: Check that global_owner_public_key.yaml exists
   local_action: stat path=/root/vars/global_owner_public_key.yaml
   register: global_owner_public_key
-  when: om_version is version_compare("4.2",">=")
+  when: om_version is version_compare("4.4",">=")
 
 - name: "Check if the initial user has been created"
   uri:
@@ -281,11 +281,11 @@
 
 - name: Saving Global Owner API Private key
   local_action: copy content={{user_create_result.json.programmaticApiKey.privateKey}} dest=/root/vars/global_owner_private_key.yaml
-  when: om_version is version_compare("4.2",">=") and global_owner_private_key.stat.exists == false
+  when: om_version is version_compare("4.4",">=") and global_owner_private_key.stat.exists == false
 
 - name: Saving Global Owner API Public key
   local_action: copy content={{user_create_result.json.programmaticApiKey.publicKey}} dest=/root/vars/global_owner_public_key.yaml
-  when: om_version is version_compare("4.2",">=") and global_owner_public_key.stat.exists == false
+  when: om_version is version_compare("4.4",">=") and global_owner_public_key.stat.exists == false
 
 - name: "Whitelist Global Owner API initial user"
   uri:
@@ -301,7 +301,7 @@
     password: "{{ api_key }}"
     body: '{"cidrBlock": "192.168.1.0/24", "description": "omserver whitelist"}'
     return_content: yes
-  when: om_version is version_compare("4.2",">=")
+  when: om_version is version_compare("4.4",">=")
 
 - name: Check that group_id.yaml exists
   local_action: stat path=/root/vars/group_id.yaml

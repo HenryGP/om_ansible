@@ -186,7 +186,7 @@
   tasks:
     - name: "Installing MongoCli"
       include: tasks/install-mongocli.yaml
-      when: om_version is version_compare("4.2",">=")
+      when: om_version is version_compare("4.4",">=")
 
 - name: "Setting up S3 storage"
   hosts: backup
