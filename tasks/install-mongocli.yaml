@@ -1,0 +1,37 @@
+- name: "Install mongocli"
+  yum: name=mongocli  state=latest
+
+- name: get automation groupid (projectid)
+  shell: mongo omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)"
+  register: opsmanager_groupid
+
+- name: Creates directory
+  file:
+    path: /root/.config
+    state: directory
+
+- name: "Copying mongocli config"
+  copy:
+    src="mongocli.toml"
+    dest="/root/.config/mongocli.toml"
+    owner=root
+    group=root
+    mode="u=rw,g=r,o=r"
+
+- name: update mongocli public key
+  lineinfile:
+    path: /root/.config/mongocli.toml
+    regexp: 'public_api_key'
+    line: "  public_api_key = \"{{public_key}}\""
+
+- name: update mongocli private key
+  lineinfile:
+    path: /root/.config/mongocli.toml
+    regexp: 'private_api_key'
+    line: "  private_api_key = \"{{private_key}}\""
+    
+- name: update mongocli project_id
+  lineinfile:
+    path: /root/.config/mongocli.toml
+    regexp: 'project_id'
+    line: "  project_id = \"{{opsmanager_groupid.stdout_lines[0]}}\""
