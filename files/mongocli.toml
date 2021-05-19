@@ -1,5 +1,5 @@
 [default]
-  ops_manager_url = "http://localhost:8080/"
+  ops_manager_url = "http://omserver.omansible.int:8080/"
   public_api_key = PUBLIC_API_KEY
   private_api_key = PRIVATE_API_KEY
   project_id=PROJECT
