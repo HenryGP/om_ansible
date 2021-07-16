@@ -1,6 +1,6 @@
 ---
 - name: "Print variable"
-  debug: var=api_key
+  debug: var=private_key
 - name: "Create FS Store"
   uri:
     url: "{{ om_url }}/api/public/v1.0/admin/backup/snapshot/fileSystemConfigs/fsstore?pretty=true"
@@ -10,8 +10,8 @@
       Content-Type: "application/json"
     status_code: 200, 404
     return_content: yes
-    user: '{{ om_username }}'
-    password: "{{api_key}}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   register: fs_created
 
 - name: "Printing result of API call"
@@ -28,6 +28,6 @@
     body: '{"id":"fsstore","assignmentEnabled" : false,"loadFactor" : 50,"mmapv1CompressionSetting" : "GZIP","storePath" : "/data/fsstore","wtCompressionSetting" : "NONE"}'
     status_code: "201"
     return_content: yes
-    user: '{{ om_username }}'
-    password: "{{api_key}}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   when: fs_created.status == 404

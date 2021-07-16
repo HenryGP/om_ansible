@@ -3,7 +3,8 @@
   become: yes
   gather_facts: no
   vars:
-    api_key: "{{ lookup('file', '../../vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', './vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', './vars/public_key.yaml') }}"
   vars_files:
     - ../../vars/om-install-vars.yaml
   tasks:

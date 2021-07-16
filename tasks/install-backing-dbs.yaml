@@ -29,7 +29,9 @@
         - rpm-libs
         - tcp_wrappers-libs
 - name: "Install mongodb"
-  yum: name=mongodb-org state=latest
+  yum: 
+    name: mongodb-org
+    state: latest
 - name: "Create dbpath for Application Database"
   file: path=/data/appdb state=directory mode=0755 owner=mongod group=mongod
 - name: "Copy mongod configuration file"

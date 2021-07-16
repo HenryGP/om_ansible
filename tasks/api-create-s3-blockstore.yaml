@@ -1,6 +1,6 @@
 ---
 - name: "Print variable"
-  debug: var=api_key
+  debug: var=private_key
 
 - name: "Gather the rpm package facts"
   package_facts:
@@ -22,12 +22,12 @@
             "labels": [],
             "loadFactor": 50,
             "s3MaxConnections":"50",
-            "s3BucketEndpoint": "http://192.168.1.103:9000",
+            "s3BucketEndpoint": "http://bkp.omansible.int:9000",
             "s3BucketName": "ombucket",
             "sseEnabled": false,
             "disableProxyS3": false,
             "ssl": false,
-            "uri": "mongodb://192.168.1.100:27017",
+            "uri": "mongodb://omserver.omansible.int:27017",
             "acceptedTos":true
         }'
   when: om_version is defined and om_version is version_compare("4.4",">=")
@@ -43,11 +43,11 @@
             "labels": [],
             "loadFactor": 50,
             "s3MaxConnections":"50",
-            "s3BucketEndpoint": "http://192.168.1.103:9000",
+            "s3BucketEndpoint": "http://bkp.omansible.int:9000",
             "s3BucketName": "ombucket",
             "sseEnabled": false,
             "ssl": false,
-            "uri": "mongodb://192.168.1.100:27017",
+            "uri": "mongodb://omserver.omansible.int:27017",
             "acceptedTos":true
         }'
   when: om_version is defined and om_version is version_compare("4.4","<") and om_version is version_compare("4.2",">=")
@@ -64,11 +64,11 @@
         "loadFactor": 1,
         "pathStyleAccessEnabled": false,
         "s3MaxConnections":"50",
-        "s3BucketEndpoint": "http://192.168.1.103:9000",
+        "s3BucketEndpoint": "http://bkp.omansible.int:9000",
         "s3BucketName": "ombucket",
         "sseEnabled": false,
         "ssl": false,
-        "uri": "mongodb://192.168.1.100:27017"
+        "uri": "mongodb://omserver.omansible.int:27017"
     }'
   when: om_version is defined and om_version is version_compare("4.2","<") and om_version is version_compare("4.0",">=")
 
@@ -83,11 +83,11 @@
         "labels": [],
         "loadFactor": 1,
         "pathStyleAccessEnabled": false,
-        "s3BucketEndpoint": "http://192.168.1.103:9000",
+        "s3BucketEndpoint": "http://bkp.omansible.int:9000",
         "s3BucketName": "ombucket",
         "sseEnabled": false,
         "ssl": false,
-        "uri": "mongodb://192.168.1.100:27017"
+        "uri": "mongodb://omserver.omansible.int:27017"
     }'
   when: om_version is defined and om_version is version_compare("4.0","<")
 
@@ -104,8 +104,8 @@
       Content-Type: "application/json"
     status_code: 200, 404
     return_content: yes
-    user: "{{ om_username }}"
-    password: "{{ api_key }}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   register: s3_created
   when: om_version is defined
 
@@ -124,7 +124,7 @@
     body: "{{ call_body }}"
     status_code: 201
     return_content: yes
-    user: "{{ om_username }}"
-    password: "{{ api_key }}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   register: result
   when: om_version is defined and s3_created.status == 404
