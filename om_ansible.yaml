@@ -185,6 +185,7 @@
   vars:
     private_key: "{{ lookup('file', './vars/private_key.yaml') }}"
     public_key: "{{ lookup('file', './vars/public_key.yaml') }}"
+
   tasks:
     - name: "Installing MongoCli"
       include: tasks/install-mongocli.yaml
