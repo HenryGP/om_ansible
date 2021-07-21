@@ -35,3 +35,9 @@
     path: /root/.config/mongocli.toml
     regexp: 'project_id'
     line: "  project_id = \"{{opsmanager_groupid.stdout_lines[0]}}\""
+
+- name: Enable monitoring on n1 and n2 via mongocli
+  command: /usr/bin/mongocli om monitoring enable {{ item }}
+  with_items:
+    - n1.omansible.int
+    - n2.omansible.int
