@@ -118,7 +118,7 @@ services:
     hostname: ldapserver.omansible.int
     domainname: omansible.int
     container_name: ldapserver
-    mem_limit: 500m
+    mem_limit: 768m
     cap_add:
       - SYS_ADMIN
     volumes:
