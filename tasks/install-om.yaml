@@ -202,6 +202,12 @@
     regexp: '^mms.preflight.run='
     line: mms.preflight.run=true
 
+- name: "Disable invite"
+  blockinfile:
+    path: /opt/mongodb/mms/conf/conf-mms.properties
+    block: |
+      mms.user.bypassInviteForExistingUsers=true
+
 - name: "Create conf dir to increase SystemD timeout for mongodb-mms service"
   file:
     path: /etc/systemd/system/mongodb-mms.service.d
@@ -231,19 +237,13 @@
     timeout: 900
   when: om_https
 
-- name: Check that admin_user_api_key.yaml exists
-  local_action: stat path=/root/vars/admin_user_api_key.yaml
-  register: admin_api_key_file
+- name: Check that private_key.yaml exists
+  local_action: stat path=/root/vars/private_key.yaml
+  register: private_key_file
 
-- name: Check that global_owner_private_key.yaml exists
-  local_action: stat path=/root/vars/global_owner_private_key.yaml
-  register: global_owner_private_key
-  when: om_version is version_compare("4.4",">=")
-
-- name: Check that global_owner_public_key.yaml exists
-  local_action: stat path=/root/vars/global_owner_public_key.yaml
-  register: global_owner_public_key
-  when: om_version is version_compare("4.4",">=")
+- name: Check that public_key.yaml exists
+  local_action: stat path=/root/vars/public_key.yaml
+  register: public_key_file
 
 - name: "Check if the initial user has been created"
   uri:
@@ -255,10 +255,10 @@
       Content-Type: "application/json"
     status_code: 200
     return_content: yes
-    user: admin
-    password: "{{ api_key }}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   register: user_exists
-  when: admin_api_key_file.stat.exists == true
+  when: private_key_file.stat.exists == true
 
 - name: "Create initial user"
   uri:
@@ -273,19 +273,27 @@
     body: "{{first_user_api_call}}"
     return_content: yes
   register: user_create_result
-  when: admin_api_key_file.stat.exists == false
+  when: private_key_file.stat.exists == false
 
 - name: Saving API key for admin user in local server
-  local_action: copy content={{user_create_result.json.apiKey}} dest=/root/vars/admin_user_api_key.yaml
-  when: admin_api_key_file.stat.exists == false
+  local_action: copy content={{user_create_result.json.apiKey}} dest=/root/vars/private_key.yaml
+  when: private_key_file.stat.exists == false and om_version is version_compare("4.4","<")
 
-- name: Saving Global Owner API Private key
-  local_action: copy content={{user_create_result.json.programmaticApiKey.privateKey}} dest=/root/vars/global_owner_private_key.yaml
-  when: om_version is version_compare("4.4",">=") and global_owner_private_key.stat.exists == false
+- name: Saving Public API key for admin user in local server
+  local_action: copy content={{om_username}} dest=/root/vars/public_key.yaml
+  when: public_key_file.stat.exists == false and om_version is version_compare("4.4","<")
 
-- name: Saving Global Owner API Public key
-  local_action: copy content={{user_create_result.json.programmaticApiKey.publicKey}} dest=/root/vars/global_owner_public_key.yaml
-  when: om_version is version_compare("4.4",">=") and global_owner_public_key.stat.exists == false
+- name: Saving Private key
+  local_action: copy content={{user_create_result.json.programmaticApiKey.privateKey}} dest=/root/vars/private_key.yaml
+  when: private_key_file.stat.exists == false and om_version is version_compare("4.4",">=")
+
+- name: Saving Public key
+  local_action: copy content={{user_create_result.json.programmaticApiKey.publicKey}} dest=/root/vars/public_key.yaml
+  when: public_key_file.stat.exists == false and  om_version is version_compare("4.4",">=")
+
+- set_fact:
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
 
 - name: "Whitelist Global Owner API initial user"
   uri:
@@ -297,17 +305,41 @@
       Content-Type: "application/json"
     body_format: json
     status_code: 200
-    user: admin
-    password: "{{ api_key }}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
     body: '{"cidrBlock": "192.168.1.0/24", "description": "omserver whitelist"}'
     return_content: yes
-  when: om_version is version_compare("4.4",">=")
+  when: om_version is version_compare("4.4",">=") and om_version is version_compare("4.4.15","<")
 
 - name: Check that group_id.yaml exists
   local_action: stat path=/root/vars/group_id.yaml
   register: group_id_file
 
-- name: "Create initial group"
+- name: Check that organization_id.yaml exists
+  local_action: stat path=/root/vars/organization_id.yaml
+  register: organization_id_file
+
+- name: "Create initial organization"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/orgs?pretty=true"
+    validate_certs: no
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: '{"name": "Initial Organization"}'
+    status_code: 201
+    return_content: yes
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
+  when: organization_id_file.stat.exists == false and private_key_file.stat.exists == false and om_version is version_compare("4.4",">=")
+  register: organization
+
+- name: Saving organization ID
+  local_action: copy content={{organization.json.id}} dest=/root/vars/organization_id.yaml
+  when: organization_id_file.stat.exists == false and om_version is version_compare("4.4",">=")
+
+- name: "Create initial group < 4.4"
   uri:
     url: "{{ om_url }}/api/public/v1.0/groups?pretty=true"
     validate_certs: no
@@ -318,11 +350,64 @@
     body: '{"name": "Initial group"}'
     status_code: 201
     return_content: yes
-    user: admin
-    password: "{{user_create_result.json.apiKey}}"
-  when: group_id_file.stat.exists == false and admin_api_key_file.stat.exists == false
-  register: project
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
+  when: group_id_file.stat.exists == false and private_key_file.stat.exists == false and om_version is version_compare("4.4","<")
+  register: project_old
 
-- name: Saving API key for admin user in local server
-  local_action: copy content={{project.json.id}} dest=/root/vars/group_id.yaml
-  when: group_id_file.stat.exists == false
+- name: "Create initial project >= 4.4"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/groups?pretty=true"
+    validate_certs: no
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: '{"name": "Initial Project", "orgId": "{{ organization.json.id }}" }'
+    status_code: 201
+    return_content: yes
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
+  when: group_id_file.stat.exists == false and private_key_file.stat.exists == false and om_version is version_compare("4.4",">=")
+  register: project_new
+
+- name: Saving project new
+  local_action: copy content={{project_new.json.id}} dest=/root/vars/group_id.yaml
+  when: group_id_file.stat.exists == false and om_version is version_compare("4.4",">=")
+
+- name: Saving project old
+  local_action: copy content={{project_old.json.id}} dest=/root/vars/group_id.yaml
+  when: group_id_file.stat.exists == false and om_version is version_compare("4.4","<")
+
+- set_fact:
+    project_id: "{{ lookup('file', '/root/vars/group_id.yaml') }}"
+
+- name: "Retrieve Admin User"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/users/byName/{{om_username}}"
+    validate_certs: no
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    status_code: 200
+    return_content: yes
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
+  when: group_id_file.stat.exists == false and private_key_file.stat.exists == false and om_version is version_compare("4.4",">=")
+  register: user_info
+
+- name: "Add user as Project Owner"
+  uri:
+    url: "{{ om_url }}/api/public/v1.0/groups/{{project_id}}/users?pretty=true"
+    validate_certs: no
+    method: POST
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    body_format: json
+    body: '[{ "id": "{{user_info.json.id}}", "roles": [{ "roleName": "GROUP_OWNER" }]}]'
+    status_code: 200
+    return_content: yes
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
+  when: group_id_file.stat.exists == false and private_key_file.stat.exists == false and om_version is version_compare("4.4",">=")

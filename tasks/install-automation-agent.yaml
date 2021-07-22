@@ -50,8 +50,8 @@
     body: '{"desc":"Initial API Key"}'
     status_code: 201
     return_content: yes
-    user: admin
-    password: "{{api_key}}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   register: agents_apikey
   when: not mongodb_repo == "mongodb-org-3.4.repo"
 

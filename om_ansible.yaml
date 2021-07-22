@@ -151,7 +151,8 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     # Install the Application database
     - name: "Installing Application Database"
@@ -168,7 +169,8 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
@@ -181,8 +183,9 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    public_key: "{{ lookup('file', './vars/global_owner_public_key.yaml') }}"
-    private_key: "{{ lookup('file', './vars/global_owner_private_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
+
   tasks:
     - name: "Installing MongoCli"
       include: tasks/install-mongocli.yaml
@@ -214,7 +217,8 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
@@ -234,7 +238,8 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
@@ -254,7 +259,8 @@
   vars_files:
     - vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', './vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
