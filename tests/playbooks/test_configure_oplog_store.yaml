@@ -6,8 +6,8 @@
   vars_files:
     - ../../vars/om-install-vars.yaml
   vars:
-    private_key: "{{ lookup('file', './vars/private_key.yaml') }}"
-    public_key: "{{ lookup('file', './vars/public_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     - name: Set Ops Manager URL for http
       set_fact:
