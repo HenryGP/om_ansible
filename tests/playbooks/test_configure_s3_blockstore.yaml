@@ -6,7 +6,8 @@
   vars_files:
     - ../../vars/om-install-vars.yaml
   vars:
-    api_key: "{{ lookup('file', '../../vars/admin_user_api_key.yaml') }}"
+    private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
+    public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
     s3_access_key: "minio"
     s3_secret_key: "miniostorage"
   tasks:

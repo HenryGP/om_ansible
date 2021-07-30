@@ -15,7 +15,9 @@ env:
   - ANSIBLE_HOME=/usr/local/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM40} MONGO=${MONGO_REPO_40} HTTP=${HTTP_ON}
   - ANSIBLE_HOME=/usr/local/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM42} MONGO=${MONGO_REPO_42} HTTP=${HTTP_OFF}
   - ANSIBLE_HOME=/usr/local/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM42} MONGO=${MONGO_REPO_42} HTTP=${HTTP_ON}
-
+  - ANSIBLE_HOME=/usr/local/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM50} MONGO=${MONGO_REPO_50} HTTP=${HTTP_OFF}
+  - ANSIBLE_HOME=/usr/local/bin PLAYBOOKS_PATH=/root/tests/playbooks OM=${OM50} MONGO=${MONGO_REPO_50} HTTP=${HTTP_ON}
+  
 before_install:
   - sudo apt-get update
   - docker-compose build

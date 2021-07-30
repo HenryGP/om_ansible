@@ -1,6 +1,6 @@
 ---
 - name: "Print variable"
-  debug: var=api_key
+  debug: var=private_key
 - name: "Create Oplog Store"
   uri:
     url: "{{ om_url }}/api/public/v1.0/admin/backup/oplog/mongoConfigs/oplog1?pretty=true"
@@ -10,8 +10,8 @@
       Content-Type: "application/json"
     status_code: 200, 404
     return_content: yes
-    user: '{{ om_username }}'
-    password: "{{api_key}}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   register: oplog_created
 
 - name: "Printing result of API call"
@@ -25,9 +25,9 @@
     headers:
       Content-Type: "application/json"
     body_format: json
-    body: '{"id":"oplog1","assignmentEnabled" : true,"encryptedCredentials" : false,"uri" : "mongodb://omserver:27017","ssl" : false}'
+    body: '{"id":"oplog1","assignmentEnabled" : true,"encryptedCredentials" : false,"uri" : "mongodb://omserver.omansible.int:27017","ssl" : false}'
     status_code: 201
     return_content: yes
-    user: '{{ om_username }}'
-    password: "{{api_key}}"
+    user: "{{ public_key }}"
+    password: "{{ private_key }}"
   when: oplog_created.status == 404

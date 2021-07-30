@@ -1,7 +1,7 @@
-192.168.1.100   omserver
-192.168.1.101   n1
-192.168.1.102   n2
-192.168.1.106   n3
-192.168.1.103   bkp
-192.168.1.104   ldapserver
+192.168.1.100   omserver omserver.omansible.int
+192.168.1.101   n1 n1.omansible.int
+192.168.1.102   n2  n2.omansible.int 
+192.168.1.106   n3 n3.omansible.int
+192.168.1.103   bkp bkp.omansible.int
+192.168.1.104   ldapserver ldapserver.omansible.int
 127.0.0.1   localhost

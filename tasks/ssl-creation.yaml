@@ -16,6 +16,7 @@
     path: /root/files/ssl/{{ item }}_client.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
+    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.omansible.int"
     extended_key_usage: clientAuth
   with_items:
     - n1
@@ -23,11 +24,22 @@
     - n3
     - omserver
 
+- name: Generate kmip client certificate requests
+  openssl_csr:
+    path: /root/files/ssl/{{ item }}_client.csr
+    privatekey_path: /root/files/ssl/{{ item }}.key
+    common_name: "n1"
+    subject_alt_name: "DNS:n1,DNS:n1.omansible.int,DNS:n2,DNS:n2.omansible.int,DNS:n3,DNS:n3.omansible.int,DNS:omserver,DNS:omserver.omansible.int"
+    extended_key_usage: clientAuth
+  with_items:
+    - kmip 
+
 - name: Generate server certificate requests
   openssl_csr:
     path: /root/files/ssl/{{ item }}_server.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
+    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.omansible.int"
     extended_key_usage: serverAuth
   with_items:
     - omserver
@@ -43,6 +55,7 @@
     path: /root/files/ssl/{{ item }}_internal.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
     common_name: "{{ item }}"
+    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.omansible.int"
     extended_key_usage:
       - serverAuth
       - clientAuth
@@ -64,6 +77,7 @@
     - n2
     - n3
     - omserver
+    - kmip
 
 - name: Generate an OpenSSL certificate for servers signed with om_ansible CA
   openssl_certificate:
@@ -104,6 +118,7 @@
     - n2
     - n3
     - omserver
+    - kmip
 
 - debug:
     msg: File exists {{ item.stat.path }}
@@ -150,7 +165,7 @@
     src: /root/files/ssl/{{ item.item }}_client.crt
     dest: /root/files/ssl/{{ item.item }}_client.pem
   with_items: "{{ clientpemstat.results }}"
-  when: item.stat.exists == false  
+  when: item.stat.exists == false
 
 - name: Client cert + key concatenation
   lineinfile:
@@ -161,7 +176,7 @@
   when: item.stat.exists == false
 
 - name: Checking if server pem file exists
-  stat: 
+  stat:
     path: /root/files/ssl/{{ item }}_server.pem
   register: serverpemstat
   with_items:
@@ -218,7 +233,7 @@
     src: /root/files/ssl/{{ item.item }}_server.crt
     dest: /root/files/ssl/{{ item.item }}_server.pem
   with_items: "{{ serverpemstat.results }}"
-  when: item.stat.exists == false  
+  when: item.stat.exists == false
 
 - name: Server cert + key concatenation
   lineinfile:
@@ -229,7 +244,7 @@
   when: item.stat.exists == false
 
 - name: Checking if internal pem file exists
-  stat: 
+  stat:
     path: /root/files/ssl/{{ item }}_internal.pem
   register: internalpemstat
   with_items:

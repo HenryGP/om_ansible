@@ -1,20 +1,25 @@
-version: "2"
+version: "2.4"
 
 services:
   provisioner:
     build: .
-    hostname: provisioner
+    hostname: provisioner.omansible.int
+    domainname: omansible.int
     container_name: provisioner
     command: tail -f /dev/null
     privileged: true
     networks:
       front:
+        aliases:
+          - provisioner.omansible.int
         ipv4_address: 192.168.1.99
 
   omserver:
     build: ./inventory/clients
-    hostname: omserver
+    hostname: omserver.omansible.int
+    domainname: omansible.int
     container_name: omserver
+#   mem_limit: 16g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -33,9 +38,11 @@ services:
 
   n1:
     build: ./inventory/clients
-    hostname: n1
+    hostname: n1.omansible.int
+    domainname: omansible.int
     container_name: n1
     mem_limit: 500m
+#   mem_limit: 2g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -51,9 +58,11 @@ services:
 
   n2:
     build: ./inventory/clients
-    hostname: n2
+    hostname: n2.omansible.int
+    domainname: omansible.int
     container_name: n2
     mem_limit: 500m
+#   mem_limit: 2g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -69,9 +78,11 @@ services:
 
   n3:
     build: ./inventory/clients
-    hostname: n3
+    hostname: n3.omansible.int
+    domainname: omansible.int
     container_name: n3
     mem_limit: 500m
+#   mem_limit: 2g
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -86,7 +97,8 @@ services:
 
   bkp:
     build: ./inventory/clients
-    hostname: bkp
+    hostname: bkp.omansible.int
+    domainname: omansible.int
     container_name: bkp
     mem_limit: 500m
     cap_add:
@@ -103,9 +115,10 @@ services:
 
   ldapserver:
     build: ./inventory/ldap
-    hostname: ldapserver
+    hostname: ldapserver.omansible.int
+    domainname: omansible.int
     container_name: ldapserver
-    mem_limit: 500m
+    mem_limit: 768m
     cap_add:
       - SYS_ADMIN
     volumes:
@@ -123,7 +136,8 @@ services:
     build:
       context: .
       dockerfile: ./inventory/kmip/Dockerfile
-    hostname: kmip
+    hostname: kmip.omansible.int
+    domainname: omansible.int
     container_name: kmip
     mem_limit: 500m
     cap_add:
@@ -140,6 +154,7 @@ services:
 
 networks:
   front:
+    name: omansible.int
     driver: bridge
     ipam:
       driver: default

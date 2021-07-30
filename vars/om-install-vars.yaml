@@ -3,16 +3,20 @@
 vms: False
 local_mode: False
 # MongoDB repositories for backing databases
-mongodb_repo: mongodb-org-4.2.repo
-# URL for Ops Manager packages
-om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.9.56829.20200304T1500Z-1.x86_64.rpm
+mongodb_repo: mongodb-org-5.0.repo
+# Ops Manaher version. (format: X.X.X)
+om_version: 5.0.0
+
+# URL for Ops Manager packages. If om_version was set, this setting will take precedence and overwrite it.
+# om_download_url: https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.2.12.56844.20200408T2127Z-1.x86_64.rpm
+
 # First user login credentials
 om_username: admin
 om_password: Password1!
 # Enable https for Ops Manager
 om_https: False
 # API calls for first user 
-first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "mongodb-mms@omserver.localdomain","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
+first_user_api_call: {"username": "{{om_username}}" ,"emailAddress": "mongodb-mms@omserver.omansible.int","password": "{{om_password}}","firstName": "Admin","lastName": "User"}
 # minio 
 minio_url: https://dl.minio.io/server/minio/release/linux-amd64/minio
 s3cmd_url: https://github.com/s3tools/s3cmd/archive/master.zip
