@@ -11,35 +11,30 @@
     - kmip
     - ldapserver
 
-- name: Generate client certificate requests
+- name: Create certificate signing request (CSR) for client X.509 certificates
   openssl_csr:
     path: /root/files/ssl/{{ item }}_client.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
-    common_name: "{{ item }}"
-    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.omansible.int"
+    organization_name: "MongoDB"
+    organizational_unit_name: "Technical Services"
+    common_name: "{{ item }}-client-x509-certificate"
+    subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage: clientAuth
   with_items:
     - n1
     - n2
     - n3
     - omserver
+    - kmip
 
-- name: Generate kmip client certificate requests
-  openssl_csr:
-    path: /root/files/ssl/{{ item }}_client.csr
-    privatekey_path: /root/files/ssl/{{ item }}.key
-    common_name: "n1"
-    subject_alt_name: "DNS:n1,DNS:n1.omansible.int,DNS:n2,DNS:n2.omansible.int,DNS:n3,DNS:n3.omansible.int,DNS:omserver,DNS:omserver.omansible.int"
-    extended_key_usage: clientAuth
-  with_items:
-    - kmip 
-
-- name: Generate server certificate requests
+- name: Create certificate signing request (CSR) for server X.509 certificates
   openssl_csr:
     path: /root/files/ssl/{{ item }}_server.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
-    common_name: "{{ item }}"
-    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.omansible.int"
+    organization_name: "MongoDB"
+    organizational_unit_name: "Technical Services"
+    common_name: "{{ item }}-server-x509-certificate"
+    subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage: serverAuth
   with_items:
     - omserver
@@ -50,12 +45,14 @@
     - kmip
     - ldapserver
 
-- name: Generate internalAuth (server + client) certificate requests
+- name: Create certificate signing request (CSR) for Replica Set membership authentication (`net.tls.clusterFile`) (X.509 certificates with clientAuth + serverAuth)
   openssl_csr:
-    path: /root/files/ssl/{{ item }}_internal.csr
+    path: /root/files/ssl/{{ item }}_member_auth.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
-    common_name: "{{ item }}"
-    subject_alt_name: "DNS:{{ item }},DNS:{{ item }}.omansible.int"
+    organization_name: "MongoDB"
+    organizational_unit_name: "Technical Services"
+    common_name: "{{ item }}-member-auth-x509-certificate"
+    subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage:
       - serverAuth
       - clientAuth
@@ -96,10 +93,10 @@
     - kmip
     - ldapserver
 
-- name: Generate an OpenSSL certificate for internalAuth (server + client) signed with om_ansible CA
+- name: Generate X.509 certificate for Replica Set membership authentication (`net.tls.clusterFile`) (X.509 certificates with clientAuth + serverAuth) signed by our Root CA
   openssl_certificate:
-    path: /root/files/ssl/{{ item }}_internal.crt
-    csr_path: /root/files/ssl/{{ item }}_internal.csr
+    path: /root/files/ssl/{{ item }}_member_auth.crt
+    csr_path: /root/files/ssl/{{ item }}_member_auth.csr
     ownca_path: /root/files/ssl/ca.pem
     ownca_privatekey_path: /root/files/ssl/ca.pem
     ownca_not_after: +825d
@@ -245,7 +242,7 @@
 
 - name: Checking if internal pem file exists
   stat:
-    path: /root/files/ssl/{{ item }}_internal.pem
+    path: /root/files/ssl/{{ item }}_member_auth.pem
   register: internalpemstat
   with_items:
     - n1
@@ -294,14 +291,14 @@
 
 - name: Create internal PEM file
   copy:
-    src: /root/files/ssl/{{ item.item }}_internal.crt
-    dest: /root/files/ssl/{{ item.item }}_internal.pem
+    src: /root/files/ssl/{{ item.item }}_member_auth.crt
+    dest: /root/files/ssl/{{ item.item }}_member_auth.pem
   with_items: "{{ internalpemstat.results }}"
   when: item.stat.exists == false
 
 - name: Internal cert + key concatenation
   lineinfile:
-    dest: /root/files/ssl/{{ item.item }}_internal.pem
+    dest: /root/files/ssl/{{ item.item }}_member_auth.pem
     regexp: ^-----BEGIN RSA PRIVATE KEY-----((.|\n)*)-----END RSA PRIVATE KEY-----\Z
     line: "{{ lookup('file', '/root/files/ssl/{{ item.item }}.key') }}"
   with_items: "{{ internalpemstat.results }}"

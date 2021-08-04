@@ -91,17 +91,17 @@
   become: yes
   gather_facts: yes
   tasks:
-    - name: "Copying internalAut certs"
+    - name: "Copying X.509 certificates for Replica Set membership authentication (`net.tls.clusterFile`) (X.509 certificates with clientAuth + serverAuth)"
       copy:
-            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem"
+            src="files/ssl/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_member_auth.pem"
             dest="/certs"
             owner=root
             group=root
             mode="u=rw,g=r,o=r"
-    - name: "Creating symbolic link `/certs/internal.pem on each server"
+    - name: "Creating symbolic link `/certs/member_auth.pem` on each host"
       file:
-            src: /certs/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_internal.pem
-            dest: /certs/internal.pem
+            src: /certs/{{ hostvars[inventory_hostname]['ansible_hostname'] }}_member_auth.pem
+            dest: /certs/member_auth.pem
             state: link
 
 - name: "Distributing SSL certificates on servers"
