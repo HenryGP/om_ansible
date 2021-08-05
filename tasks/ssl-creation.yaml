@@ -15,9 +15,11 @@
   openssl_csr:
     path: /root/files/ssl/{{ item }}_client.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
-    organization_name: "MongoDB"
-    organizational_unit_name: "Technical Services"
-    common_name: "{{ item }}-client-x509-certificate"
+    subject:
+      domainComponent: "CLIENT AUTH"
+      organizationName: "MongoDB"
+      organizationalUnitName: "Technical Services"
+      commonName: "{{ item }}-client-x509-certificate"
     subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage: clientAuth
   with_items:
@@ -31,9 +33,11 @@
   openssl_csr:
     path: /root/files/ssl/{{ item }}_server.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
-    organization_name: "MongoDB"
-    organizational_unit_name: "Technical Services"
-    common_name: "{{ item }}-server-x509-certificate"
+    subject:
+      domainComponent: "SERVER AUTH"
+      organizationName: "MongoDB"
+      organizationalUnitName: "Technical Services"
+      commonName: "{{ item }}-server-x509-certificate"
     subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage: serverAuth
   with_items:
@@ -49,9 +53,11 @@
   openssl_csr:
     path: /root/files/ssl/{{ item }}_member_auth.csr
     privatekey_path: /root/files/ssl/{{ item }}.key
-    organization_name: "MongoDB"
-    organizational_unit_name: "Technical Services"
-    common_name: "{{ item }}-member-auth-x509-certificate"
+    subject:
+      domainComponent: "REPLICA SET MEMBERSHIP AUTH"
+      organizationName: "MongoDB"
+      organizationalUnitName: "Technical Services"
+      commonName: "{{ item }}-member-auth-x509-certificate"
     subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage:
       - serverAuth
