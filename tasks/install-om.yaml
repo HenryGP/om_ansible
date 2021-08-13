@@ -309,7 +309,26 @@
     password: "{{ private_key }}"
     body: '{"cidrBlock": "192.168.1.0/24", "description": "omserver whitelist"}'
     return_content: yes
-  when: om_version is version_compare("4.4",">=") and om_version is version_compare("4.4.15","<")
+  when: om_version is version_compare("4.4",">=")
+
+- name: "Restarting Ops Manager after adding the whitelist for API user (workaround for OM > 4.4 and < 4.4.15"
+  service:
+    name: mongodb-mms
+    enabled: yes
+    state: restarted
+  when: om_version is defined and om_version is version_compare("4.4",">=") and om_version is version_compare("4.4.15","<")
+
+- name: "Wait for port 8080 to become available"
+  wait_for:
+    port: 8080
+    timeout: 900
+  when: not om_https
+
+- name: "Wait for port 8443 to become available"
+  wait_for:
+    port: 8443
+    timeout: 900
+  when: om_https  
 
 - name: Check that group_id.yaml exists
   local_action: stat path=/root/vars/group_id.yaml
