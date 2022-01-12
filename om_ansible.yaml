@@ -55,7 +55,7 @@
   tasks:
     - name: "Moving queryable.pem into /certs"
       copy:
-        src="files/ssl/queryable.pem"
+        src="files/ssl/queryable_server.pem"
         dest="/certs"
         owner=root
         group=root

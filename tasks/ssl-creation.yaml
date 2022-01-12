@@ -10,6 +10,7 @@
     - bkp
     - kmip
     - ldapserver
+    - queryable
 
 - name: Create certificate signing request (CSR) for client X.509 certificates
   openssl_csr:
@@ -67,6 +68,21 @@
     - n2
     - n3
 
+- name: Create certificate signing request (CSR) for server X.509 certificates (queryable backup)
+  openssl_csr:
+    path: /root/files/ssl/{{ item }}_server.csr
+    privatekey_path: /root/files/ssl/{{ item }}.key
+    subject:
+      domainComponent: "SERVER AUTH"
+      organizationName: "MongoDB"
+      organizationalUnitName: "Technical Services"
+      commonName: "{{ item }}-server-x509-certificate"
+    subject_alt_name: "DNS:omserver.omansible.int,DNS:*.omansible.int"
+    keyUsage: digitalSignature
+    extended_key_usage: serverAuth
+  with_items:
+    - queryable
+
 - name: Generate an OpenSSL certificate for clients signed with om_ansible CA
   openssl_certificate:
     path: /root/files/ssl/{{ item }}_client.crt
@@ -98,6 +114,7 @@
     - bkp
     - kmip
     - ldapserver
+    - queryable
 
 - name: Generate X.509 certificate for Replica Set membership authentication (`net.tls.clusterFile`) (X.509 certificates with clientAuth + serverAuth) signed by our Root CA
   openssl_certificate:
@@ -190,6 +207,7 @@
     - bkp
     - kmip
     - ldapserver
+    - queryable
 
 - debug:
     msg: File exists {{ item.stat.path }}
