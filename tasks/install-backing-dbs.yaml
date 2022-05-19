@@ -41,6 +41,14 @@
     owner=root
     group=root
     mode="u=rw,g=r,o=r"
+- name: "Create conf dir to increase SystemD timeout for mongod service"
+  file:
+    path: /etc/systemd/system/mongod.service.d
+    state: directory
+- name: "Increase SystemD timeout for mongodb-mms service"
+  copy:
+    content: "[Service]\nTimeoutStartSec=900"
+    dest: "/etc/systemd/system/mongod.service.d/increase-timeout.conf"
 - name: "Enable mongod service"
   service:
     name: mongod
