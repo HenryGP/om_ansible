@@ -45,9 +45,9 @@
   file:
     path: /etc/systemd/system/mongod.service.d
     state: directory
-- name: "Increase SystemD timeout for mongodb-mms service"
+- name: "Increase SystemD timeout for mongod service and add a forking Type"
   copy:
-    content: "[Service]\nTimeoutStartSec=900"
+    content: "[Service]\nTimeoutStartSec=900\nType=forking"
     dest: "/etc/systemd/system/mongod.service.d/increase-timeout.conf"
 - name: "Enable mongod service"
   service:
