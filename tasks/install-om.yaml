@@ -218,6 +218,15 @@
     content: "[Service]\nTimeoutStartSec=900"
     dest: "/etc/systemd/system/mongodb-mms.service.d/increase-timeout.conf"
 
+- name: Ensure mongod is in a running state
+  service:
+    name: mongod 
+    state: started
+  register: mongodserviceDetails
+  until: mongodserviceDetails.status.ActiveState == "active"
+  retries: 15
+  delay: 20
+
 - name: "Start mongodb-mms service"
   systemd:
     state: restarted
