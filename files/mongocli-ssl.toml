@@ -1,0 +1,6 @@
+[default]
+  ops_manager_url = "https://omserver.omansible.int:8443/"
+  public_api_key = PUBLIC_API_KEY
+  private_api_key = PRIVATE_API_KEY
+  project_id=PROJECT
+  service = "ops-manager"

@@ -1,3 +1,8 @@
+- name: "Set variables"
+  set_fact:
+    confdir: "/root/.config/mongocli"
+    conffile: "/root/.config/mongocli/config.toml"
+
 - name: "Install mongocli"
   yum: name=mongocli  state=latest
 
@@ -7,32 +12,42 @@
 
 - name: Creates directory
   file:
-    path: /root/.config
+    path: '{{ confdir }}'
     state: directory
 
 - name: "Copying mongocli config"
   copy:
     src="mongocli.toml"
-    dest="/root/.config/mongocli.toml"
+    dest='{{ conffile}}'
     owner=root
     group=root
     mode="u=rw,g=r,o=r"
+  when: not om_https
+
+- name: "Copying mongocli config (ssl)"
+  copy:
+    src="mongocli-ssl.toml"
+    dest='{{ conffile}}'
+    owner=root
+    group=root
+    mode="u=rw,g=r,o=r"
+  when: om_https
 
 - name: update mongocli public key
   lineinfile:
-    path: /root/.config/mongocli.toml
+    path: '{{ conffile}}'
     regexp: 'public_api_key'
     line: "  public_api_key = \"{{public_key}}\""
 
 - name: update mongocli private key
   lineinfile:
-    path: /root/.config/mongocli.toml
+    path: '{{ conffile}}'
     regexp: 'private_api_key'
     line: "  private_api_key = \"{{private_key}}\""
     
 - name: update mongocli project_id
   lineinfile:
-    path: /root/.config/mongocli.toml
+    path: '{{ conffile}}'
     regexp: 'project_id'
     line: "  project_id = \"{{opsmanager_groupid.stdout_lines[0]}}\""
 
