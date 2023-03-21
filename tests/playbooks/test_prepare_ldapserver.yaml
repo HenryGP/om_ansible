@@ -8,4 +8,4 @@
     - ../../vars/om-install-vars.yaml
   tasks:
     - name: "ldapserver setup and start"
-      include: ../../tasks/prepare-ldapserver.yaml
+      include_tasks: ../../tasks/prepare-ldapserver.yaml

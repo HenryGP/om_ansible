@@ -18,4 +18,4 @@
       when: om_https
     #Install the Automation Agent on all clients
     - name: "Install Automation Agents"
-      include: ../../tasks/install-automation-agent.yaml
+      include_tasks: ../../tasks/install-automation-agent.yaml

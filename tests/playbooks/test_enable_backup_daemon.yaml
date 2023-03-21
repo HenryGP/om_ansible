@@ -4,4 +4,4 @@
   gather_facts: no
   ignore_errors: no
   tasks:
-    - include: ../../tasks/api-enable-backup-daemon.yaml
+    - include_tasks: ../../tasks/api-enable-backup-daemon.yaml

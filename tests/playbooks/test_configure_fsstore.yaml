@@ -17,5 +17,5 @@
       set_fact:
         om_url: "https://omserver.omansible.int:8443"
       when: om_https
-    - include: ../../tasks/api-create-fs-store.yaml
+    - include_tasks: ../../tasks/api-create-fs-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"

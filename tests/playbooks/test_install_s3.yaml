@@ -7,4 +7,4 @@
   tasks:
     #Install minio and startup
     - name: "Installing minio"
-      include: ../../tasks/install-s3.yaml
+      include_tasks: ../../tasks/install-s3.yaml
