@@ -48,7 +48,7 @@
 - name: "Increase SystemD timeout for mongod service and add a forking Type"
   copy:
     content: "[Service]\nTimeoutStartSec=900\nType=forking"
-    dest: "/etc/systemd/system/mongod.service.d/increase-timeout.conf"
+    dest: "/etc/systemd/system/mongod.service.d/additional.conf"
 - name: "Enable mongod service"
   service:
     name: mongod
