@@ -21,7 +21,6 @@
       organizationName: "MongoDB"
       organizationalUnitName: "Technical Services"
       commonName: "{{ item }}-client-x509-certificate"
-    subject_alt_name: "DNS:{{ item }},DNS:*.omansible.int"
     extended_key_usage: clientAuth
   with_items:
     - n1
