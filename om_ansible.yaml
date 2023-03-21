@@ -18,14 +18,6 @@
       file:
         path: /certs
         state: directory
-    - name: Set Ops Manager URL for http
-      set_fact:
-        om_url: "http://omserver.omansible.int:8080"
-      when: not om_https
-    - name: Set Ops Manager URL for https
-      set_fact:
-        om_url: "https://omserver.omansible.int:8443"
-      when: om_https
 
 - name: "Generating SSL certificates"
   hosts: localhost # Runs on the provisioner and later distributes certs
@@ -220,14 +212,6 @@
     private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
     public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
-    - name: Set Ops Manager URL for http
-      set_fact:
-        om_url: "http://omserver.omansible.int:8080"
-      when: not om_https
-    - name: Set Ops Manager URL for https
-      set_fact:
-        om_url: "https://omserver.omansible.int:8443"
-      when: om_https
     - include: tasks/api-create-fs-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 
@@ -241,14 +225,6 @@
     private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
     public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
-    - name: Set Ops Manager URL for http
-      set_fact:
-        om_url: "http://omserver.omansible.int:8080"
-      when: not om_https
-    - name: Set Ops Manager URL for https
-      set_fact:
-        om_url: "https://omserver.omansible.int:8443"
-      when: om_https
     - include: tasks/api-create-oplog-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 
@@ -262,14 +238,6 @@
     private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
     public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
-    - name: Set Ops Manager URL for http
-      set_fact:
-        om_url: "http://omserver.omansible.int:8080"
-      when: not om_https
-    - name: Set Ops Manager URL for https
-      set_fact:
-        om_url: "https://omserver.omansible.int:8443"
-      when: om_https
     - include: tasks/api-create-s3-blockstore.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
 

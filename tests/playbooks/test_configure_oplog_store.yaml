@@ -9,13 +9,5 @@
     private_key: "{{ lookup('file', '/root/vars/private_key.yaml') }}"
     public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
-    - name: Set Ops Manager URL for http
-      set_fact:
-        om_url: "http://omserver.omansible.int:8080"
-      when: not om_https
-    - name: Set Ops Manager URL for https
-      set_fact:
-        om_url: "https://omserver.omansible.int:8443"
-      when: om_https
     - include: ../../tasks/api-create-oplog-store.yaml
       when: not mongodb_repo == "mongodb-org-3.4.repo"
