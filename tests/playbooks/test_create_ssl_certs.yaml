@@ -5,7 +5,7 @@
   gather_facts: no
   tasks:
     - name: "Creating PEM files"
-      include: ../../tasks/ssl-creation.yaml
+      include_tasks: ../../tasks/ssl-creation.yaml
 
 - name: "Distributing CA on all hosts"
   hosts: all

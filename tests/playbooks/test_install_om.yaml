@@ -18,7 +18,7 @@
       when: om_https
     # Install the Application database
     - name: "Installing Application Database"
-      include: ../../tasks/install-backing-dbs.yaml
+      include_tasks: ../../tasks/install-backing-dbs.yaml
     # Install Ops Manager
     - name: "Installing Ops Manager Server"
-      include: ../../tasks/install-om.yaml
+      include_tasks: ../../tasks/install-om.yaml
