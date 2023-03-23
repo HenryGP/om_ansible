@@ -6,8 +6,11 @@
 - name: "Install mongocli"
   yum: name=mongocli  state=latest
 
+- name: "Make sure mongosh is installed"
+  yum: name=mongodb-mongosh  state=latest
+
 - name: get automation groupid (projectid)
-  shell: mongo omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)"
+  shell: mongosh omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.toString())"
   register: opsmanager_groupid
 
 - name: Creates directory

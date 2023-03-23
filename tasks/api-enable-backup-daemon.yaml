@@ -2,4 +2,4 @@
 - name: Create js to enable Backup Daemon
   shell: echo 'db.daemon.update({},{$set:{machine:{machine:"omserver.omansible.int",head:"/data/head/"},configured:true,deploymentId:null}})' > /tmp/bkp_daemon.js
 - name: Enable Backup Daemon
-  shell: mongo localhost:27017/backupconfig /tmp/bkp_daemon.js
+  shell: mongosh localhost:27017/backupconfig /tmp/bkp_daemon.js

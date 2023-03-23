@@ -3,9 +3,9 @@
 vms: false
 local_mode: false
 # MongoDB repositories for backing databases
-mongodb_repo: mongodb-org-5.0.repo
+mongodb_repo: mongodb-org-6.0.repo
 # Ops Manaher version. (format: X.X.X)
-om_version: 5.0.20
+om_version: 6.0.11
 ## Keep the next 2 lines uncommented if you want OM on HTTP (and keep commented the HTTPS ones)
 om_url: "http://omserver.omansible.int:8080"
 om_https: false

@@ -32,6 +32,8 @@
   yum: 
     name: mongodb-org
     state: latest
+- name: "Make sure mongosh is installed"
+  yum: name=mongodb-mongosh  state=latest
 - name: "Create dbpath for Application Database"
   file: path=/data/appdb state=directory mode=0755 owner=mongod group=mongod
 - name: "Copy mongod configuration file"
