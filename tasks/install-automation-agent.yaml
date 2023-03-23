@@ -6,8 +6,9 @@
     owner=root
     group=root
     mode="u=rw,g=r,o=r"
-- name: "Install mongodb shell"
+- name: "Install legacy mongodb shell (mongo), ignore errors if using mongodb repo >= 6.0"
   yum: name=mongodb-org-shell state=latest
+  ignore_errors: true
 
 - name: "Install MongoDB Enterprise dependencies"
   yum:
@@ -29,14 +30,13 @@
         - rpm-libs
         - tcp_wrappers-libs
 
+- name: "Make sure mongosh is installed"
+  yum: name=mongodb-mongosh  state=latest
+
 - name: get automation groupid
-  shell: mongo omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.str)"
+  shell: mongosh omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne()._id.toString())"
   register: opsmanager_groupid
 - debug: var=opsmanager_groupid
-
-- name: get automation apikey
-  shell: mongo omserver.omansible.int:27017 --quiet --eval "print(db.getSiblingDB('mmsdbconfig').config.customers.findOne().k)"
-  register: opsmanager_apikey
 
 - name: "Create Agent key with API call"
   uri:
@@ -53,10 +53,8 @@
     user: "{{ public_key }}"
     password: "{{ private_key }}"
   register: agents_apikey
-  when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - debug: var=(agents_apikey.content|from_json)['key']
-  when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: download automation agent
   get_url:
@@ -81,15 +79,7 @@
   lineinfile:
     path: /etc/mongodb-mms/automation-agent.config
     regexp: '^mmsApiKey='
-    line: 'mmsApiKey={{opsmanager_apikey.stdout_lines[0]}}'
-  when: mongodb_repo == "mongodb-org-3.4.repo"
-
-- name: update config mmsApiKey
-  lineinfile:
-    path: /etc/mongodb-mms/automation-agent.config
-    regexp: '^mmsApiKey='
     line: "mmsApiKey={{(agents_apikey.content|from_json)['key']}}"
-  when: not mongodb_repo == "mongodb-org-3.4.repo"
 
 - name: update config mmsBaseUrl
   lineinfile:

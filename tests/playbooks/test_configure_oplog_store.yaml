@@ -10,4 +10,3 @@
     public_key: "{{ lookup('file', '/root/vars/public_key.yaml') }}"
   tasks:
     - include_tasks: ../../tasks/api-create-oplog-store.yaml
-      when: not mongodb_repo == "mongodb-org-3.4.repo"

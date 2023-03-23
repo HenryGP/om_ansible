@@ -20,4 +20,3 @@
         om_url: "https://omserver.omansible.int:8443"
       when: om_https
     - include_tasks: ../../tasks/api-create-s3-blockstore.yaml
-      when: not mongodb_repo == "mongodb-org-3.4.repo"
