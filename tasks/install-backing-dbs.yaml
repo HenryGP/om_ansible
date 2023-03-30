@@ -32,6 +32,14 @@
   yum: 
     name: mongodb-org
     state: latest
+  when: mongodb_repo | regex_search('^mongodb-org')
+
+- name: "Install mongodb"
+  yum: 
+    name: mongodb-enterprise
+    state: latest
+  when: mongodb_repo | regex_search('^mongodb-enterprise')
+
 - name: "Make sure mongosh is installed"
   yum: name=mongodb-mongosh  state=latest
 - name: "Create dbpath for Application Database"
