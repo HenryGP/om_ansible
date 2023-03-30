@@ -9,6 +9,12 @@
 - name: "Install legacy mongodb shell (mongo), ignore errors if using mongodb repo >= 6.0"
   yum: name=mongodb-org-shell state=latest
   ignore_errors: true
+  when: mongodb_repo | regex_search('^mongodb-org')
+
+- name: "Install legacy mongodb shell (mongo), ignore errors if using mongodb repo >= 6.0"
+  yum: name=mongodb-enterprise-shell state=latest
+  ignore_errors: true
+  when: mongodb_repo | regex_search('^mongodb-enterprise')
 
 - name: "Install MongoDB Enterprise dependencies"
   yum:
