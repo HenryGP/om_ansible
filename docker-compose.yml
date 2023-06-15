@@ -108,6 +108,7 @@ services:
     ports:
       - "22"
       - "9000:9000"
+      - "9090:9090"
     privileged: true
     networks:
       front:

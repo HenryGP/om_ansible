@@ -32,7 +32,7 @@ Once the infrastructure has been provisioned, the following UIs can be accessed:
    - URL: http://localhost:8080 or https://omserver.omansible.int:8443 if [https for Ops Manager](https://github.com/HenryGP/om_ansible/wiki/Security#https-for-ops-manager-server-) was enabled. (you would need to setup an alias in your etc/hosts to allow TLS/SSL certificate validation to succeed). 
    - User: admin
    - Password: Password1!
-- S3 minio UI: http://localhost:9000
+- S3 minio UI: http://localhost:9090
    - Access key: minio
    - Secret key: miniostorage
 
